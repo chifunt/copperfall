@@ -1,6 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
+import { SquashAndStretch } from "../components/SquashAndStretch.js";
 
 export class Player extends GameObject {
   constructor(inputHandler) {
@@ -33,11 +34,22 @@ export class Player extends GameObject {
     const img = new Image();
     img.src = "/assets/images/rafli.png";
     img.onload = () => {
-      this.addComponent(new SpriteRenderer(img));
+      this.addComponent(new SpriteRenderer(img, { pivot: "bottom" }));
     };
+
+    const squashAndStretch = new SquashAndStretch({
+      squashScale: 0.95,
+      stretchScale: 1.05,
+      easingFunction: EasingFunctions.easeInOutQuad,
+      duration: 2,
+      loop: true,
+    });
+    this.addComponent(squashAndStretch);
   }
 
   update(deltaTime) {
+    super.update(deltaTime);
+
     // 1. Get normalized direction from InputHandler
     const direction = this.inputHandler.getNormalizedDirection();
     const isMoving = (direction.x !== 0 || direction.y !== 0);
