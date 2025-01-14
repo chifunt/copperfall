@@ -4,7 +4,7 @@ import { SquashAndStretch } from "../components/SquashAndStretch.js";
 import { EasingFunctions } from "../utils/easing.js";
 
 export class TestThing extends GameObject {
-    constructor(canvas) {
+    constructor() {
         super("TestThing");
 
         // Set initial position and scale
