@@ -9,13 +9,13 @@ export class TestThing extends GameObject {
 
         // Set initial position and scale
         this.transform.position = { x: 250, y: 100 };
-        this.transform.scale = { x: 0.1, y: 0.1 };
+        this.transform.scale = { x: 100, y: 100 };
 
         // Add SpriteRenderer
         const img = new Image();
-        img.src = "/assets/images/rafli.png";
+        img.src = "/assets/images/test.png";
         img.onload = () => {
-            this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 10 }));
+            this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 4 }));
         };
 
         // Add SquashAndStretch component
@@ -23,7 +23,7 @@ export class TestThing extends GameObject {
             squashScale: 0.95,
             stretchScale: 1.05,
             easingFunction: EasingFunctions.easeInOutQuad,
-            duration: 0.5,
+            duration: 3,
             loop: true,
         });
         this.addComponent(squashAndStretch);
