@@ -1,0 +1,54 @@
+/* CSS RESET */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+/* --- */
+:root {
+  --base: #191724;
+}
+/* --- */
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+canvas {
+  /* border: solid grey; */
+  /* aspect-ratio: 16 / 9; */
+  position: absolute;
+  width: 100vw;
+  max-height: 100vh;
+  object-fit: contain;
+  image-rendering: auto;
+}
