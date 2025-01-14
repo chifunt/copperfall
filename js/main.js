@@ -9,7 +9,7 @@ const engine = new Engine("canvas");
 
 const background = new Background();
 
-const testThing = new TestThing();
+// const testThing = new TestThing();
 
 const inputHandler = new InputHandler();
 const player = new Player(inputHandler);
