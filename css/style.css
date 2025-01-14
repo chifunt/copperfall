@@ -45,7 +45,7 @@ body {
 
 canvas {
   /* border: solid grey; */
-  /* aspect-ratio: 16 / 9; */
+  aspect-ratio: 16 / 9;
   position: absolute;
   width: 100vw;
   max-height: 100vh;
