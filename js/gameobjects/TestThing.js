@@ -8,7 +8,7 @@ export class TestThing extends GameObject {
         super("TestThing");
 
         // Set initial position and scale
-        this.transform.position = { x: 0, y: 50 };
+        this.transform.position = { x: 0, y: 100 };
         this.transform.scale = { x: 0.1, y: 0.1 };
 
         // Add SpriteRenderer
