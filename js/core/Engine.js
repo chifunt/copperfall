@@ -15,13 +15,27 @@ export class Engine {
 
     this.lastTime = 0;
     this.gameObjects = [];
+
+    this.virtualWidth = 640;
+    this.virtualHeight = 480;
     this.camera = {
       position: { x: 0, y: 0 }, // Camera's position in world space
       scale: 1,                 // Scale factor (zoom level)
     };
+    this.updateCameraScale();
+    window.addEventListener("resize", () => this.updateCameraScale());
 
     // Static reference to the engine instance
     Engine.instance = this;
+  }
+
+  updateCameraScale() {
+    // e.g. Fit to width or fit to height, or do min to keep aspect ratio
+    const scaleX = this.canvas.width / this.virtualWidth;
+    const scaleY = this.canvas.height / this.virtualHeight;
+
+    // If you want to fill the entire canvas while maintaining aspect ratio:
+    this.camera.scale = Math.min(scaleX, scaleY);
   }
 
   addGameObject(gameObject) {
