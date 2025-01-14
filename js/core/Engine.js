@@ -1,3 +1,5 @@
+import { SpriteRenderer } from "/js/components/SpriteRenderer.js";
+
 export class Engine {
   constructor(canvasId) {
     const canvas = document.getElementById(canvasId);
@@ -77,6 +79,19 @@ export class Engine {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       this.gameObjects = this.gameObjects.filter(object => !object.isDestroyed);
+
+      this.gameObjects.sort((a, b) => {
+        const aRenderer = a.getComponent(SpriteRenderer);
+        const bRenderer = b.getComponent(SpriteRenderer);
+
+        if (aRenderer && bRenderer) {
+          return aRenderer.zOrder - bRenderer.zOrder;
+        }
+        if (aRenderer && !bRenderer) return 1;   // b has no renderer, so a is "on top"
+        if (!aRenderer && bRenderer) return -1; // a has no renderer, b is "on top"
+        return 0; // neither has a renderer
+      });
+
       for (const object of this.gameObjects) {
         object.update(deltaTime);
         object.render(this.ctx);

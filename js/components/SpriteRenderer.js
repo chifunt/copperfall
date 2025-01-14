@@ -6,6 +6,7 @@ export class SpriteRenderer extends Component {
     super();
     this.image = image;
     this.pivot = options.pivot || "center"; // can be "center" or "bottom"
+    this.zOrder = options.zOrder || 0;
   }
 
   render(ctx) {

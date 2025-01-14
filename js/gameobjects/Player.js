@@ -34,7 +34,7 @@ export class Player extends GameObject {
     const img = new Image();
     img.src = "/assets/images/rafli.png";
     img.onload = () => {
-      this.addComponent(new SpriteRenderer(img, { pivot: "bottom" }));
+      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 5 }));
     };
 
     const squashAndStretch = new SquashAndStretch({

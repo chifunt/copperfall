@@ -15,7 +15,7 @@ export class TestThing extends GameObject {
         const img = new Image();
         img.src = "/assets/images/rafli.png";
         img.onload = () => {
-            this.addComponent(new SpriteRenderer(img, { pivot: "bottom" }));
+            this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 10 }));
         };
 
         // Add SquashAndStretch component
