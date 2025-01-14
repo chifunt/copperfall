@@ -8,14 +8,14 @@ export class TestThing extends GameObject {
         super("TestThing");
 
         // Set initial position and scale
-        this.transform.position = { x: 250, y: 150 };
+        this.transform.position = { x: 250, y: 100 };
         this.transform.scale = { x: 0.1, y: 0.1 };
 
         // Add SpriteRenderer
         const img = new Image();
         img.src = "/assets/images/rafli.png";
         img.onload = () => {
-            this.addComponent(new SpriteRenderer(img));
+            this.addComponent(new SpriteRenderer(img, { pivot: "bottom" }));
         };
 
         // Add SquashAndStretch component
