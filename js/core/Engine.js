@@ -20,13 +20,44 @@ export class Engine {
     this.virtualHeight = 480;
     this.camera = {
       position: { x: 0, y: 0 }, // Camera's position in world space
-      scale: 1,                 // Scale factor (zoom level)
+      scale: 1, // Scale factor (zoom level)
     };
-    this.updateCameraScale();
-    window.addEventListener("resize", () => this.updateCameraScale());
+    this.setupResizeListener();
 
-    // Static reference to the engine instance
+    // Static reference to the engine instance (singleton)
     Engine.instance = this;
+  }
+
+  setupResizeListener() {
+    const resizeCanvas = () => {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // Maintain stated aspect ratio
+      const aspectRatio = 4 / 3;
+      let canvasWidth, canvasHeight;
+
+      if (windowWidth / windowHeight < aspectRatio) {
+        // Window is taller than stated aspect ratio
+        canvasWidth = windowWidth;
+        canvasHeight = windowWidth / aspectRatio;
+      } else {
+        // Window is wider than stated aspect ratio
+        canvasHeight = windowHeight;
+        canvasWidth = windowHeight * aspectRatio;
+      }
+
+      this.canvas.width = canvasWidth;
+      this.canvas.height = canvasHeight;
+
+      this.updateCameraScale();
+    };
+
+    // Attach resize event listener
+    window.addEventListener("resize", resizeCanvas);
+
+    // Initial resize
+    resizeCanvas();
   }
 
   updateCameraScale() {
