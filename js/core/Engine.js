@@ -8,11 +8,6 @@ export class Engine {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext("2d");
 
-    // Disable image smoothing
-    this.ctx.webkitImageSmoothingEnabled = false;
-    this.ctx.mozImageSmoothingEnabled = false;
-    this.ctx.imageSmoothingEnabled = false;
-
     this.lastTime = 0;
     this.gameObjects = [];
 
@@ -34,7 +29,7 @@ export class Engine {
       const windowHeight = window.innerHeight;
 
       // Maintain stated aspect ratio
-      const aspectRatio = 4 / 3;
+      const aspectRatio = 16 / 9;
       let canvasWidth, canvasHeight;
 
       if (windowWidth / windowHeight < aspectRatio) {
