@@ -9,6 +9,7 @@ export class Player extends GameObject {
     // Initial position and scale
     this.transform.position = { x: 0, y: 0 };
     this.transform.scale = { x: 0.03, y: 0.03 };
+    this.transform.rotation = 10;
 
     // Movement
     this.inputHandler = inputHandler;
