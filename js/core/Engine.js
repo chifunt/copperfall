@@ -15,6 +15,10 @@ export class Engine {
 
     this.lastTime = 0;
     this.gameObjects = [];
+    this.camera = {
+      position: { x: 0, y: 0 }, // Camera's position in world space
+      scale: 1,                 // Scale factor (zoom level)
+    };
 
     // Static reference to the engine instance
     Engine.instance = this;

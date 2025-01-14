@@ -8,12 +8,12 @@ export class TestThing extends GameObject {
         super("TestThing");
 
         // Set initial position and scale
-        this.transform.position = { x: canvas.width / 4, y: canvas.height / 4 };
+        this.transform.position = { x: 0, y: 50 };
         this.transform.scale = { x: 0.1, y: 0.1 };
 
         // Add SpriteRenderer
         const img = new Image();
-        img.src = "/assets/images/yolk.png";
+        img.src = "/assets/images/rafli.png";
         img.onload = () => {
             this.addComponent(new SpriteRenderer(img));
         };
