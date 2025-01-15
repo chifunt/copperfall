@@ -18,8 +18,8 @@ const inputHandler = new InputHandler();
 const player = new Player(inputHandler);
 
 const cameraObj = new CameraObject(player, {
-  smoothness: 0.08,    // how smoothly camera catches up
-  lookAheadDist: 10,    // how many world units ahead we look
+  smoothness: 0.175,
+  lookAheadDist: 10,
 });
 engine.debugMode = true;
 engine.start();

@@ -1,28 +1,23 @@
 import { Component } from "/js/core/Component.js";
 import { Engine } from "/js/core/Engine.js";
+import { EasingFunctions } from "/js/utils/easing.js";
 
 export class CameraFollow extends Component {
   /**
    * @param {Object} config
-   * @param {GameObject} config.target   The GameObject we want to follow (e.g. player)
-   * @param {number} [config.smoothness] How quickly the camera catches up. 0.1 = slow, 1.0 = instant
-   * @param {number} [config.lookAheadDist] How far ahead (in world units) to look in the direction of travel
+   * @param {GameObject} config.target           The GameObject to follow (e.g., player)
+   * @param {number} [config.smoothness]        How quickly the camera catches up. 0.1 = slow, 1.0 = instant
+   * @param {number} [config.lookAheadDist]     How far ahead (in world units) to look in the direction of travel
+   * @param {Function} [config.easingFunction]  Easing function to apply. Defaults to linear.
    */
   constructor(config = {}) {
     super();
-    this.target = config.target;               // The GameObject to follow
-    this.smoothness = config.smoothness ?? 0.1; // 0 < smoothness <= 1
+    this.target = config.target;
+    this.smoothness = config.smoothness ?? 0.1;
     this.lookAheadDist = config.lookAheadDist ?? 0;
+    this.easingFunction = config.easingFunction || EasingFunctions.easeInOutQuad;
     this.lastTargetPos = { x: 0, y: 0 };
-    this.lastDir = { x: 1, y: 0 }; // default direction
-  }
-
-  start() {
-    // Optionally store the initial target pos
-    if (this.target) {
-      this.lastTargetPos.x = this.target.transform.position.x;
-      this.lastTargetPos.y = this.target.transform.position.y;
-    }
+    this.lastDir = { x: 1, y: 0 }; // Default direction
   }
 
   update(deltaTime) {
@@ -35,14 +30,14 @@ export class CameraFollow extends Component {
     const tx = this.target.transform.position.x;
     const ty = this.target.transform.position.y;
 
-    // Figure out direction of movement
+    // Calculate movement since last frame
     const dx = tx - this.lastTargetPos.x;
     const dy = ty - this.lastTargetPos.y;
     const distMoved = Math.sqrt(dx * dx + dy * dy);
     let dirX = this.lastDir.x;
     let dirY = this.lastDir.y;
 
-    // If the target is moving significantly, update lastDir
+    // Update direction if the target has moved significantly
     if (distMoved > 0.0001) {
       dirX = dx / distMoved;
       dirY = dy / distMoved;
@@ -54,25 +49,31 @@ export class CameraFollow extends Component {
     const lookX = dirX * this.lookAheadDist;
     const lookY = dirY * this.lookAheadDist;
 
-    // Desired camera position = target pos + look-ahead
+    // Desired camera position = target position + look-ahead
     const desiredX = tx + lookX;
     const desiredY = ty + lookY;
 
-    // Current camera pos
+    // Current camera position
     const currentX = camera.position.x;
     const currentY = camera.position.y;
 
-    // Lerp toward the desired position
-    // smoothness typically in [0..1], so we might do:
-    // newPos = currentPos + (desiredPos - currentPos) * smoothness
-    const nextX = currentX + (desiredX - currentX) * this.smoothness;
-    const nextY = currentY + (desiredY - currentY) * this.smoothness;
+    // Calculate the difference
+    const deltaCamX = desiredX - currentX;
+    const deltaCamY = desiredY - currentY;
 
-    // Update the engine's camera
+    // Apply easing function to smoothness
+    const t = Math.min(this.smoothness, 1); // Clamp t to [0,1]
+    const easedT = this.easingFunction(t);
+
+    // Interpolate camera position towards desired position using easedT
+    const nextX = currentX + deltaCamX * easedT;
+    const nextY = currentY + deltaCamY * easedT;
+
+    // Update the camera's position
     camera.position.x = nextX;
     camera.position.y = nextY;
 
-    // Save current target pos for next frame
+    // Update last target position for the next frame
     this.lastTargetPos.x = tx;
     this.lastTargetPos.y = ty;
   }
