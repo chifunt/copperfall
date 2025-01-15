@@ -1,7 +1,8 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
-import { SquashAndStretch } from "../components/SquashAndStretch.js";
+import { SquashAndStretch } from "/js/components/SquashAndStretch.js";
+import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
 
 export class Player extends GameObject {
   constructor(inputHandler) {
@@ -45,6 +46,8 @@ export class Player extends GameObject {
       loop: true,
     });
     this.addComponent(squashAndStretch);
+
+    this.addComponent(new HorizontalFlip(true));
   }
 
   update(deltaTime) {

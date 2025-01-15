@@ -7,6 +7,7 @@ export class SpriteRenderer extends Component {
     this.image = image;
     this.pivot = options.pivot || "center"; // can be "center" or "bottom"
     this.zOrder = options.zOrder || 0;
+    this.flipX = false;
   }
 
   render(ctx) {
@@ -25,8 +26,10 @@ export class SpriteRenderer extends Component {
     // Save context and apply transforms
     ctx.save();
     ctx.translate(canvasX, canvasY);
-    ctx.rotate(rotation);
-    ctx.scale(scaleX * camera.scale, scaleY * camera.scale);
+    // check if horizontally flipped
+    ctx.rotate(this.flipX ? -rotation : rotation);
+    const finalScaleX = this.flipX ? -scaleX : scaleX;
+    ctx.scale(finalScaleX * camera.scale, scaleY * camera.scale);
 
     // Draw from pivot
     const width = this.image.width;
