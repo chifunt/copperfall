@@ -46,18 +46,28 @@ export class Player extends GameObject {
       loop: true,
     });
     this.addComponent(squashAndStretch);
-
-    this.addComponent(new HorizontalFlip(true));
+    // Add HorizontalFlip component (default facing right)
+    this.horizontalFlip = new HorizontalFlip(true);
+    this.addComponent(this.horizontalFlip);
   }
 
   update(deltaTime) {
     super.update(deltaTime);
 
-    // 1. Get normalized direction from InputHandler
+    // Get normalized direction from InputHandler
     const direction = this.inputHandler.getNormalizedDirection();
     const isMoving = (direction.x !== 0 || direction.y !== 0);
 
-    // 2. State transitions
+    // Explicitly control flipping based on input
+    if (isMoving) {
+      if (direction.x > 0) {
+        this.horizontalFlip.setFacingRight(true); // Facing right
+      } else if (direction.x < 0) {
+        this.horizontalFlip.setFacingRight(false); // Facing left
+      }
+    }
+
+    // State transitions
     if (isMoving) {
       // Update lastDirection every frame we have a nonzero direction
       this.lastDirection = { ...direction };
@@ -119,7 +129,7 @@ export class Player extends GameObject {
       }
     }
 
-    // 3. Apply movement
+    // Apply movement
     // - Use `lastDirection` for deceleration, because `direction` will be zero.
     // - If we're still pressing keys, direction & lastDirection are the same.
     const effectiveSpeed = this.speed * this.currentFactor;
