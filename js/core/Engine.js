@@ -77,7 +77,7 @@ export class Engine {
     const { scale } = this.camera;
     const { x: camX, y: camY } = this.camera.position;
 
-    const gridSize = 10; // Grid cell size in virtual units
+    const gridSize = 50; // Grid cell size in virtual units
     const canvasWidth = this.canvas.width;
     const canvasHeight = this.canvas.height;
 
