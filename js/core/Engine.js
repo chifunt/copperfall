@@ -19,6 +19,7 @@ export class Engine {
       position: { x: 0, y: 0 }, // Camera's position in world space
       scale: 1, // Scale factor (zoom level)
     };
+    this.debugMode = false;
     this.setupResizeListener();
 
     // Static reference to the engine instance (singleton)
@@ -71,6 +72,45 @@ export class Engine {
     this.gameObjects.push(gameObject);
   }
 
+  renderGrid() {
+    const ctx = this.ctx;
+    const { scale } = this.camera;
+    const { x: camX, y: camY } = this.camera.position;
+
+    const gridSize = 10; // Grid cell size in virtual units
+    const canvasWidth = this.canvas.width;
+    const canvasHeight = this.canvas.height;
+
+    const startX = -Math.ceil(canvasWidth / 2 / scale) + camX;
+    const endX = Math.ceil(canvasWidth / 2 / scale) + camX;
+    const startY = -Math.ceil(canvasHeight / 2 / scale) + camY;
+    const endY = Math.ceil(canvasHeight / 2 / scale) + camY;
+
+    ctx.save();
+    ctx.strokeStyle = "rgba(255, 255, 100, 0.3)"; // Green grid lines
+    ctx.lineWidth = 1;
+
+    // Draw vertical lines
+    for (let x = Math.floor(startX / gridSize) * gridSize; x <= endX; x += gridSize) {
+      const screenX = (x - camX) * scale + canvasWidth / 2;
+      ctx.beginPath();
+      ctx.moveTo(screenX, 0);
+      ctx.lineTo(screenX, canvasHeight);
+      ctx.stroke();
+    }
+
+    // Draw horizontal lines
+    for (let y = Math.floor(startY / gridSize) * gridSize; y <= endY; y += gridSize) {
+      const screenY = (-y + camY) * scale + canvasHeight / 2; // Invert Y-axis
+      ctx.beginPath();
+      ctx.moveTo(0, screenY);
+      ctx.lineTo(canvasWidth, screenY);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
   start() {
     const gameLoop = (currentTime) => {
       const deltaTime = (currentTime - this.lastTime) / 1000;
@@ -95,6 +135,10 @@ export class Engine {
       for (const object of this.gameObjects) {
         object.update(deltaTime);
         object.render(this.ctx);
+      }
+
+      if (this.debugMode) {
+        this.renderGrid();
       }
 
       requestAnimationFrame(gameLoop);
