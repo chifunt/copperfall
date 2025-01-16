@@ -66,8 +66,8 @@ export class Player extends GameObject {
 
     const mainCollider = new BoxCollider({
       width: 25,
-      height: 25,
-      offset: { x: 2, y: 20 },
+      height: 32,
+      offset: { x: 2, y: 12 },
       isTrigger: false,
     });
     this.addComponent(mainCollider);
