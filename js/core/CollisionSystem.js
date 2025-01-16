@@ -331,40 +331,51 @@ export class CollisionSystem {
 
   debugDrawColliders(colliders) {
     const ctx = this.engine.ctx;
-    ctx.save();
-    ctx.strokeStyle = "rgba(0,255,0,0.6)";
-    ctx.lineWidth = 10;
-
     const camera = this.engine.camera;
     const canvas = this.engine.canvas;
+
+    ctx.save(); // Save the current state
 
     for (const c of colliders) {
       const transform = c.gameObject.transform;
       const posX = transform.position.x + c.offset.x;
       const posY = transform.position.y + c.offset.y;
 
+      // Convert world coordinates to canvas coordinates
       const canvasX = (posX - camera.position.x) * camera.scale + canvas.width / 2;
       const canvasY = (-posY + camera.position.y) * camera.scale + canvas.height / 2;
 
-      // Box
+      // Determine style based on whether the collider is a trigger
+      if (c.isTrigger) {
+        ctx.strokeStyle = "rgba(255, 0, 255, 0.6)";
+        ctx.lineWidth = 5;
+      } else {
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.6)";
+        ctx.lineWidth = 10;
+      }
+
+      // Draw BoxCollider
       if (c instanceof BoxCollider) {
-        ctx.save();
+        ctx.save(); // Save the state before transformations
         ctx.translate(canvasX, canvasY);
-        // We can rotate if needed but ignoring rotation for naive AABB
+        // Optionally handle rotation if needed
         // ctx.rotate(transform.rotationInRadians);
 
         const w = c.width * camera.scale;
         const h = c.height * camera.scale;
 
-        ctx.strokeRect(-w / 2, -h / 2, w, h);
-        ctx.restore();
-      } else if (c instanceof CircleCollider) {
+        ctx.strokeRect(-w / 2, -h / 2, w, h); // Draw rectangle centered at (0,0)
+        ctx.restore(); // Restore to the original state
+      }
+      // Draw CircleCollider
+      else if (c instanceof CircleCollider) {
         ctx.beginPath();
         const r = c.radius * camera.scale;
         ctx.arc(canvasX, canvasY, r, 0, 2 * Math.PI);
         ctx.stroke();
       }
     }
-    ctx.restore();
+
+    ctx.restore(); // Restore the original state after drawing
   }
 }
