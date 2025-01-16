@@ -36,7 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 body {
   width: 100vw;
   height: 100vh;
-  background-color: var(--base);
+  background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,4 +52,39 @@ canvas {
   object-fit: contain;
   image-rendering: auto;
   /* cursor: none; */
+}
+
+#ui-container {
+  display: flex;
+  aspect-ratio: 16 / 9;
+  position: absolute;
+  width: 100%;
+  max-width: calc(100vh * (16 / 9));
+  max-height: 100vh;
+  object-fit: contain;
+  image-rendering: auto;
+  /* background-color: #ffffff55; */
+  font-size: 10%;
+}
+
+#hud-container, #menu-container {
+  width: 100%;
+  height: 100%;
+}
+
+#hud-container {
+  /* background-color: #ff000010; */
+}
+
+#menu-container {
+  /* background-color: #00ff0010; */
+}
+
+.vignette {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 200px rgba(0, 0, 0, 1) inset;
+  /* background: radial-gradient(circle, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%); */
+  pointer-events: none;
 }
