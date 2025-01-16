@@ -20,6 +20,7 @@ export class Engine {
       position: { x: 0, y: 0 }, // Camera's position in world space
       scale: 1, // Scale factor (zoom level)
     };
+    this.activeScene = null;
     this.debugMode = false;
     this.setupResizeListener();
 
@@ -27,6 +28,14 @@ export class Engine {
 
     // Static reference to the engine instance (singleton)
     Engine.instance = this;
+  }
+
+  loadScene(scene) {
+    if (this.activeScene) {
+      this.activeScene.destroy(); // Clean up the previous scene
+    }
+    this.activeScene = scene;
+    this.activeScene.start(); // Initialize the new scene
   }
 
   setupResizeListener() {
@@ -122,6 +131,11 @@ export class Engine {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       this.gameObjects = this.gameObjects.filter(object => !object.isDestroyed);
+
+      if (!this.activeScene) {
+        console.log("No scene loaded dumbass!!")
+        return;
+      }
 
       this.gameObjects.sort((a, b) => {
         const aRenderer = a.getComponent(SpriteRenderer);
