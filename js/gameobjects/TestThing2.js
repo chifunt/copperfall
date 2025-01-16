@@ -19,8 +19,8 @@ export class TestThing2 extends GameObject {
         };
 
         const mainCollider = new BoxCollider({
-        width: 120,
-        height: 220,
+        width: 100,
+        height: 200,
         offset: { x: 0, y: 0 },
         isTrigger: false,
         });
