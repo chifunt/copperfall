@@ -117,18 +117,21 @@ canvas {
 #charge-container {
   width: 27.5%;
   height: 100%;
-  background-color: white;
+  background-color: var(--text-color);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  box-shadow: 0 0 0.5vw black;
+  border-radius: .5vw;
 }
 
 .charge {
   width: 90%;
   height: 25%;
   background-color: blue;
-  border-radius: 20%;
+  border-radius: .5vw;
+  box-shadow: 0 0 0.5vw rgb(72, 81, 255)
 }
 
 #hud-subcontainer {
@@ -154,6 +157,8 @@ canvas {
   height: 2.5vw;
   background-color: red;
   border-radius: 50%;
+  box-shadow: 0 0 0.5vw black;
+  border: solid .2vw var(--text-color);
 }
 
 #copper-container {
@@ -161,6 +166,7 @@ canvas {
   height: 40%;
   font-size: 3vw;
   color: white;
+  text-shadow: 0 0 0.5vw black;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -173,6 +179,7 @@ canvas {
   width: 12.5%;
   background-color: chocolate;
   border-radius: 50%;
+  box-shadow: 0 0 0.5vw black;
 }
 
 #menu-container {
