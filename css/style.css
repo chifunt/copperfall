@@ -29,7 +29,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* --- */
 :root {
-  --base: #191724;
+  --base-color: #191724;
+  --overlay-color: #26233ade;
+  --text-color: #e0def4;
+  --love-color: #eb6f92;
+  --gold-color: #f6c177;
+  --rose-color: #ebbcba;
+  --pine-color: #31748f;
 }
 /* --- */
 @font-face {
@@ -103,7 +109,7 @@ canvas {
 #hud {
   width: 35%;
   height: 15%;
-  /* background-color: var(--base); */
+  /* background-color: var(--base-color); */
   display: flex;
   gap: 5%;
 }
