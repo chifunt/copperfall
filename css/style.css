@@ -65,6 +65,7 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: black;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,7 +104,6 @@ canvas {
 
 #hud-container {
   padding: 3%;
-  background-color: #ff000010;
 }
 
 #hud {
@@ -146,7 +146,6 @@ canvas {
   align-items: center;
   justify-content: flex-start;
   gap: 5%;
-  /* padding-left: 5%; */
   width: 100%;
   height: 60%;
   background-color: rgba(127, 255, 212, 0);
@@ -171,7 +170,6 @@ canvas {
   align-items: center;
   justify-content: flex-start;
   gap: 5%;
-  /* padding-left: 5%; */
 }
 
 #copper-image-container {
@@ -184,6 +182,58 @@ canvas {
 
 #menu-container {
   /* background-color: #00ff0010; */
+  display: flex;
+  align-items: end;
+  padding: 7%;
+}
+
+#menu-container h1 {
+  color: #eb961f;
+  text-shadow: 0 0 1vw black, -.3vw -.3vw rgb(165, 103, 10), 0 0 .5vw;
+}
+
+#main-menu-container, #pause-menu-container {
+  width: 40%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  font-size: 3.5vw;
+}
+
+#main-menu-container button, #pause-menu-container button {
+  text-align: left;
+  background-color: #00000000;
+  color:#a7a6b9;
+  border: #00000000;
+  text-shadow: 0 0 1vw black;
+}
+
+#main-menu-container button:hover, #pause-menu-container button:hover {
+  background-color: #00000050;
+  color:#ffffff;
+  border: #00000000;
+  text-shadow: 0 0 1vw white;
+}
+
+#main-menu-container {
+  /* background-color: #eb6f927a; */
+
+  /* display: none; */
+}
+
+#pause-menu-container {
+  background-color: #7a4b08;
+  display: none;
+}
+
+#ship-menu-container {
+  display: none;
+  background-color: #191724;
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  align-self: center;
+  justify-self: center;
 }
 
 .vignette {
@@ -193,4 +243,13 @@ canvas {
   box-shadow: 0 0 200px rgba(0, 0, 0, 1) inset;
   /* background: radial-gradient(circle, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%); */
   pointer-events: none;
+}
+
+
+#hud-container {
+  display: none;
+}
+
+#menu-container {
+  display: none;
 }
