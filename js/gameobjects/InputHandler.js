@@ -1,6 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 
 export class InputHandler extends GameObject {
+    static instance = null;
     /**
      * @param {Object} config
      * @param {Object} config.keyBindings - An object mapping directions to arrays of keys.
@@ -13,7 +14,14 @@ export class InputHandler extends GameObject {
      * }
      */
     constructor(config = {}) {
+        if (InputHandler.instance) {
+            console.warn("InputHandler is a singleton and has already been created.");
+            return InputHandler.instance;
+        }
+
         super("InputHandler");
+
+        InputHandler.instance = this;
 
         // Define default key bindings if not provided
         this.keyBindings = config.keyBindings || {
@@ -42,6 +50,13 @@ export class InputHandler extends GameObject {
         window.addEventListener("keyup", (e) => this.handleKeyUp(e));
         window.addEventListener("gamepadconnected", (e) => this.handleGamepadConnected(e));
         window.addEventListener("gamepaddisconnected", (e) => this.handleGamepadDisconnected(e));
+    }
+
+    static getInstance() {
+        if (!InputHandler.instance) {
+            InputHandler.instance = new InputHandler();
+        }
+        return InputHandler.instance;
     }
 
     /**

@@ -6,9 +6,10 @@ import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { Rigidbody } from "../components/Rigidbody.js";
+import { InputHandler } from "./InputHandler.js";
 
 export class Player extends GameObject {
-  constructor(inputHandler) {
+  constructor() {
     super("Player");
 
     // Initial position and scale
@@ -17,7 +18,7 @@ export class Player extends GameObject {
     this.transform.rotation = 10;
 
     // Movement
-    this.inputHandler = inputHandler;
+    this.inputHandler = InputHandler.getInstance();
     this.speed = 350; // Max speed in units/second
 
     // Easing configuration

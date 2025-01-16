@@ -11,7 +11,7 @@ export class MainScene extends Scene {
     const background = new Background();
 
     const inputHandler = new InputHandler();
-    const player = new Player(inputHandler);
+    const player = new Player();
 
     new TestThing2(250, 100);
     new TestThing2(250, -50);
