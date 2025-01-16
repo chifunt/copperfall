@@ -5,6 +5,7 @@ import { SquashAndStretch } from "/js/components/SquashAndStretch.js";
 import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
+import { Rigidbody } from "../components/Rigidbody.js";
 
 export class Player extends GameObject {
   constructor(inputHandler) {
@@ -76,6 +77,9 @@ export class Player extends GameObject {
       console.log("Player trigger triggered by:", other.gameObject.name);
       // e.g. if player enters the sight range
     };
+
+    const rb = new Rigidbody();
+    this.addComponent(rb);
   }
 
   update(deltaTime) {

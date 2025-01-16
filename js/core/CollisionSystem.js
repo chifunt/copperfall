@@ -1,5 +1,6 @@
 import { BoxCollider } from "/js/components/BoxCollider.js";
 import { CircleCollider } from "/js/components/CircleCollider.js";
+import { Rigidbody } from "/js/components/Rigidbody.js";
 
 export class CollisionSystem {
   constructor(engine) {
@@ -145,6 +146,132 @@ export class CollisionSystem {
       this.processTrigger(cA, cB);
     } else {
       this.processCollision(cA, cB);
+      this.resolveOverlap(cA, cB);
+    }
+  }
+
+  resolveOverlap(cA, cB) {
+    // 1) We only do resolution for Box-Box in this naive approach
+    //    (You can expand for circle, etc.)
+    //    And ignoring rotation => purely AABB
+    if (!(cA instanceof BoxCollider && cB instanceof BoxCollider)) {
+      return;
+    }
+    // 2) Identify rigidbodies
+    const rbA = cA.gameObject.getComponent(Rigidbody);
+    const rbB = cB.gameObject.getComponent(Rigidbody);
+    const staticA = !rbA; // no rigidbody => static
+    const staticB = !rbB;
+    const kinA = rbA?.isKinematic === true;
+    const kinB = rbB?.isKinematic === true;
+    // If both are static or both are kinematic => no movement
+    // => Overlaps remain, but typically you'd want to avoid that in level design
+    // If one is dynamic, we push that one out. If both dynamic, push them half each, etc.
+    // 3) Compute overlap for AABBs
+    const transformA = cA.gameObject.transform;
+    const transformB = cB.gameObject.transform;
+    // For box colliders anchored at center:
+    const halfW_A = cA.width / 2;
+    const halfH_A = cA.height / 2;
+    const centerAX = transformA.position.x + cA.offset.x;
+    const centerAY = transformA.position.y + cA.offset.y;
+    const leftA = centerAX - halfW_A;
+    const rightA = centerAX + halfW_A;
+    const topA = centerAY - halfH_A;
+    const bottomA = centerAY + halfH_A;
+    const halfW_B = cB.width / 2;
+    const halfH_B = cB.height / 2;
+    const centerBX = transformB.position.x + cB.offset.x;
+    const centerBY = transformB.position.y + cB.offset.y;
+    const leftB = centerBX - halfW_B;
+    const rightB = centerBX + halfW_B;
+    const topB = centerBY - halfH_B;
+    const bottomB = centerBY + halfH_B;
+    // Overlap extents
+    const overlapX = Math.min(rightA, rightB) - Math.max(leftA, leftB);
+    const overlapY = Math.min(bottomA, bottomB) - Math.max(topA, topB);
+    if (overlapX > 0 && overlapY > 0) {
+      // There's an overlap
+      // 4) Decide how to push out
+      // We'll push along the axis of least overlap for a simple approach
+      if (overlapX < overlapY) {
+        // push along X
+        this.separateAxisX(
+          overlapX, transformA, transformB,
+          staticA, staticB, kinA, kinB
+        );
+      } else {
+        // push along Y
+        this.separateAxisY(
+          overlapY, transformA, transformB,
+          staticA, staticB, kinA, kinB
+        );
+      }
+    }
+  }
+  separateAxisX(overlapX, transformA, transformB, staticA, staticB, kinA, kinB) {
+    // We figure out which side is left vs right by comparing centers
+    const dx = (transformB.position.x - transformA.position.x);
+    // if dx > 0 => B is to the right of A => push them apart
+    // if dx < 0 => B is to the left => push in opposite direction
+    if (dx > 0) {
+      // B is to the right => we push B to the right, or A to the left,
+      // or both if both dynamic
+      this.doPushX(overlapX, transformA, transformB, staticA, staticB, kinA, kinB, +1);
+    } else {
+      // B is to the left => push them in the other direction
+      this.doPushX(overlapX, transformA, transformB, staticA, staticB, kinA, kinB, -1);
+    }
+  }
+  doPushX(
+    overlapX, transformA, transformB,
+    staticA, staticB, kinA, kinB,
+    direction
+  ) {
+    // direction = +1 => push B to the right
+    // direction = -1 => push B to the left
+    // naive approach:
+    const bothDynamic = (!staticA && !kinA) && (!staticB && !kinB);
+    const AisDynamic = (!staticA && !kinA);
+    const BisDynamic = (!staticB && !kinB);
+    if (bothDynamic) {
+      // push each half
+      transformA.position.x -= (overlapX / 2) * direction;
+      transformB.position.x += (overlapX / 2) * direction;
+    } else if (AisDynamic && !BisDynamic) {
+      // push only A
+      transformA.position.x -= overlapX * direction;
+    } else if (!AisDynamic && BisDynamic) {
+      // push only B
+      transformB.position.x += overlapX * direction;
+    }
+    // else: both static or kinematic => no push
+  }
+  separateAxisY(overlapY, transformA, transformB, staticA, staticB, kinA, kinB) {
+    const dy = (transformB.position.y - transformA.position.y);
+    if (dy > 0) {
+      // B is above => push B up
+      this.doPushY(overlapY, transformA, transformB, staticA, staticB, kinA, kinB, +1);
+    } else {
+      // B below => push B down
+      this.doPushY(overlapY, transformA, transformB, staticA, staticB, kinA, kinB, -1);
+    }
+  }
+  doPushY(
+    overlapY, transformA, transformB,
+    staticA, staticB, kinA, kinB,
+    direction
+  ) {
+    const bothDynamic = (!staticA && !kinA) && (!staticB && !kinB);
+    const AisDynamic = (!staticA && !kinA);
+    const BisDynamic = (!staticB && !kinB);
+    if (bothDynamic) {
+      transformA.position.y -= (overlapY / 2) * direction;
+      transformB.position.y += (overlapY / 2) * direction;
+    } else if (AisDynamic && !BisDynamic) {
+      transformA.position.y -= overlapY * direction;
+    } else if (!AisDynamic && BisDynamic) {
+      transformB.position.y += overlapY * direction;
     }
   }
 
