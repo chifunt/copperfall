@@ -1,4 +1,5 @@
 import { SpriteRenderer } from "/js/components/SpriteRenderer.js";
+import { CollisionSystem } from "/js/core/CollisionSystem.js";
 
 export class Engine {
   constructor(canvasId) {
@@ -21,6 +22,8 @@ export class Engine {
     };
     this.debugMode = false;
     this.setupResizeListener();
+
+    this.collisionSystem = new CollisionSystem(this);
 
     // Static reference to the engine instance (singleton)
     Engine.instance = this;
@@ -140,6 +143,8 @@ export class Engine {
       if (this.debugMode) {
         this.renderGrid();
       }
+
+      this.collisionSystem.update(deltaTime);
 
       requestAnimationFrame(gameLoop);
     };

@@ -3,6 +3,8 @@ import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
 import { SquashAndStretch } from "/js/components/SquashAndStretch.js";
 import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
+import { BoxCollider } from "../components/BoxCollider.js";
+import { CircleCollider } from "../components/CircleCollider.js";
 
 export class Player extends GameObject {
   constructor(inputHandler) {
@@ -49,6 +51,31 @@ export class Player extends GameObject {
     // Add HorizontalFlip component (default facing right)
     this.horizontalFlip = new HorizontalFlip(true);
     this.addComponent(this.horizontalFlip);
+
+    const mainCollider = new BoxCollider({
+      width: 35,
+      height: 30,
+      offset: { x: 2, y: 20 },
+      isTrigger: false,
+    });
+    this.addComponent(mainCollider);
+
+    mainCollider.onCollisionEnter = (other) => {
+      console.log("Player main collider collision with:", other.gameObject.name);
+      // e.g. check if the other is a Player
+    };
+
+    const triggerCollider = new CircleCollider({
+      radius: 30,
+      offset: { x: 2.5, y: 19 },
+      isTrigger: true,
+    });
+    this.addComponent(triggerCollider);
+
+    triggerCollider.onTriggerEnter = (other) => {
+      console.log("Player trigger triggered by:", other.gameObject.name);
+      // e.g. if player enters the sight range
+    };
   }
 
   update(deltaTime) {

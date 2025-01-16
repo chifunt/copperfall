@@ -1,6 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
+import { BoxCollider } from "../components/BoxCollider.js";
 
 export class TestThing2 extends GameObject {
     constructor() {
@@ -16,5 +17,13 @@ export class TestThing2 extends GameObject {
         img.onload = () => {
             this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 4 }));
         };
+
+        const mainCollider = new BoxCollider({
+        width: 120,
+        height: 220,
+        offset: { x: 0, y: 0 },
+        isTrigger: false,
+        });
+        this.addComponent(mainCollider);
     }
 }
