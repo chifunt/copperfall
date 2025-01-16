@@ -151,14 +151,10 @@ export class Player extends GameObject {
     const sAndS = this.getComponent(SquashAndStretch);
     if (sAndS) {
       if (isMoving) {
-        sAndS.duration = 0.1;
-        sAndS.squashScale = 0.90;
-        sAndS.stretchScale = 1.1;
+        sAndS.setConfig({duration: 0.1, squashScale: 0.9, stretchScale: 1.1});
       }
       else {
-        sAndS.duration = 2;
-        sAndS.squashScale = 0.95;
-        sAndS.stretchScale = 1.05;
+        sAndS.setConfig({duration: 2, squashScale: 0.95, stretchScale: 1.05});
       }
     }
 

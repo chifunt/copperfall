@@ -24,14 +24,8 @@ export class SquashAndStretch extends Component {
     const easedProgress = this.easingFunction(rawProgress);
 
     // Interpolate between squash and stretch
-    const startFactor = this.targetFactor === this.stretchScale ? this.squashScale : this.stretchScale;
-    const currentFactor = startFactor + (this.targetFactor - startFactor) * easedProgress;
-
-    // Apply asymmetric scaling
-    this.gameObject.transform.scale = {
-      x: this.baseScale.x * currentFactor,
-      y: this.baseScale.y * (2 - currentFactor), // Inverse scaling
-    };
+    const currentFactor = this.interpolate(easedProgress);
+    this.applyScale(currentFactor);
 
     // Handle loop or stop animation
     if (rawProgress >= 1) {
@@ -41,6 +35,62 @@ export class SquashAndStretch extends Component {
       } else {
         this.running = false; // Stop if not looping
       }
+    }
+  }
+
+  // Helper method for interpolation
+  interpolate(progress) {
+    const startFactor = this.targetFactor === this.stretchScale ? this.squashScale : this.stretchScale;
+    return startFactor + (this.targetFactor - startFactor) * progress;
+  }
+
+  // Helper method to apply the scale
+  applyScale(currentFactor) {
+    this.gameObject.transform.scale = {
+      x: this.baseScale.x * currentFactor,
+      y: this.baseScale.y * (2 - currentFactor), // Inverse scaling
+    };
+  }
+
+  setConfig(config = {}) {
+    if (config.duration !== undefined && config.duration !== this.duration) {
+      const oldDuration = this.duration;
+      this.duration = config.duration;
+
+      // Adjust elapsed time proportionally to the new duration
+      this.elapsedTime = (this.elapsedTime / oldDuration) * this.duration;
+    }
+
+    if (config.squashScale !== undefined && config.squashScale !== this.squashScale) {
+      this.squashScale = config.squashScale;
+
+      // Update target factor and reset progress
+      const progress = this.elapsedTime / this.duration;
+      const currentFactor = this.interpolate(progress);
+      this.targetFactor = this.targetFactor === this.stretchScale ? this.squashScale : this.stretchScale;
+
+      // Reapply current scale based on new factor
+      this.applyScale(currentFactor);
+    }
+
+    if (config.stretchScale !== undefined && config.stretchScale !== this.stretchScale) {
+      this.stretchScale = config.stretchScale;
+
+      // Update target factor and reset progress
+      const progress = this.elapsedTime / this.duration;
+      const currentFactor = this.interpolate(progress);
+      this.targetFactor = this.targetFactor === this.stretchScale ? this.squashScale : this.stretchScale;
+
+      // Reapply current scale based on new factor
+      this.applyScale(currentFactor);
+    }
+
+    if (config.easingFunction !== undefined) {
+      this.easingFunction = config.easingFunction;
+    }
+
+    if (config.loop !== undefined) {
+      this.loop = config.loop;
     }
   }
 
