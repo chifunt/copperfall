@@ -1,7 +1,10 @@
 # Copperfall - A Creative Code Lab Diary
 
-## 13/01/2025
+## 2025-01-13
 The first day was the day that I started planning and experiment with how to approach making this game. I already had a way in mind, but unfortunately the method I had in mind has a very similiar process on how I would make a game in a game engine. I tried to make use of the sample code provided by the 2D Browser Game Coding course but it just seems like I couldn't get it to work the way I wanted to.
 
-## 14/01/2025
+## 2025-01-14
 Today I scrapped my experiments from yesterday and devised my own system, a custom game engine of sorts. One that would work exactly the way I need it to work, one that has only the things I need for this game, and nothing more. I then was able to create a nice structured codebase and implemented a player controller, as well as a component for squashing and stretching, complete with a custom pivoting option. Combining the player controller with the squashing and stretching, having acceleration and deceleration, as well as having a null-cancelling movement system made a character that would feel good to run around with. I also initially thought that I would have to stick to a 4:3 aspect ratio with the resolution of 640x480, with pixel art and no smoothing. This was due to the fact that I was inexperienced with using canvas in html and thought of how much of a hassle it would be to scale the canvas with the screen in a way that is non-destructive and makes sense. But I managed to create a virtualized coordinate and width system that is separate from the canvas'. This resulted in me being able to instead use the full resolution of the window that the browser is running at, at the intended aspect ratio, with the canvas scaling as big as it can with that constraint in mind. The virtualized transforms would also be a stepping stone for the way that I can implement a moving camera, which I intend to do later on.
+
+## 2025-01-15
+The day began with me adding more easings for future use (possibly), in particular bounce easings which can make a really good feel, but not sure what to use it on at the moment. Created a modular system where I can essentially flip the any gameobject's sprite on their spriterenderer component. Implemented a debugging mode for the engine where I can see the world grid. Implemented a camera gameobject that follows the player, complete with lerping and lookahead, as well as easing support.
