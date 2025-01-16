@@ -22,7 +22,7 @@ export class Player extends GameObject {
 
     // Easing configuration
     this.easeInDuration = 0.1;    // Time (in seconds) to go from 0 → full speed
-    this.easeOutDuration = 0.2;  // Time (in seconds) to go from full speed → 0
+    this.easeOutDuration = 0.5;  // Time (in seconds) to go from full speed → 0
     this.easingFunctionIn = EasingFunctions.easeOutExpo;
     this.easingFunctionOut = EasingFunctions.easeOutExpo;
 
@@ -54,8 +54,8 @@ export class Player extends GameObject {
     this.addComponent(this.horizontalFlip);
 
     const mainCollider = new BoxCollider({
-      width: 35,
-      height: 30,
+      width: 25,
+      height: 25,
       offset: { x: 2, y: 20 },
       isTrigger: false,
     });
