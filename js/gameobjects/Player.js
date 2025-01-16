@@ -7,6 +7,7 @@ import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { Rigidbody } from "../components/Rigidbody.js";
 import { InputHandler } from "./InputHandler.js";
+import { DropShadow } from "../components/DropShadow.js";
 
 export class Player extends GameObject {
   constructor() {
@@ -34,6 +35,15 @@ export class Player extends GameObject {
 
     // Store the last nonzero direction so we can decelerate along that vector.
     this.lastDirection = { x: 0, y: 0 };
+
+    // Add DropShadow component
+    const dropShadow = new DropShadow({
+      offset: { x: 0, y: 5 },
+      width: 1500,
+      height: 600,
+      color: "#00002288",
+    });
+    this.addComponent(dropShadow);
 
     // Add a SpriteRenderer component
     const img = new Image();
