@@ -1,13 +1,36 @@
+// /js/gameobjects/InputHandler.js
 import { GameObject } from "../core/GameObject.js";
 
 export class InputHandler extends GameObject {
-    constructor() {
+    /**
+     * @param {Object} config
+     * @param {Object} config.keyBindings - An object mapping directions to arrays of keys.
+     * Example:
+     * {
+     *   up: ["w", "arrowup"],
+     *   down: ["s", "arrowdown"],
+     *   left: ["a", "arrowleft"],
+     *   right: ["d", "arrowright"]
+     * }
+     */
+    constructor(config = {}) {
         super("InputHandler");
+
+        // Define default key bindings if not provided
+        this.keyBindings = config.keyBindings || {
+            up: ["w", "arrowup"],
+            down: ["s", "arrowdown"],
+            left: ["a", "arrowleft"],
+            right: ["d", "arrowright"],
+        };
+
+        // Reverse mapping: key -> axis and value
+        this.keyMap = this.generateKeyMap(this.keyBindings);
 
         // Direction tracking with active keys
         this.activeKeys = {
-            x: [], // Keys for horizontal movement (e.g., "a" and "d")
-            y: [], // Keys for vertical movement (e.g., "w" and "s")
+            x: [], // Keys for horizontal movement
+            y: [], // Keys for vertical movement
         };
         this.direction = { x: 0, y: 0 }; // Final normalized direction
 
@@ -16,46 +39,49 @@ export class InputHandler extends GameObject {
         window.addEventListener("keyup", (e) => this.handleKeyUp(e));
     }
 
+    /**
+     * Generates a reverse mapping from key to movement axis and value.
+     * @param {Object} keyBindings
+     * @returns {Object} keyMap
+     */
+    generateKeyMap(keyBindings) {
+        const map = {};
+        for (const direction in keyBindings) {
+            const keys = keyBindings[direction];
+            keys.forEach(key => {
+                const lowerKey = key.toLowerCase();
+                if (direction === "up") {
+                    map[lowerKey] = { axis: "y", value: 1 };
+                } else if (direction === "down") {
+                    map[lowerKey] = { axis: "y", value: -1 };
+                } else if (direction === "left") {
+                    map[lowerKey] = { axis: "x", value: -1 };
+                } else if (direction === "right") {
+                    map[lowerKey] = { axis: "x", value: 1 };
+                }
+            });
+        }
+        return map;
+    }
+
     handleKeyDown(event) {
         const key = event.key.toLowerCase();
 
-        switch (key) {
-            case "w": // Move up
-                this.addKey("y", 1);
-                break;
-            case "s": // Move down
-                this.addKey("y", -1);
-                break;
-            case "d": // Move right
-                this.addKey("x", 1);
-                break;
-            case "a": // Move left
-                this.addKey("x", -1);
-                break;
+        if (this.keyMap[key]) {
+            const { axis, value } = this.keyMap[key];
+            this.addKey(axis, value);
+            this.updateDirection();
         }
-
-        this.updateDirection();
     }
 
     handleKeyUp(event) {
         const key = event.key.toLowerCase();
 
-        switch (key) {
-            case "w":
-                this.removeKey("y", 1);
-                break;
-            case "s":
-                this.removeKey("y", -1);
-                break;
-            case "d":
-                this.removeKey("x", 1);
-                break;
-            case "a":
-                this.removeKey("x", -1);
-                break;
+        if (this.keyMap[key]) {
+            const { axis, value } = this.keyMap[key];
+            this.removeKey(axis, value);
+            this.updateDirection();
         }
-
-        this.updateDirection();
     }
 
     addKey(axis, value) {
