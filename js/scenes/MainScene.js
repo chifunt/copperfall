@@ -13,7 +13,10 @@ export class MainScene extends Scene {
     const inputHandler = new InputHandler();
     const player = new Player(inputHandler);
 
-    const testThing = new TestThing2();
+    new TestThing2(250, 100);
+    new TestThing2(250, -50);
+    new TestThing2(-250, 100);
+    new TestThing2(-250, -100);
 
     const cameraObj = new CameraObject(player, {
       smoothness: 0.175,

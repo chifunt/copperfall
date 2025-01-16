@@ -4,12 +4,12 @@ import { EasingFunctions } from "../utils/easing.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 
 export class TestThing2 extends GameObject {
-    constructor() {
+    constructor(posx = 0, posy = 0, width = 100, height = 100) {
         super("TestThing");
 
         // Set initial position and scale
-        this.transform.position = { x: 250, y: 100 };
-        this.transform.scale = { x: 100, y: 200 };
+        this.transform.position = { x: posx, y: posy };
+        this.transform.scale = { x: width, y: height };
 
         // Add SpriteRenderer
         const img = new Image();
