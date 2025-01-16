@@ -209,6 +209,7 @@ export class CollisionSystem {
       }
     }
   }
+
   separateAxisX(overlapX, transformA, transformB, staticA, staticB, kinA, kinB) {
     // We figure out which side is left vs right by comparing centers
     const dx = (transformB.position.x - transformA.position.x);
@@ -223,6 +224,7 @@ export class CollisionSystem {
       this.doPushX(overlapX, transformA, transformB, staticA, staticB, kinA, kinB, -1);
     }
   }
+
   doPushX(
     overlapX, transformA, transformB,
     staticA, staticB, kinA, kinB,
@@ -247,6 +249,7 @@ export class CollisionSystem {
     }
     // else: both static or kinematic => no push
   }
+
   separateAxisY(overlapY, transformA, transformB, staticA, staticB, kinA, kinB) {
     const dy = (transformB.position.y - transformA.position.y);
     if (dy > 0) {
@@ -257,6 +260,7 @@ export class CollisionSystem {
       this.doPushY(overlapY, transformA, transformB, staticA, staticB, kinA, kinB, -1);
     }
   }
+
   doPushY(
     overlapY, transformA, transformB,
     staticA, staticB, kinA, kinB,
