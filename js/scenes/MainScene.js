@@ -16,7 +16,7 @@ export class MainScene extends Scene {
     new TestThing2(250, 100);
     new TestThing2(250, -50);
     new TestThing2(-250, 100);
-    new TestThing2(-250, -100);
+    new TestThing2(-250, -100, 100, 50);
 
     const cameraObj = new CameraObject(player, {
       smoothness: 0.175,

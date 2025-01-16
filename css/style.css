@@ -51,4 +51,5 @@ canvas {
   max-height: 100vh;
   object-fit: contain;
   image-rendering: auto;
+  /* cursor: none; */
 }
