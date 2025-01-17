@@ -64,8 +64,8 @@ export class InputHandler extends GameObject {
         // Define action key mappings
         this.actionKeyMap = {
             h: Actions.HELP,
-            esc: [Actions.BACK, Actions.PAUSE],
-            space: Actions.DASH,
+            Escape: [Actions.BACK, Actions.PAUSE],
+            " ": Actions.DASH,
             e: Actions.INTERACT,
         };
 
@@ -82,8 +82,8 @@ export class InputHandler extends GameObject {
 
         // Define controller axis mappings
         this.controllerAxisActionMap = {
-            2: Actions.DASH, // LT
-            5: Actions.DASH, // RT
+            2: Actions.DASH,
+            5: Actions.DASH,
         };
 
         // Threshold for axis actions
@@ -155,7 +155,7 @@ export class InputHandler extends GameObject {
      */
     emit(action, collector) {
         if (this.debug) {
-            console.log(`Action Emitted: ${action} by ${collector instanceof GameObject ? collector.name : 'Controller'}`);
+            console.log(`Action Emitted: ${action} by ${collector instanceof GameObject ? collector.name : 'Something'}`);
         }
         if (this.actionCallbacks[action]) {
             this.actionCallbacks[action].forEach(callback => callback(collector));
@@ -167,7 +167,8 @@ export class InputHandler extends GameObject {
      * @param {KeyboardEvent} event
      */
     handleKeyDown(event) {
-        const key = event.key.toLowerCase();
+        // const key = event.key.toLowerCase();
+        const key = event.key;
 
         // Handle movement keys
         if (this.keyMap[key]) {
