@@ -175,7 +175,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the interact action.
      */
     interact(collector) {
-        console.log(`${this.name} interacted with ${collector.name}!`);
+        // console.log(`${this.name} interacted with ${collector.name}!`);
         // Implement interaction logic, e.g., open a door, pick up an item
     }
 
@@ -184,7 +184,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the pause action.
      */
     pause(collector) {
-        console.log(`${this.name} paused the game!`);
+        // console.log(`${this.name} paused the game!`);
         // Implement pause logic, e.g., show pause menu
     }
 
