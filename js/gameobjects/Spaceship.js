@@ -18,7 +18,7 @@ export class Spaceship extends GameObject {
     const img = new Image();
     img.src = "/assets/images/test.png";
     img.onload = () => {
-      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 6 }));
+      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 5 }));
     };
 
     // Add SquashAndStretch component
@@ -33,7 +33,7 @@ export class Spaceship extends GameObject {
 
     const mainCollider = new BoxCollider({
       width: 120,
-      height: 160,
+      height: 180,
       offset: { x: 0, y: 80 },
       isTrigger: false,
     });
