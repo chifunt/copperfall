@@ -9,6 +9,7 @@ import { Rigidbody } from "../components/Rigidbody.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { Actions } from "../utils/Actions.js";
+import { ScreenShake } from "/js/components/ScreenShake.js"; // Import ScreenShake
 
 export class Player extends GameObject {
     constructor() {
@@ -19,7 +20,7 @@ export class Player extends GameObject {
         this.transform.scale = { x: 0.03, y: 0.03 };
         this.transform.rotation = 10;
 
-        // Movement
+        // Reference to InputHandler
         this.inputHandler = InputHandler.getInstance();
         this.speed = 350; // Max speed in units/second
 
@@ -165,6 +166,17 @@ export class Player extends GameObject {
 
         this.inputHandler.triggerRumble(200, 200, 0.5, 0.2);
 
+        // Trigger screen shake
+        if (ScreenShake.instance) {
+            ScreenShake.instance.trigger(
+                0.2,   // duration in seconds
+                0,  // blendInTime in seconds
+                0.1,  // blendOutTime in seconds
+                2,    // amplitude
+                15     // frequency
+            );
+        }
+
         if (this.debugLogs) {
             console.log(`Dash initiated in direction (${this.dashDirection.x.toFixed(2)}, ${this.dashDirection.y.toFixed(2)})`);
         }
@@ -252,6 +264,17 @@ export class Player extends GameObject {
                         easingFunction: EasingFunctions.easeInOutQuad,
                         loop: true,    // Re-enable looping
                     });
+                }
+
+                // Optionally, trigger a subtle screen shake upon dash completion
+                if (ScreenShake.instance) {
+                    ScreenShake.instance.trigger(
+                        0.1,  // duration in seconds
+                        0.02, // blendInTime in seconds
+                        0.02, // blendOutTime in seconds
+                        5,    // amplitude
+                        20    // frequency
+                    );
                 }
             }
 
