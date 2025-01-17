@@ -31,7 +31,15 @@ export class MainScene extends Scene {
     new Pickup({x: 50, y: -200});
     new Pickup({x: 0, y: -200});
     new Pickup({x: -50, y: -200});
+    new Pickup({x: 100, y: 400});
+    new Pickup({x: 50, y: 400});
+    new Pickup({x: 0, y: 400});
+    new Pickup({x: -50, y: 400});
     new Pickup({x: 250, y: 25});
+    new Pickup({x: 300, y: 25});
+    new Pickup({x: 350, y: 25});
     new Pickup({x: -250, y: -40});
+    new Pickup({x: -300, y: -40});
+    new Pickup({x: -350, y: -40});
   }
 }
