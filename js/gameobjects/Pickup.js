@@ -35,6 +35,7 @@ export class Pickup extends GameObject {
       // Check if the other collider belongs to the player
       if (other.gameObject.name === "Player") {
         pickupable.onPickup(other.gameObject); // Call the onPickup method
+        other.gameObject.increaseCopper(10);
       }
     };
   }
