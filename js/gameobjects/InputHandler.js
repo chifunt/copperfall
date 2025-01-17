@@ -1,5 +1,5 @@
-// /js/gameobjects/InputHandler.js
 import { GameObject } from "../core/GameObject.js";
+import { Actions } from "../utils/Actions.js";
 
 export class InputHandler extends GameObject {
     static instance = null;
@@ -54,6 +54,44 @@ export class InputHandler extends GameObject {
         this.gamepads = {}; // Store connected gamepads
         this.deadzone = 0.2; // Deadzone for analog sticks
 
+        // Action callbacks
+        this.actionCallbacks = {}; // { actionName: [callback, ...] }
+
+        // Previous states for gamepad buttons and axes
+        this.previousGamepadButtonStates = {}; // { gamepadIndex: [bool, ...] }
+        this.previousGamepadAxisStates = {}; // { gamepadIndex: { axisIndex: bool, ... } }
+
+        // Define action key mappings
+        this.actionKeyMap = {
+            h: Actions.HELP,
+            esc: [Actions.BACK, Actions.PAUSE],
+            space: Actions.DASH,
+            e: Actions.INTERACT,
+        };
+
+        // Define controller button mappings
+        this.controllerButtonActionMap = {
+            0: Actions.INTERACT, // A
+            1: Actions.BACK,     // B
+            2: Actions.DASH,     // X
+            3: Actions.HELP,     // Y
+            7: Actions.DASH,     // LB
+            6: Actions.DASH,     // RB
+            9: Actions.PAUSE,    // Start/Menu
+        };
+
+        // Define controller axis mappings
+        this.controllerAxisActionMap = {
+            2: Actions.DASH, // LT
+            5: Actions.DASH, // RT
+        };
+
+        // Threshold for axis actions
+        this.AXIS_THRESHOLD = 0.5;
+
+        // Debug flag for logging actions
+        this.debug = true; // Set to true to enable action logs
+
         // Attach event listeners
         window.addEventListener("keydown", (e) => this.handleKeyDown(e));
         window.addEventListener("keyup", (e) => this.handleKeyUp(e));
@@ -98,18 +136,54 @@ export class InputHandler extends GameObject {
     }
 
     /**
+     * Registers a callback for a specific action.
+     * @param {string} action - The action to listen for.
+     * @param {Function} callback - The callback to execute when the action is triggered.
+     */
+    on(action, callback) {
+        if (!this.actionCallbacks[action]) {
+            this.actionCallbacks[action] = [];
+        }
+        this.actionCallbacks[action].push(callback);
+    }
+
+    /**
+     * Emits an action, invoking all registered callbacks.
+     * Also logs the action if debug mode is enabled.
+     * @param {string} action - The action to emit.
+     * @param {GameObject|Gamepad} collector - The GameObject or Gamepad that triggered the action.
+     */
+    emit(action, collector) {
+        if (this.debug) {
+            console.log(`Action Emitted: ${action} by ${collector instanceof GameObject ? collector.name : 'Controller'}`);
+        }
+        if (this.actionCallbacks[action]) {
+            this.actionCallbacks[action].forEach(callback => callback(collector));
+        }
+    }
+
+    /**
      * Handles keydown events for keyboard input.
      * @param {KeyboardEvent} event
      */
     handleKeyDown(event) {
         const key = event.key.toLowerCase();
 
+        // Handle movement keys
         if (this.keyMap[key]) {
             event.preventDefault(); // Prevent default behavior for mapped keys
             const { axis, value } = this.keyMap[key];
             this.addKey(axis, value);
             this.updateKeyboardDirection();
             this.usingController = false; // Switch to keyboard input
+        }
+
+        // Handle action keys
+        if (this.actionKeyMap[key]) {
+            event.preventDefault(); // Prevent default behavior for mapped keys
+            const actions = Array.isArray(this.actionKeyMap[key]) ? this.actionKeyMap[key] : [this.actionKeyMap[key]];
+            actions.forEach(action => this.emit(action, this.gameObject)); // 'collector' is the InputHandler's GameObject
+            // Note: For toggle actions like pause, you might want to handle state here
         }
     }
 
@@ -120,6 +194,7 @@ export class InputHandler extends GameObject {
     handleKeyUp(event) {
         const key = event.key.toLowerCase();
 
+        // Handle movement keys
         if (this.keyMap[key]) {
             event.preventDefault(); // Prevent default behavior for mapped keys
             const { axis, value } = this.keyMap[key];
@@ -127,6 +202,9 @@ export class InputHandler extends GameObject {
             this.updateKeyboardDirection();
             this.usingController = false; // Switch to keyboard input
         }
+
+        // Handle action keys (if actions need to respond to key releases)
+        // For now, actions are triggered on keydown only
     }
 
     /**
@@ -187,6 +265,13 @@ export class InputHandler extends GameObject {
         const gamepad = event.gamepad;
         this.gamepads[gamepad.index] = gamepad;
         console.log(`Gamepad connected: ${gamepad.id}`);
+
+        // Initialize previous button and axis states
+        this.previousGamepadButtonStates[gamepad.index] = gamepad.buttons.map(b => b.pressed);
+        this.previousGamepadAxisStates[gamepad.index] = {};
+        for (const axisIndex in this.controllerAxisActionMap) {
+            this.previousGamepadAxisStates[gamepad.index][axisIndex] = false;
+        }
     }
 
     /**
@@ -196,6 +281,8 @@ export class InputHandler extends GameObject {
     handleGamepadDisconnected(event) {
         const gamepad = event.gamepad;
         delete this.gamepads[gamepad.index];
+        delete this.previousGamepadButtonStates[gamepad.index];
+        delete this.previousGamepadAxisStates[gamepad.index];
         console.log(`Gamepad disconnected: ${gamepad.id}`);
     }
 
@@ -212,7 +299,59 @@ export class InputHandler extends GameObject {
 
         for (let gp of connectedGamepads) {
             if (gp) {
-                // Process Left Stick (axes[0], axes[1])
+                // Update gamepad reference
+                this.gamepads[gp.index] = gp;
+
+                // Initialize previous states if not present
+                if (!this.previousGamepadButtonStates[gp.index]) {
+                    this.previousGamepadButtonStates[gp.index] = gp.buttons.map(b => b.pressed);
+                }
+                if (!this.previousGamepadAxisStates[gp.index]) {
+                    this.previousGamepadAxisStates[gp.index] = {};
+                    for (const axisIndex in this.controllerAxisActionMap) {
+                        this.previousGamepadAxisStates[gp.index][axisIndex] = false;
+                    }
+                }
+
+                // Handle button actions
+                for (const buttonIndex in this.controllerButtonActionMap) {
+                    const action = this.controllerButtonActionMap[buttonIndex];
+                    const pressed = gp.buttons[buttonIndex].pressed;
+                    const wasPressed = this.previousGamepadButtonStates[gp.index][buttonIndex];
+
+                    if (pressed && !wasPressed) {
+                        // Button was just pressed
+                        this.emit(action, gp); // 'collector' is the Gamepad object
+                    }
+
+                    // Update previous button state
+                    this.previousGamepadButtonStates[gp.index][buttonIndex] = pressed;
+                }
+
+                // Handle axis actions
+                for (const axisIndex in this.controllerAxisActionMap) {
+                    const action = this.controllerAxisActionMap[axisIndex];
+                    const axisValue = gp.axes[axisIndex];
+                    const isPressed = axisValue > this.AXIS_THRESHOLD;
+                    const wasPressed = this.previousGamepadAxisStates[gp.index][axisIndex];
+
+                    if (isPressed && !wasPressed) {
+                        // Axis just exceeded the threshold
+                        this.emit(action, gp); // 'collector' is the Gamepad object
+                    }
+
+                    // Update previous axis state
+                    this.previousGamepadAxisStates[gp.index][axisIndex] = isPressed;
+
+                    if (isPressed) {
+                        anyGamepadInput = true;
+                        // For dash, direction might not matter, but if needed, modify here
+                        // Example: this.gamepadDirection.x += some_value;
+                        // For now, we leave it as 0
+                    }
+                }
+
+                // Process Left Stick (axes[0], axes[1]) for movement
                 let lsX = gp.axes[0];
                 let lsY = gp.axes[1];
 
@@ -288,7 +427,7 @@ export class InputHandler extends GameObject {
     }
 
     /**
-     * Override the update method to include gamepad polling.
+     * Override the update method to include gamepad polling and direction updating.
      * @param {number} deltaTime
      */
     update(deltaTime) {
@@ -305,5 +444,19 @@ export class InputHandler extends GameObject {
         }
 
         // No need to normalize here, as it's done in updateKeyboardDirection and pollGamepads
+    }
+
+    /**
+     * Enables debug logging for input actions.
+     */
+    enableDebug() {
+        this.debug = true;
+    }
+
+    /**
+     * Disables debug logging for input actions.
+     */
+    disableDebug() {
+        this.debug = false;
     }
 }
