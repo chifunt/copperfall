@@ -154,10 +154,14 @@ canvas {
 .health {
   width: 2.5vw;
   height: 2.5vw;
-  background-color: red;
+  background-color: var(--base-color);
   border-radius: 50%;
   box-shadow: 0 0 0.5vw black;
   border: solid .2vw var(--text-color);
+}
+
+.health-active {
+  background-color: red;
 }
 
 #copper-container {
