@@ -169,11 +169,11 @@ export class Player extends GameObject {
         // Trigger screen shake
         if (ScreenShake.instance) {
             ScreenShake.instance.trigger(
-                0.2,   // duration in seconds
+                0.3,   // duration in seconds
                 0,  // blendInTime in seconds
-                0.1,  // blendOutTime in seconds
-                2,    // amplitude
-                15     // frequency
+                0.2,  // blendOutTime in seconds
+                4,    // amplitude
+                20     // frequency
             );
         }
 
@@ -266,16 +266,16 @@ export class Player extends GameObject {
                     });
                 }
 
-                // Optionally, trigger a subtle screen shake upon dash completion
-                if (ScreenShake.instance) {
-                    ScreenShake.instance.trigger(
-                        0.1,  // duration in seconds
-                        0.02, // blendInTime in seconds
-                        0.02, // blendOutTime in seconds
-                        5,    // amplitude
-                        20    // frequency
-                    );
-                }
+                // // Optionally, trigger a subtle screen shake upon dash completion
+                // if (ScreenShake.instance) {
+                //     ScreenShake.instance.trigger(
+                //         0.1,  // duration in seconds
+                //         0.02, // blendInTime in seconds
+                //         0.02, // blendOutTime in seconds
+                //         5,    // amplitude
+                //         20    // frequency
+                //     );
+                // }
             }
 
             // Apply easing function to progress (easeOutQuad for smooth deceleration)
