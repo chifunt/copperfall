@@ -9,7 +9,8 @@ import { Rigidbody } from "../components/Rigidbody.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { Actions } from "../utils/Actions.js";
-import { ScreenShake } from "/js/components/ScreenShake.js"; // Import ScreenShake
+import { ScreenShake } from "/js/components/ScreenShake.js";
+import { HUD } from "/js/components/HUD.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -40,15 +41,33 @@ export class Player extends GameObject {
 
         // Dash-related variables
         this.isDashing = false;
-        this.dashDuration = 0.2;          // 200ms dash
+        this.dashDuration = 0.25;          // 200ms dash
         this.dashElapsedTime = 0;
         this.dashSpeed = 1200;             // Dash speed
         this.dashDirection = { x: 1, y: 0 }; // Default dash direction (facing right)
-        this.debugLogs = false;           // Debug logging flag
+        this.debugLogs = true;           // Debug logging flag
 
         // Optional: Dash cooldown (prevent spamming)
-        this.dashCooldown = 0.4;          // 300ms cooldown
+        this.dashCooldown = 0.4;          // 400ms cooldown
         this.dashCooldownTimer = 0;
+
+        // Health Management
+        this.maxHealth = 5;
+        this.currentHealth = 5;
+        this.isInvulnerable = false;
+        this.invulnerabilityTimer = 0; // Time left in invulnerability
+
+        // Resource Management (Copper)
+        this.copper = 0;
+
+        // Dash Charge Management
+        this.maxDashCharges = 3;
+        this.currentDashCharges = 3;
+        this.dashChargeRechargeDuration = 2; // seconds
+        this.dashRechargeTimer = 0;
+
+        const hud = new HUD(this);
+        this.addComponent(hud);
 
         // Add DropShadow component
         const dropShadow = new DropShadow({
@@ -97,6 +116,9 @@ export class Player extends GameObject {
         mainCollider.onCollisionEnter = (other) => {
             console.log("Player main collider collision with:", other.gameObject.name);
             // e.g., check if the other is an Enemy
+            if (other.gameObject.name === "Enemy") {
+                this.takeDamage();
+            }
         };
 
         // Add CircleCollider (trigger)
@@ -110,6 +132,11 @@ export class Player extends GameObject {
         triggerCollider.onTriggerEnter = (other) => {
             console.log("Player trigger triggered by:", other.gameObject.name);
             // e.g., if player enters the sight range of an enemy
+            if (other.gameObject.name === "CopperCoin") {
+                this.increaseCopper(1);
+                // Optionally, destroy the copper coin GameObject
+                other.destroy();
+            }
         };
 
         // Add Rigidbody component (dynamic)
@@ -125,7 +152,110 @@ export class Player extends GameObject {
     }
 
     /**
-     * Initiates the dash action.
+     * Reduces the player's health by 1.
+     * Initiates invulnerability for 2 seconds after taking damage.
+     */
+    takeDamage() {
+        if (this.isInvulnerable) {
+            if (this.debugLogs) {
+                console.log("Player is invulnerable and cannot take damage.");
+            }
+            return;
+        }
+
+        this.currentHealth -= 1;
+        if (this.debugLogs) {
+            console.log(`Player took damage. Current Health: ${this.currentHealth}`);
+        }
+
+        // Trigger screen shake for damage
+        if (ScreenShake.instance) {
+            ScreenShake.instance.trigger(
+                0.3,   // duration in seconds
+                0.05,  // blendInTime in seconds
+                0.05,  // blendOutTime in seconds
+                8,     // amplitude
+                20     // frequency
+            );
+        }
+
+        // Trigger controller rumble for damage
+        this.inputHandler.triggerRumble(300, 1.0, 1.0); // 300ms duration, strong 1.0, weak 1.0
+
+        // Set invulnerability
+        this.isInvulnerable = true;
+        this.invulnerabilityTimer = 2; // 2 seconds of invulnerability
+
+        // Check for death
+        if (this.currentHealth <= 0) {
+            this.die();
+        }
+    }
+
+    /**
+     * Handles the player's death.
+     * For now, it simply logs a message.
+     */
+    die() {
+        console.log("Player has died!");
+        // Implement additional death logic here (e.g., respawn, game over screen)
+    }
+
+    /**
+     * Updates the invulnerability timer.
+     * @param {number} deltaTime - Time elapsed since the last frame.
+     */
+    updateInvulnerability(deltaTime) {
+        if (this.isInvulnerable) {
+            this.invulnerabilityTimer -= deltaTime;
+            if (this.invulnerabilityTimer <= 0) {
+                this.isInvulnerable = false;
+                this.invulnerabilityTimer = 0;
+                if (this.debugLogs) {
+                    console.log("Player is no longer invulnerable.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Increases the player's copper by a specified amount.
+     * @param {number} amount - The amount of copper to add.
+     */
+    increaseCopper(amount) {
+        if (amount < 0) {
+            console.warn("increaseCopper called with negative amount. Use decreaseCopper instead.");
+            return;
+        }
+
+        this.copper += amount;
+        console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
+    }
+
+    /**
+     * Decreases the player's copper by a specified amount.
+     * @param {number} amount - The amount of copper to subtract.
+     */
+    decreaseCopper(amount) {
+        if (amount < 0) {
+            console.warn("decreaseCopper called with negative amount. Use increaseCopper instead.");
+            return;
+        }
+
+        if (amount > this.copper) {
+            console.warn("Attempted to decrease copper below zero.");
+            this.copper = 0;
+        } else {
+            this.copper -= amount;
+        }
+
+        console.log(`Player spent ${amount} copper. Remaining Copper: ${this.copper}`);
+    }
+
+
+    /**
+     * Initiates the dash action if possible.
+     * Consumes a dash charge and triggers related effects.
      * @param {Gamepad|GameObject} collector - The source of the dash action.
      */
     startDash(collector) {
@@ -135,6 +265,19 @@ export class Player extends GameObject {
                 console.log("Dash attempted while already dashing or cooldown active.");
             }
             return;
+        }
+
+        if (this.currentDashCharges <= 0) {
+            if (this.debugLogs) {
+                console.log("Dash attempted with no available dash charges.");
+            }
+            return;
+        }
+
+        // Consume a single dash charge
+        this.currentDashCharges -= 1;
+        if (this.debugLogs) {
+            console.log(`Dash charge consumed. Remaining Dash Charges: ${this.currentDashCharges}`);
         }
 
         // Determine dash direction based on last movement or default
@@ -153,6 +296,14 @@ export class Player extends GameObject {
         // Start dash cooldown
         this.dashCooldownTimer = this.dashCooldown;
 
+        // Start the recharge timer if not at max charges and timer isn't already running
+        if (this.currentDashCharges < this.maxDashCharges && this.dashRechargeTimer <= 0) {
+            this.dashRechargeTimer = this.dashChargeRechargeDuration;
+            if (this.debugLogs) {
+                console.log(`Dash recharge timer started: ${this.dashRechargeTimer} seconds.`);
+            }
+        }
+
         // Modify SquashAndStretch for dash effect
         if (this.sAndS) {
             this.sAndS.setConfig({
@@ -164,15 +315,16 @@ export class Player extends GameObject {
             });
         }
 
-        this.inputHandler.triggerRumble(200, 200, 0.5, 0.2);
+        // Trigger controller rumble
+        this.inputHandler.triggerRumble(200, 1.0, 0.5); // 200ms duration, strong 1.0, weak 0.5
 
         // Trigger screen shake
         if (ScreenShake.instance) {
             ScreenShake.instance.trigger(
                 0.3,   // duration in seconds
-                0,  // blendInTime in seconds
-                0.2,  // blendOutTime in seconds
-                4,    // amplitude
+                0,     // blendInTime in seconds
+                0.2,   // blendOutTime in seconds
+                4,     // amplitude
                 20     // frequency
             );
         }
@@ -182,8 +334,33 @@ export class Player extends GameObject {
         }
     }
 
+    handleDashRecharge(deltaTime) {
+        // Use a single recharge timer
+        if (this.dashRechargeTimer > 0) {
+            this.dashRechargeTimer -= deltaTime;
+
+            if (this.dashRechargeTimer <= 0) {
+                this.dashRechargeTimer = 0;
+                if (this.currentDashCharges < this.maxDashCharges) {
+                    this.currentDashCharges += 1;
+                    if (this.debugLogs) {
+                        console.log(`Dash charge recharged. Current Dash Charges: ${this.currentDashCharges}`);
+                    }
+
+                    // Restart the timer if still below max charges
+                    if (this.currentDashCharges < this.maxDashCharges) {
+                        this.dashRechargeTimer = this.dashChargeRechargeDuration;
+                        if (this.debugLogs) {
+                            console.log(`Dash recharge timer restarted: ${this.dashRechargeTimer} seconds.`);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
-     * Handles the interact action.
+     * Handles the player's interaction.
      * @param {Gamepad|GameObject} collector - The source of the interact action.
      */
     interact(collector) {
@@ -234,14 +411,24 @@ export class Player extends GameObject {
         console.log("Player debug logs disabled.");
     }
 
+    /**
+     * The main update loop called every frame.
+     * @param {number} deltaTime - Time elapsed since the last frame.
+     */
     update(deltaTime) {
         super.update(deltaTime);
+
+        // Handle invulnerability timer
+        this.updateInvulnerability(deltaTime);
 
         // Update dash cooldown timer
         if (this.dashCooldownTimer > 0) {
             this.dashCooldownTimer -= deltaTime;
             if (this.dashCooldownTimer < 0) this.dashCooldownTimer = 0;
         }
+
+        // Handle dash charge recharge
+        this.handleDashRecharge(deltaTime);
 
         if (this.isDashing) {
             // Update dash timer
@@ -266,16 +453,19 @@ export class Player extends GameObject {
                     });
                 }
 
-                // // Optionally, trigger a subtle screen shake upon dash completion
-                // if (ScreenShake.instance) {
-                //     ScreenShake.instance.trigger(
-                //         0.1,  // duration in seconds
-                //         0.02, // blendInTime in seconds
-                //         0.02, // blendOutTime in seconds
-                //         5,    // amplitude
-                //         20    // frequency
-                //     );
-                // }
+                // Optionally, trigger a subtle screen shake upon dash completion
+                // Uncomment if desired
+                /*
+                if (ScreenShake.instance) {
+                    ScreenShake.instance.trigger(
+                        0.1,  // duration in seconds
+                        0.02, // blendInTime in seconds
+                        0.02, // blendOutTime in seconds
+                        5,    // amplitude
+                        20    // frequency
+                    );
+                }
+                */
             }
 
             // Apply easing function to progress (easeOutQuad for smooth deceleration)
