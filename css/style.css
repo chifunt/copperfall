@@ -240,14 +240,14 @@ canvas {
   position: absolute;
   width: 100%;
   height: 100%;
-  box-shadow: 0 0 200px rgba(0, 0, 0, 1) inset;
+  box-shadow: 0 0 5vw rgba(0, 0, 0, 1) inset;
   /* background: radial-gradient(circle, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%); */
   pointer-events: none;
 }
 
 
 #hud-container {
-  display: none;
+  /* display: none; */
 }
 
 #menu-container {
