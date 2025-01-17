@@ -46,7 +46,7 @@ export class Player extends GameObject {
         this.debugLogs = false;           // Debug logging flag
 
         // Optional: Dash cooldown (prevent spamming)
-        this.dashCooldown = 0.3;          // 300ms cooldown
+        this.dashCooldown = 0.4;          // 300ms cooldown
         this.dashCooldownTimer = 0;
 
         // Add DropShadow component
@@ -162,6 +162,8 @@ export class Player extends GameObject {
                 loop: false,               // No looping during dash
             });
         }
+
+        this.inputHandler.triggerRumble(200, 200, 0.5, 0.2);
 
         if (this.debugLogs) {
             console.log(`Dash initiated in direction (${this.dashDirection.x.toFixed(2)}, ${this.dashDirection.y.toFixed(2)})`);

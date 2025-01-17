@@ -460,4 +460,38 @@ export class InputHandler extends GameObject {
     disableDebug() {
         this.debug = false;
     }
+
+    /**
+     * Triggers a rumble (vibration) effect on specified gamepads.
+     * @param {number[]} gamepadIndices - Array of gamepad indices to rumble. If empty, rumble all.
+     * @param {number} duration - Duration of the vibration in milliseconds.
+     * @param {number} strongMagnitude - Strength of the strong vibration (0.0 to 1.0).
+     * @param {number} weakMagnitude - Strength of the weak vibration (0.0 to 1.0).
+     */
+    triggerRumble(gamepadIndices = [], duration = 200, strongMagnitude = 0.5, weakMagnitude = 0.5) {
+        const targets = gamepadIndices.length > 0 ? gamepadIndices : Object.keys(this.gamepads);
+
+        targets.forEach(index => {
+            const gamepad = this.gamepads[index];
+            if (gamepad && gamepad.vibrationActuator) {
+                try {
+                    gamepad.vibrationActuator.playEffect("dual-rumble", {
+                        startDelay: 0,
+                        duration: duration,
+                        strongMagnitude: strongMagnitude,
+                        weakMagnitude: weakMagnitude
+                    });
+                    if (this.debug) {
+                        console.log(`Rumble triggered on gamepad ${gamepad.id}`);
+                    }
+                } catch (error) {
+                    console.error(`Failed to trigger rumble on gamepad ${gamepad.id}:`, error);
+                }
+            } else {
+                if (this.debug) {
+                    console.log(`Gamepad ${gamepad.id} does not support vibration or is not connected.`);
+                }
+            }
+        });
+    }
 }
