@@ -1,7 +1,9 @@
+// /js/gameobjects/InputHandler.js
 import { GameObject } from "../core/GameObject.js";
 
 export class InputHandler extends GameObject {
     static instance = null;
+
     /**
      * @param {Object} config
      * @param {Object} config.keyBindings - An object mapping directions to arrays of keys.
@@ -41,6 +43,13 @@ export class InputHandler extends GameObject {
         };
         this.direction = { x: 0, y: 0 }; // Final normalized direction
 
+        // Separate direction vectors for keyboard and gamepad
+        this.keyboardDirection = { x: 0, y: 0 };
+        this.gamepadDirection = { x: 0, y: 0 };
+
+        // Flag to determine which input source to use
+        this.usingController = false;
+
         // Gamepad handling
         this.gamepads = {}; // Store connected gamepads
         this.deadzone = 0.2; // Deadzone for analog sticks
@@ -52,6 +61,10 @@ export class InputHandler extends GameObject {
         window.addEventListener("gamepaddisconnected", (e) => this.handleGamepadDisconnected(e));
     }
 
+    /**
+     * Retrieves the singleton instance of InputHandler.
+     * @returns {InputHandler}
+     */
     static getInstance() {
         if (!InputHandler.instance) {
             InputHandler.instance = new InputHandler();
@@ -84,6 +97,10 @@ export class InputHandler extends GameObject {
         return map;
     }
 
+    /**
+     * Handles keydown events for keyboard input.
+     * @param {KeyboardEvent} event
+     */
     handleKeyDown(event) {
         const key = event.key.toLowerCase();
 
@@ -91,10 +108,15 @@ export class InputHandler extends GameObject {
             event.preventDefault(); // Prevent default behavior for mapped keys
             const { axis, value } = this.keyMap[key];
             this.addKey(axis, value);
-            this.updateDirection();
+            this.updateKeyboardDirection();
+            this.usingController = false; // Switch to keyboard input
         }
     }
 
+    /**
+     * Handles keyup events for keyboard input.
+     * @param {KeyboardEvent} event
+     */
     handleKeyUp(event) {
         const key = event.key.toLowerCase();
 
@@ -102,49 +124,75 @@ export class InputHandler extends GameObject {
             event.preventDefault(); // Prevent default behavior for mapped keys
             const { axis, value } = this.keyMap[key];
             this.removeKey(axis, value);
-            this.updateDirection();
+            this.updateKeyboardDirection();
+            this.usingController = false; // Switch to keyboard input
         }
     }
 
+    /**
+     * Adds a key to the activeKeys tracking.
+     * @param {string} axis
+     * @param {number} value
+     */
     addKey(axis, value) {
         if (!this.activeKeys[axis].includes(value)) {
             this.activeKeys[axis].push(value);
         }
     }
 
+    /**
+     * Removes a key from the activeKeys tracking.
+     * @param {string} axis
+     * @param {number} value
+     */
     removeKey(axis, value) {
         this.activeKeys[axis] = this.activeKeys[axis].filter((key) => key !== value);
     }
 
-    updateDirection() {
+    /**
+     * Updates the keyboardDirection based on activeKeys.
+     */
+    updateKeyboardDirection() {
         // Get the last active key for each axis
         const lastX = this.activeKeys.x[this.activeKeys.x.length - 1] || 0;
         const lastY = this.activeKeys.y[this.activeKeys.y.length - 1] || 0;
 
-        // Set direction based on active keys
-        this.direction.x = lastX;
-        this.direction.y = lastY;
+        // Set keyboard direction based on active keys
+        this.keyboardDirection.x = lastX;
+        this.keyboardDirection.y = lastY;
 
         // Normalize direction if necessary
-        const magnitude = Math.sqrt(this.direction.x ** 2 + this.direction.y ** 2);
+        const magnitude = Math.sqrt(this.keyboardDirection.x ** 2 + this.keyboardDirection.y ** 2);
         if (magnitude > 1) {
-            this.direction.x /= magnitude;
-            this.direction.y /= magnitude;
+            this.keyboardDirection.x /= magnitude;
+            this.keyboardDirection.y /= magnitude;
         }
     }
 
+    /**
+     * Retrieves the normalized direction vector.
+     * @returns {Object} direction
+     */
     getNormalizedDirection() {
         return this.direction;
     }
 
-    // Gamepad Handling
+    // -------------------- Gamepad Handling --------------------
 
+    /**
+     * Handles gamepad connection events.
+     * @param {GamepadEvent} event
+     */
     handleGamepadConnected(event) {
         const gamepad = event.gamepad;
         this.gamepads[gamepad.index] = gamepad;
         console.log(`Gamepad connected: ${gamepad.id}`);
     }
 
+    /**
+     * Handles gamepad disconnection events.
+     * @param {GamepadEvent} event
+     */
     handleGamepadDisconnected(event) {
         const gamepad = event.gamepad;
         delete this.gamepads[gamepad.index];
@@ -152,11 +200,15 @@ export class InputHandler extends GameObject {
     }
 
     /**
-     * Polls connected gamepads and updates the direction accordingly.
+     * Polls connected gamepads and updates the gamepadDirection accordingly.
      * This should be called every frame within the update method.
      */
     pollGamepads() {
         const connectedGamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+
+        let anyGamepadInput = false;
+        // Reset gamepadDirection
+        this.gamepadDirection = { x: 0, y: 0 };
 
         for (let gp of connectedGamepads) {
             if (gp) {
@@ -200,17 +252,38 @@ export class InputHandler extends GameObject {
                     combinedY /= magnitude;
                 }
 
-                // Directly set the direction based on gamepad input
-                this.direction.x = combinedX;
-                this.direction.y = combinedY;
+                // Accumulate gamepad direction
+                this.gamepadDirection.x += combinedX;
+                this.gamepadDirection.y += combinedY;
+
+                // Check if any gamepad input is active
+                if (combinedX !== 0 || combinedY !== 0) {
+                    anyGamepadInput = true;
+                }
             }
         }
 
-        // Normalize the final direction to ensure it's within the unit circle
-        const finalMagnitude = Math.sqrt(this.direction.x ** 2 + this.direction.y ** 2);
-        if (finalMagnitude > 1) {
-            this.direction.x /= finalMagnitude;
-            this.direction.y /= finalMagnitude;
+        // If any gamepad has input, set 'usingController' to true and set gamepadDirection
+        if (anyGamepadInput) {
+            this.usingController = true;
+            // If multiple gamepads, average their inputs
+            const numGamepads = Object.keys(this.gamepads).length;
+            if (numGamepads > 1) {
+                this.gamepadDirection.x /= numGamepads;
+                this.gamepadDirection.y /= numGamepads;
+            }
+
+            // Normalize gamepadDirection if necessary
+            const magnitude = Math.sqrt(this.gamepadDirection.x ** 2 + this.gamepadDirection.y ** 2);
+            if (magnitude > 1) {
+                this.gamepadDirection.x /= magnitude;
+                this.gamepadDirection.y /= magnitude;
+            }
+
+        } else {
+            // No gamepad input detected
+            this.usingController = false;
+            this.gamepadDirection = { x: 0, y: 0 };
         }
     }
 
@@ -219,15 +292,18 @@ export class InputHandler extends GameObject {
      * @param {number} deltaTime
      */
     update(deltaTime) {
-        // First, handle keyboard inputs (already managed via event listeners)
-        // Now, handle gamepad inputs
+        // Poll gamepads every frame
         this.pollGamepads();
 
-        // After updating direction, normalize it to ensure consistent movement speed
-        const magnitude = Math.sqrt(this.direction.x ** 2 + this.direction.y ** 2);
-        if (magnitude > 1) {
-            this.direction.x /= magnitude;
-            this.direction.y /= magnitude;
+        // Update direction based on active input source
+        if (this.usingController) {
+            this.direction.x = this.gamepadDirection.x;
+            this.direction.y = this.gamepadDirection.y;
+        } else {
+            this.direction.x = this.keyboardDirection.x;
+            this.direction.y = this.keyboardDirection.y;
         }
+
+        // No need to normalize here, as it's done in updateKeyboardDirection and pollGamepads
     }
 }
