@@ -111,7 +111,6 @@ export class Player extends GameObject {
 
     // State transitions
     if (isMoving) {
-      console.log("moving");
       // Update lastDirection every frame we have a nonzero direction
       this.lastDirection = { ...direction };
 
