@@ -15,7 +15,7 @@ export class TestThing2 extends GameObject {
         const img = new Image();
         img.src = "/assets/images/test.png";
         img.onload = () => {
-            this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 4 }));
+            this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 6 }));
         };
 
         const mainCollider = new BoxCollider({
