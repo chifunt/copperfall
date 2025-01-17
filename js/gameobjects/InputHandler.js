@@ -82,8 +82,8 @@ export class InputHandler extends GameObject {
 
         // Define controller axis mappings
         this.controllerAxisActionMap = {
-            2: Actions.DASH,
-            5: Actions.DASH,
+            // 2: Actions.DASH,
+            // 5: Actions.DASH,
         };
 
         // Threshold for axis actions
