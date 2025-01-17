@@ -208,12 +208,22 @@ canvas {
   text-shadow: 0 0 1vw black;
 }
 
-#main-menu-container button:hover, #pause-menu-container button:hover {
+#main-menu-container button:hover,
+#pause-menu-container button:hover,
+#main-menu-container button:focus,
+#pause-menu-container button:focus {
   background-color: #00000050;
   color:#ffffff;
   border: #00000000;
   text-shadow: 0 0 1vw white;
 }
+
+/* #main-menu-container button:, #pause-menu-container button:hover {
+  background-color: #00000050;
+  color:#ffffff;
+  border: #00000000;
+  text-shadow: 0 0 1vw white;
+} */
 
 #main-menu-container {
   /* background-color: #eb6f927a; */
@@ -247,9 +257,9 @@ canvas {
 
 
 #hud-container {
-  /* display: none; */
+  display: none;
 }
 
 #menu-container {
-  display: none;
+  /* display: none; */
 }
