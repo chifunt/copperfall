@@ -39,14 +39,14 @@ export class Player extends GameObject {
 
         // Dash-related variables
         this.isDashing = false;
-        this.dashDuration = 0.2;          // 300ms dash
+        this.dashDuration = 0.2;          // 200ms dash
         this.dashElapsedTime = 0;
         this.dashSpeed = 1200;             // Dash speed
         this.dashDirection = { x: 1, y: 0 }; // Default dash direction (facing right)
         this.debugLogs = false;           // Debug logging flag
 
         // Optional: Dash cooldown (prevent spamming)
-        this.dashCooldown = 0.3;          // 500ms cooldown
+        this.dashCooldown = 0.3;          // 300ms cooldown
         this.dashCooldownTimer = 0;
 
         // Add DropShadow component
@@ -66,14 +66,19 @@ export class Player extends GameObject {
         };
 
         // Add SquashAndStretch component
-        const squashAndStretch = new SquashAndStretch({
+        this.sAndS = new SquashAndStretch({
             squashScale: 0.95,
             stretchScale: 1.05,
             easingFunction: EasingFunctions.easeInOutQuad,
             duration: 2,
             loop: true,
         });
-        this.addComponent(squashAndStretch);
+        this.addComponent(this.sAndS);
+        this.sAndS.startAnimation(); // Initialize baseScale
+
+        // Store original squash and stretch values
+        this.originalSquashScale = 0.95;
+        this.originalStretchScale = 1.05;
 
         // Add HorizontalFlip component (default facing right)
         this.horizontalFlip = new HorizontalFlip(true);
@@ -146,6 +151,17 @@ export class Player extends GameObject {
 
         // Start dash cooldown
         this.dashCooldownTimer = this.dashCooldown;
+
+        // Modify SquashAndStretch for dash effect
+        if (this.sAndS) {
+            this.sAndS.setConfig({
+                squashScale: 1.2,          // Squash to 1.2
+                stretchScale: 0.8,         // Stretch to 0.8
+                duration: this.dashDuration / 2, // Adjust duration as needed
+                easingFunction: EasingFunctions.easeInOutQuad,
+                loop: false,               // No looping during dash
+            });
+        }
 
         if (this.debugLogs) {
             console.log(`Dash initiated in direction (${this.dashDirection.x.toFixed(2)}, ${this.dashDirection.y.toFixed(2)})`);
@@ -223,6 +239,17 @@ export class Player extends GameObject {
                 this.isDashing = false; // Dash complete
                 if (this.debugLogs) {
                     console.log("Dash completed.");
+                }
+
+                // Restore original SquashAndStretch config
+                if (this.sAndS) {
+                    this.sAndS.setConfig({
+                        squashScale: this.originalSquashScale,
+                        stretchScale: this.originalStretchScale,
+                        duration: 2, // Original duration
+                        easingFunction: EasingFunctions.easeInOutQuad,
+                        loop: true,    // Re-enable looping
+                    });
                 }
             }
 
@@ -302,13 +329,12 @@ export class Player extends GameObject {
         }
 
         // Adjust SquashAndStretch component based on movement
-        const sAndS = this.getComponent(SquashAndStretch);
-        if (sAndS) {
+        if (this.sAndS) {
             if (isMoving) {
-                sAndS.setConfig({ duration: 0.1, squashScale: 0.9, stretchScale: 1.1 });
+                this.sAndS.setConfig({ duration: 0.1, squashScale: 0.9, stretchScale: 1.1 });
             }
             else {
-                sAndS.setConfig({ duration: 2, squashScale: 0.95, stretchScale: 1.05 });
+                this.sAndS.setConfig({ duration: 2, squashScale: 0.95, stretchScale: 1.05 });
             }
         }
 
