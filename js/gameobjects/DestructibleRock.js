@@ -2,6 +2,7 @@ import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { ScreenShake } from "../components/ScreenShake.js";
+import { InputHandler } from "./InputHandler.js";
 
 export class DestructibleRock extends GameObject {
   constructor(posx = 0, posy = 0, width = 50, height = 50) {
@@ -39,7 +40,7 @@ export class DestructibleRock extends GameObject {
           20     // frequency
         );
       }
-      player.inputHandler.triggerRumble(200, 100, .2, .5);
+      InputHandler.getInstance().triggerRumble(200, 100, .2, .5);
       this.destroy();
     }
   }
