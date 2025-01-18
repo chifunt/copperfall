@@ -7,6 +7,7 @@ import { InputHandler } from "/js/gameobjects/InputHandler.js";
 import { CameraObject } from "/js/gameobjects/CameraObject.js";
 import { Pickup } from "/js/gameobjects/Pickup.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
+import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
 
 export class MainScene extends Scene {
   onStart() {
@@ -41,5 +42,16 @@ export class MainScene extends Scene {
     new Pickup({x: -250, y: -40});
     new Pickup({x: -300, y: -40});
     new Pickup({x: -350, y: -40});
+
+    new DestructibleRock(10, -400);
+    new DestructibleRock(10, -330);
+    new DestructibleRock(10, -470);
+    new DestructibleRock(140, -400);
+    new DestructibleRock(140, -330);
+    new DestructibleRock(140, -470);
+    new DestructibleRock(75, -330);
+    new DestructibleRock(75, -470);
+    new DestructibleRock(300, 25);
+    new Pickup({x:75,y:-400});
   }
 }
