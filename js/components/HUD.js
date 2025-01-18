@@ -88,6 +88,16 @@ export class HUD extends Component {
         if (currentCopper === this.prevCopper) return;
         this.prevCopper = currentCopper;
 
+        // Remove the flash class to reset the animation
+        this.copperContainer.classList.remove('flash');
+
+        // Trigger reflow to restart the animation
+        void this.copperContainer.offsetWidth;
+
+        // Update the text content
         this.copperContainer.textContent = currentCopper;
+
+        // Add the flash class to trigger the animation
+        this.copperContainer.classList.add('flash');
     }
 }

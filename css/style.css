@@ -131,7 +131,9 @@ canvas {
   height: 25%;
   background-color: var(--base-color);
   border-radius: .5vw;
-  transition: background-color 0.4s ease-in-out;
+  transition-timing-function: cubic-bezier(0.64, 0.57, 0.67, 1.53);
+  transition-duration: 0.4s;
+  transition: background-color 0.4s;
 }
 
 .charge-active {
@@ -173,9 +175,6 @@ canvas {
 #copper-container {
   width: 100%;
   height: 40%;
-  font-size: 3vw;
-  color: white;
-  text-shadow: 0 0 0.5vw black;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -188,6 +187,32 @@ canvas {
   background-color: chocolate;
   border-radius: 50%;
   box-shadow: 0 0 0.5vw black;
+}
+
+#copper-container p {
+  font-size: 3vw;
+  color: var(--text-color);
+  text-shadow: 0 0 0.5vw black;
+}
+
+@keyframes flash {
+  0% {
+    color: white;
+    font-size: 4.5vw;
+    text-shadow: 0 0 0.5vw black, 0 0 1.5vw white;
+  }
+  50% {
+
+  }
+  100% {
+    color: var(--text-color);
+    background-color: transparent;
+    font-size: 3vw;
+  }
+}
+
+#copper-container p.flash {
+  animation: flash 0.5s ease-out;
 }
 
 #menu-container {
