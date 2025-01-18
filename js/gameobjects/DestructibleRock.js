@@ -39,7 +39,7 @@ export class DestructibleRock extends GameObject {
           20     // frequency
         );
       }
-      player.inputHandler.triggerRumble(300, .2, .5);
+      player.inputHandler.triggerRumble(200, 100, .2, .5);
       this.destroy();
     }
   }
