@@ -59,6 +59,17 @@ export class MainScene extends Scene {
     new Pickup({x: 150, y: -600});
     new Pickup({x: 200, y: -600});
     new Pickup({x: 250, y: -600});
+    new Pickup({x: -50, y: 600});
+    new Pickup({x: -100, y: 600});
+    new Pickup({x: -150, y: 600});
+    new Pickup({x: -200, y: 600});
+    new Pickup({x: -250, y: 600});
+    new Pickup({x: 0, y: 600});
+    new Pickup({x: 50, y: 600});
+    new Pickup({x: 100, y: 600});
+    new Pickup({x: 150, y: 600});
+    new Pickup({x: 200, y: 600});
+    new Pickup({x: 250, y: 600});
 
     new DestructibleRock(10, -400);
     new DestructibleRock(10, -330);
