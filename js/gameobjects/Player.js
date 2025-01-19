@@ -240,7 +240,7 @@ export class Player extends GameObject {
             console.warn("increaseCopper called with negative amount. Use decreaseCopper instead.");
             return;
         }
-        this.inputHandler.triggerRumble(200, 50, .1, .2);
+        this.inputHandler.triggerRumble(200, 50, 0, .2);
         this.copper += amount;
         console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
     }
