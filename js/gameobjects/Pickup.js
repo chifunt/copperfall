@@ -46,7 +46,7 @@ export class Pickup extends GameObject {
       squashScale: 0.97,
       stretchScale: 1.03,
       easingFunction: EasingFunctions.easeInOutQuad,
-      duration: 4,
+      duration: .2,
       loop: true,
     });
     this.addComponent(this.sAndS);
