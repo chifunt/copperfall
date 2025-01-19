@@ -3,6 +3,7 @@ import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { ScreenShake } from "../components/ScreenShake.js";
 import { InputHandler } from "./InputHandler.js";
+import { DropShadow } from "../components/DropShadow.js";
 
 export class DestructibleRock extends GameObject {
   constructor(posx = 0, posy = 0, width = 50, height = 50) {
@@ -18,6 +19,15 @@ export class DestructibleRock extends GameObject {
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };
+
+    const dropShadow = new DropShadow({
+      offset: { x: 0, y: -23 },
+      width: 1.3,
+      height: 0.25,
+      color: "#00002266",
+      zOrderOffset: -10,
+    });
+    this.addComponent(dropShadow);
 
     const mainCollider = new BoxCollider({
       width: this.transform.scale.x,
