@@ -14,3 +14,8 @@ This is the day when collision had been discovered, at long last do things colli
 
 ## 2025-01-17
 We now have pickups. We can pick stuff up. But not any stuff. It's copper, and just copper. For copper is all we need in this life. Control maps? Yeah we now have all the possible actions in the game in terms of input and how they are registered. Tweakin with the css as well makin stuff look nicer. Player can now dash around the world, with a special super squash! Controller vibrations included? yes. screen shake as well? yes. We now have a spaceship, it don't do anything yet but it's big and has a trigger. The HUD is now mapped to the player, who now has health, charges, and copper.
+
+## 2025-01-18
+Today I implemented the copper pickup UI flash effect when the method gets called. Destructible rocks were also implemented, including screen shake and rumble effects when that happens. But can't test some of that stuff cause I'm away from home rn and didn't bring along my controller. Experimented with code to colorize a gameobject's spriterenderer but so far no success, backtracked on that for a bit to maybe implement in the future.
+
+## 2025-01-19
