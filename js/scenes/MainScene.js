@@ -21,6 +21,12 @@ export class MainScene extends Scene {
     new TestThing2(-250, 50);
     new TestThing2(-250, -100, 100, 50);
 
+    new TestThing2(0, -700, 1450, 50);
+    new TestThing2(0, 700, 1450, 50);
+    new TestThing2(700, 0, 50, 1450);
+    new TestThing2(-700, 0, 50, 1450);
+
+
     const cameraObj = new CameraObject(player, {
       smoothness: 0.175,
       lookAheadDist: 10,
@@ -37,11 +43,22 @@ export class MainScene extends Scene {
     new Pickup({x: 0, y: 400});
     new Pickup({x: -50, y: 400});
     new Pickup({x: 250, y: 25});
-    new Pickup({x: 300, y: 25});
     new Pickup({x: 350, y: 25});
     new Pickup({x: -250, y: -40});
     new Pickup({x: -300, y: -40});
     new Pickup({x: -350, y: -40});
+
+    new Pickup({x: -50, y: -600});
+    new Pickup({x: -100, y: -600});
+    new Pickup({x: -150, y: -600});
+    new Pickup({x: -200, y: -600});
+    new Pickup({x: -250, y: -600});
+    new Pickup({x: 0, y: -600});
+    new Pickup({x: 50, y: -600});
+    new Pickup({x: 100, y: -600});
+    new Pickup({x: 150, y: -600});
+    new Pickup({x: 200, y: -600});
+    new Pickup({x: 250, y: -600});
 
     new DestructibleRock(10, -400);
     new DestructibleRock(10, -330);
