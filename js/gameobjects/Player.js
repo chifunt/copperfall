@@ -129,6 +129,8 @@ export class Player extends GameObject {
         });
         this.addComponent(triggerCollider);
 
+        this.isInSpaceshipZone = false;
+
         triggerCollider.onTriggerEnter = (other) => {
             console.log("Player trigger triggered by:", other.gameObject.name);
             // e.g., if player enters the sight range of an enemy
@@ -136,6 +138,17 @@ export class Player extends GameObject {
                 this.increaseCopper(1);
                 // Optionally, destroy the copper coin GameObject
                 other.destroy();
+            }
+            if (other.gameObject.name === "Spaceship" && other.isTrigger) {
+                // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
+                this.isInSpaceshipZone = true;
+            }
+        };
+
+        triggerCollider.onTriggerExit = (other) => {
+            if (other.gameObject.name === "Spaceship" && other.isTrigger) {
+                // console.log("PLAYER OUTSIDE RANGE FOR SPACESHIP INTERACtION");
+                this.isInSpaceshipZone = false;
             }
         };
 
@@ -366,6 +379,9 @@ export class Player extends GameObject {
     interact(collector) {
         // console.log(`${this.name} interacted with ${collector.name}!`);
         // Implement interaction logic, e.g., open a door, pick up an item
+        if (this.isInSpaceshipZone) {
+            console.log("PLAYER INTERACTED WITH SPACESHIP");
+        }
     }
 
     /**
