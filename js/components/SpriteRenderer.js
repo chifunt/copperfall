@@ -8,8 +8,21 @@ export class SpriteRenderer extends Component {
     this.pivot = options.pivot || "center"; // can be "center" or "bottom"
     this.zOrder = options.zOrder || 0;
     this.flipX = false;
+    this.verticalOffset = 0;
   }
 
+  /**
+   * Sets the vertical offset for the sprite.
+   * @param {number} offset - The vertical offset in game units.
+   */
+  setVerticalOffset(offset) {
+    this.verticalOffset = offset;
+  }
+
+  /**
+   * Renders the sprite on the canvas with the applied vertical offset.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   render(ctx) {
     const engine = Engine.instance;
     const camera = engine.camera;
@@ -19,14 +32,17 @@ export class SpriteRenderer extends Component {
     const { x: scaleX, y: scaleY } = transform.scale;
     const rotation = transform.rotationInRadians;
 
+    // Apply vertical offset to the Y position
+    const modifiedWorldY = worldY + this.verticalOffset;
+
     // Convert world coordinates to canvas coordinates
     const canvasX = (worldX - camera.position.x) * camera.scale + engine.canvas.width / 2;
-    const canvasY = (-worldY + camera.position.y) * camera.scale + engine.canvas.height / 2; // invert y
+    const canvasY = (-modifiedWorldY + camera.position.y) * camera.scale + engine.canvas.height / 2; // invert y
 
     // Save context and apply transforms
     ctx.save();
     ctx.translate(canvasX, canvasY);
-    // check if horizontally flipped
+    // Check if horizontally flipped
     ctx.rotate(this.flipX ? -rotation : rotation);
     const finalScaleX = this.flipX ? -scaleX : scaleX;
     ctx.scale(finalScaleX * camera.scale, scaleY * camera.scale);
