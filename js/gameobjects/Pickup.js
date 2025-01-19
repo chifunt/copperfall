@@ -59,14 +59,12 @@ export class Pickup extends GameObject {
       color: "#00002288",
     });
     this.addComponent(dropShadow);
-
-
   }
 
   update(deltaTime) {
     super.update(deltaTime);
 
-    this.transform.rotation += 90 * deltaTime;
+    this.transform.rotation += 60 * deltaTime;
 
     // Ensure rotation stays within 0-360 degrees for consistency
     if (this.transform.rotation >= 360) {
