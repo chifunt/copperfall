@@ -240,7 +240,7 @@ export class Player extends GameObject {
             console.warn("increaseCopper called with negative amount. Use decreaseCopper instead.");
             return;
         }
-
+        this.inputHandler.triggerRumble(200, 50, .1, .2);
         this.copper += amount;
         console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
     }
@@ -329,7 +329,7 @@ export class Player extends GameObject {
         }
 
         // Trigger controller rumble
-        this.inputHandler.triggerRumble(200, 1.0, 0.5); // 200ms duration, strong 1.0, weak 0.5
+        this.inputHandler.triggerRumble(200, 200, 1, 1);
 
         // Trigger screen shake
         if (ScreenShake.instance) {
