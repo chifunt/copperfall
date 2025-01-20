@@ -133,12 +133,6 @@ export class Player extends GameObject {
 
         triggerCollider.onTriggerEnter = (other) => {
             console.log("Player trigger triggered by:", other.gameObject.name);
-            // e.g., if player enters the sight range of an enemy
-            if (other.gameObject.name === "CopperCoin") {
-                this.increaseCopper(1);
-                // Optionally, destroy the copper coin GameObject
-                other.destroy();
-            }
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
                 this.isInSpaceshipZone = true;
