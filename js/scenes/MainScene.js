@@ -85,5 +85,8 @@ export class MainScene extends Scene {
     new Pickup({x:250,y:-400});
 
     new EnemyTest(600, -600);
+    new EnemyTest(-600, 600);
+    new EnemyTest(-600, -600);
+    new EnemyTest(600, 600);
   }
 }

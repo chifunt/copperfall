@@ -1,4 +1,3 @@
-// /js/scenes/MainScene.js
 import { Scene } from "/js/core/Scene.js";
 import { Background } from "/js/gameobjects/Background.js";
 import { InputHandler } from "/js/gameobjects/InputHandler.js";

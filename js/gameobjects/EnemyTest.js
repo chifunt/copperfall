@@ -36,6 +36,10 @@ export class EnemyTest extends GameObject {
 
     triggerCollider.onTriggerStay = (other) => {
       if (other.gameObject.name === "Player") {
+        if (other.gameObject.isDashing) {
+          this.destroy();
+          return;
+        }
         other.gameObject.takeDamage();
       }
     };

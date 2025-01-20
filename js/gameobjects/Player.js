@@ -211,6 +211,7 @@ export class Player extends GameObject {
      */
     die() {
         console.log("Player has died!");
+        this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)
     }
 
