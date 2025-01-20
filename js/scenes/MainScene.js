@@ -8,6 +8,7 @@ import { CameraObject } from "/js/gameobjects/CameraObject.js";
 import { Pickup } from "/js/gameobjects/Pickup.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
 import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
+import { EnemyTest } from "../gameobjects/EnemyTest.js";
 
 export class MainScene extends Scene {
   onStart() {
@@ -81,5 +82,8 @@ export class MainScene extends Scene {
     new DestructibleRock(75, -470);
     new DestructibleRock(300, 25);
     new Pickup({x:75,y:-400});
+    new Pickup({x:250,y:-400});
+
+    new EnemyTest(600, -600);
   }
 }

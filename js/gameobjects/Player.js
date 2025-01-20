@@ -193,7 +193,7 @@ export class Player extends GameObject {
         }
 
         // Trigger controller rumble for damage
-        this.inputHandler.triggerRumble(200, 200, 1.0, 0.5, 0.2); // 300ms duration, strong 1.0, weak 1.0
+        this.inputHandler.triggerRumble(200, 400, 1.0, 0.5); // 300ms duration, strong 1.0, weak 1.0
 
         // Set invulnerability
         this.isInvulnerable = true;
