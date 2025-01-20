@@ -1,7 +1,6 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { CircleCollider } from "../components/CircleCollider.js";
-import { Pickupable } from "../components/Pickupable.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
 import { EasingFunctions } from "../utils/easing.js";
 import { DropShadow } from "../components/DropShadow.js";
@@ -13,6 +12,13 @@ export class Pickup extends GameObject {
 
     this.transform.position = position;
     this.transform.scale = { x: 0.015, y: 0.015 };
+    this.isPickedUp = false;
+    this.pickupAnimationDuration = 0.5;
+    this.pickupAnimationElapsed = 0;
+
+    this.playerObject = null;
+    this.startPos = { ...position };
+    this.targetPos = { x: 0, y: 0 };
 
     const img = new Image();
     img.src = "/assets/images/rafli.png";
@@ -31,14 +37,12 @@ export class Pickup extends GameObject {
     });
     this.addComponent(triggerCollider);
 
-    const pickupable = new Pickupable();
-    this.addComponent(pickupable);
-
     // Handle trigger logic
     triggerCollider.onTriggerEnter = (other) => {
       if (other.gameObject.name === "Player") {
-        pickupable.onPickup(other.gameObject);
-        other.gameObject.increaseCopper(15);
+        if (this.isPickedUp) return;
+        this.isPickedUp = true;
+        this.playerObject = other.gameObject;
       }
     };
 
@@ -69,6 +73,23 @@ export class Pickup extends GameObject {
     // Ensure rotation stays within 0-360 degrees for consistency
     if (this.transform.rotation >= 360) {
       this.transform.rotation -= 360;
+    }
+
+    if (!this.isPickedUp) return;
+    this.pickupAnimationElapsed += deltaTime;
+    const t = Math.min(this.pickupAnimationElapsed / this.pickupAnimationDuration, 1); // Clamp t to [0,1]
+    const easedT = EasingFunctions.easeInBack(t);
+
+    this.targetPos.x = this.playerObject.transform.position.x;
+    this.targetPos.y = this.playerObject.transform.position.y + 15; // Add a little offset for the player
+
+    this.transform.position.x = this.startPos.x + (this.targetPos.x - this.startPos.x) * easedT;
+    this.transform.position.y = this.startPos.y + (this.targetPos.y - this.startPos.y) * easedT;
+
+    if (this.pickupAnimationElapsed >= this.pickupAnimationDuration) {
+      // console.log("ANIMATION ELEPASE");
+      this.playerObject.increaseCopper(15);
+      this.destroy();
     }
   }
 }
