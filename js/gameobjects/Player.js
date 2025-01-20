@@ -175,6 +175,8 @@ export class Player extends GameObject {
             console.log(`Player took damage. Current Health: ${this.currentHealth}`);
         }
 
+        this.getComponent(HUD).updateDamaged();
+
         // Trigger screen shake for damage
         if (ScreenShake.instance) {
             ScreenShake.instance.trigger(
@@ -204,6 +206,7 @@ export class Player extends GameObject {
      * For now, it simply logs a message.
      */
     die() {
+        this.getComponent(HUD).removeHud();
         console.log("Player has died!");
         this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)

@@ -10,14 +10,19 @@ export class HUD extends Component {
         this.player = player;
 
         // Select DOM elements
+        this.hudContainer = document.querySelector("#hud-container");
+
         this.chargeContainer = document.querySelector("#charge-container");
         this.healthContainer = document.querySelector("#health-container");
         this.copperContainer = document.querySelector("#copper-container p");
+
+        this.damageVignette = document.querySelector(".vignette-damage");
 
         // Initialize previous state to optimize updates
         this.prevDashCharges = null;
         this.prevHealth = null;
         this.prevCopper = null;
+        this.damagedShown = false;
 
         // Validate DOM elements
         if (!this.chargeContainer || !this.healthContainer || !this.copperContainer) {
@@ -99,5 +104,30 @@ export class HUD extends Component {
 
         // Add the flash class to trigger the animation
         this.copperContainer.classList.add('flash');
+    }
+
+    updateDamaged() {
+        if (this.damagedShown) return; // Prevent triggering if already shown
+
+        this.damageVignette.classList.remove("damaged"); // Remove the class
+
+        // Force reflow to ensure the class removal is recognized
+        void this.damageVignette.offsetWidth;
+
+        this.damageVignette.classList.add("damaged"); // Re-add the class to trigger animation
+        this.damagedShown = true; // Set the flag to indicate the animation is in progress
+
+        // Define the event handler
+        const onAnimationEnd = () => {
+            this.damagedShown = false; // Reset the flag
+            this.damageVignette.removeEventListener('animationend', onAnimationEnd); // Clean up the listener
+        };
+
+        // Add the event listener for when the animation ends
+        this.damageVignette.addEventListener('animationend', onAnimationEnd);
+    }
+
+    removeHud() {
+        this.hudContainer.style.display = "none";
     }
 }
