@@ -16,6 +16,10 @@ export class Scene {
     // Override in child scenes to initialize game objects
   }
 
+  addGameObject(gameObject) {
+    this.gameObjects.push(gameObject);
+  }
+
   destroy() {
     // Clean up all game objects in this scene
     for (const gameObject of this.gameObjects) {
