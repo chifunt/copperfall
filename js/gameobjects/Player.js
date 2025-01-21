@@ -1,3 +1,4 @@
+// Player.js
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
@@ -157,6 +158,38 @@ export class Player extends GameObject {
         this.inputHandler.on(Actions.PAUSE, this.pause.bind(this));
         this.inputHandler.on(Actions.HELP, this.help.bind(this));
         this.inputHandler.on(Actions.BACK, this.back.bind(this));
+
+        // Initialize playerCanMove flag
+        this.playerCanMove = true;
+
+        // Listen to UIManager's menuOpened and menuClosed events
+        const uiManager = UIManager.getInstance();
+        uiManager.addEventListener("menuOpened", this.onMenuOpened.bind(this));
+        uiManager.addEventListener("menuClosed", this.onMenuClosed.bind(this));
+    }
+
+    /**
+     * Event handler for when a menu is opened.
+     * Disables player movement.
+     * @param {CustomEvent} event
+     */
+    onMenuOpened(event) {
+        if (this.debugLogs) {
+            console.log("Player received menuOpened event. Disabling movement.");
+        }
+        this.playerCanMove = false;
+    }
+
+    /**
+     * Event handler for when a menu is closed.
+     * Enables player movement.
+     * @param {CustomEvent} event
+     */
+    onMenuClosed(event) {
+        if (this.debugLogs) {
+            console.log("Player received menuClosed event. Enabling movement.");
+        }
+        this.playerCanMove = true;
     }
 
     /**
@@ -272,6 +305,13 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the dash action.
      */
     startDash(collector) {
+        if (!this.playerCanMove) {
+            if (this.debugLogs) {
+                console.log("Dash attempted while player cannot move (menu active).");
+            }
+            return;
+        }
+
         if (this.isDashing || this.dashCooldownTimer > 0) {
             // Already dashing or cooldown active; ignore additional dash inputs
             if (this.debugLogs) {
@@ -377,6 +417,13 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the interact action.
      */
     interact(collector) {
+        if (!this.playerCanMove) {
+            if (this.debugLogs) {
+                console.log("Interact attempted while player cannot move (menu active).");
+            }
+            return;
+        }
+
         // console.log(`${this.name} interacted with ${collector.name}!`);
         // Implement interaction logic, e.g., open a door, pick up an item
         if (this.isInSpaceshipZone) {
@@ -390,6 +437,13 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the pause action.
      */
     pause(collector) {
+        if (!this.playerCanMove) {
+            if (this.debugLogs) {
+                console.log("Pause attempted while player cannot move (menu active).");
+            }
+            return;
+        }
+
         // console.log(`${this.name} paused the game!`);
         // Implement pause logic, e.g., show pause menu
         UIManager.instance.openPauseMenu();
@@ -400,6 +454,13 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the help action.
      */
     help(collector) {
+        if (!this.playerCanMove) {
+            if (this.debugLogs) {
+                console.log("Help attempted while player cannot move (menu active).");
+            }
+            return;
+        }
+
         // console.log(`${this.name} requested help!`);
         // Implement help logic, e.g., display help screen
         UIManager.instance.openHelpMenu();
@@ -500,6 +561,15 @@ export class Player extends GameObject {
 
             // During dash, skip normal movement updates
             return;
+        }
+
+        // Check if player can move
+        if (!this.playerCanMove) {
+            // Optionally, reset movement states or other relevant variables
+            // For example:
+            // this.movementState = "idle";
+            // this.currentFactor = 0;
+            return; // Skip movement logic
         }
 
         // Get normalized direction from InputHandler

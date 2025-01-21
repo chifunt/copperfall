@@ -22,6 +22,9 @@ export class UIManager extends GameObject {
 
     this.activeMenu = null;
     this.isAnimating = false; // Flag to handle animation state
+
+    // Initialize EventTarget for event handling
+    this.eventTarget = new EventTarget();
   }
 
   /**
@@ -33,6 +36,34 @@ export class UIManager extends GameObject {
       UIManager.instance = new UIManager();
     }
     return UIManager.instance;
+  }
+
+  /**
+   * Dispatches custom events.
+   * @param {string} eventName - Name of the event.
+   * @param {any} detail - Additional data to pass with the event.
+   */
+  dispatchEvent(eventName, detail = {}) {
+    const event = new CustomEvent(eventName, { detail });
+    this.eventTarget.dispatchEvent(event);
+  }
+
+  /**
+   * Adds an event listener.
+   * @param {string} eventName - Name of the event.
+   * @param {Function} callback - Callback function.
+   */
+  addEventListener(eventName, callback) {
+    this.eventTarget.addEventListener(eventName, callback);
+  }
+
+  /**
+   * Removes an event listener.
+   * @param {string} eventName - Name of the event.
+   * @param {Function} callback - Callback function.
+   */
+  removeEventListener(eventName, callback) {
+    this.eventTarget.removeEventListener(eventName, callback);
   }
 
   /**
@@ -70,6 +101,9 @@ export class UIManager extends GameObject {
     const onAnimationEnd = () => {
       this.isAnimating = false; // Reset animation flag
       this.activeMenu.removeEventListener("animationend", onAnimationEnd);
+
+      // Dispatch event indicating a menu has been opened
+      this.dispatchEvent("menuOpened", { menu: this.activeMenu });
     };
 
     this.activeMenu.addEventListener("animationend", onAnimationEnd);
@@ -117,7 +151,10 @@ export class UIManager extends GameObject {
     if (this.activeMenu == null) return;
 
     // Prevent closing critical menus manually
-    if (this.activeMenu == this.gameOverMenu || this.activeMenu == this.mainMenu) {
+    if (
+      this.activeMenu == this.gameOverMenu ||
+      this.activeMenu == this.mainMenu
+    ) {
       console.log("Cannot close the Game Over or Main Menu manually.");
       return;
     }
@@ -140,6 +177,10 @@ export class UIManager extends GameObject {
       this.isAnimating = false; // Reset animation flag
       this.activeMenu.removeEventListener("animationend", onAnimationEnd);
       this.activeMenu.style.display = "none";
+
+      // Dispatch event indicating a menu has been closed
+      this.dispatchEvent("menuClosed", { menu: this.activeMenu });
+
       this.activeMenu = null;
     };
 
