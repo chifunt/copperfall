@@ -7,6 +7,7 @@ export class GameObject {
     this.transform = new Transform();
     this.components = [];
     this.isDestroyed = false;
+    this.persistent = false;
 
     // Automatically register with the Engine
     if (Engine.instance) {

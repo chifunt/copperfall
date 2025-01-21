@@ -23,6 +23,7 @@ export class Scene {
   destroy() {
     // Clean up all game objects in this scene
     for (const gameObject of this.gameObjects) {
+      if (gameObject.persistent) continue;
       gameObject.destroy();
     }
     this.gameObjects = [];

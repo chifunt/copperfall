@@ -10,6 +10,7 @@ export class UIManager extends GameObject {
     }
 
     super("UIManager");
+    this.persistent = true;
 
     UIManager.instance = this;
 
@@ -151,13 +152,13 @@ export class UIManager extends GameObject {
     if (this.activeMenu == null) return;
 
     // Prevent closing critical menus manually
-    if (
-      this.activeMenu == this.gameOverMenu ||
-      this.activeMenu == this.mainMenu
-    ) {
-      console.log("Cannot close the Game Over or Main Menu manually.");
-      return;
-    }
+    // if (
+    //   this.activeMenu == this.gameOverMenu ||
+    //   this.activeMenu == this.mainMenu
+    // ) {
+    //   console.log("Cannot close the Game Over or Main Menu manually.");
+    //   return;
+    // }
 
     if (this.isAnimating) {
       console.log("Animation in progress. Please wait.");

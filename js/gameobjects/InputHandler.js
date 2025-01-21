@@ -22,6 +22,7 @@ export class InputHandler extends GameObject {
         }
 
         super("InputHandler");
+        this.persistent = true;
 
         InputHandler.instance = this;
 
