@@ -26,3 +26,6 @@ Main menu scene has been created but non functional at the moment being. Impleme
 Implemented the UI management system to figure out which UI to be opened and when. Added a test enemy to test out damage system. Added the damage vignette to happen during damaged state. Added more easing functions, made the copper pickups follow the player for a bit before actually getting picked up.
 
 ## 2025-01-21
+Implement UI Functionality (Start screen and game over screen). Added controller support for those screens. Styled the Shipwreck UI. Implemented persistent gameobjects.
+
+## 2025-01-22
