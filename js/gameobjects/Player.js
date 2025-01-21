@@ -60,7 +60,7 @@ export class Player extends GameObject {
         this.invulnerabilityTimer = 0; // Time left in invulnerability
 
         // Resource Management (Copper)
-        this.copper = 69420;
+        this.copper = 0;
 
         // Dash Charge Management
         this.maxDashCharges = 3;
