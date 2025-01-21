@@ -34,8 +34,11 @@ export class HUD extends Component {
      * Updates the HUD elements based on the player's current state.
      */
     update(deltaTime) {
-        if (!this.player) return;
+        if (!this.player) {
+            this.removeHud();
+        }
 
+        this.showHud();
         this.updateDashCharges();
         this.updateHealth();
         this.updateCopper();
@@ -129,5 +132,10 @@ export class HUD extends Component {
 
     removeHud() {
         this.hudContainer.style.display = "none";
+    }
+
+    showHud() {
+        if (this.hudContainer.style.display = "flex") return;
+        this.hudContainer.style.display = "flex";
     }
 }
