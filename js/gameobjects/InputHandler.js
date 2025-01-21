@@ -161,6 +161,9 @@ export class InputHandler extends GameObject {
         if (this.actionCallbacks[action]) {
             this.actionCallbacks[action].forEach(callback => callback(collector));
         }
+        if (action == Actions.INTERACT) {
+            document.activeElement.click();
+        }
     }
 
     /**

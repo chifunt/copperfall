@@ -230,6 +230,7 @@ canvas {
   width: 100%;
   height: 100%;
   opacity: 0;
+  pointer-events: none;
 }
 
 #blackscreen.activated {
@@ -316,10 +317,11 @@ button {
 }
 
 button:hover,
-button:focus {
+button:active {
   background-color: #00000050;
   color:#ffffff;
-  border: #00000000;
+  border: #000000ff;
+  /* outline: none; */
   text-shadow: 0 0 1vw white;
 }
 

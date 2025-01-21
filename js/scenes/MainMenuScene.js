@@ -14,6 +14,20 @@ export class MainMenuScene extends Scene {
     const uiManager = new UIManager();
 
     uiManager.openMainMenu();
+    uiManager.startButton.addEventListener("click", function () {
+      UIManager.instance.closeMenu();
+      uiManager.blackScreen.classList.remove("activated");
+      void uiManager.blackScreen.offsetWidth;
+      uiManager.blackScreen.classList.add("activated");
+      setTimeout(() => {
+        Engine.instance.loadScene(new MainScene());
+      }, 500);
+
+    });
+    uiManager.retryButton.addEventListener("click", function () {
+      UIManager.instance.closeMenu();
+      Engine.instance.loadScene(new MainScene());
+    });
 
     new Pickup({ x: 50, y: -100 });
     new Pickup({ x: 100, y: -50 });
@@ -31,13 +45,11 @@ export class MainMenuScene extends Scene {
     new TestThing2(-440, 0, 10, 500);
 
     // For now just load the main scene
-    this.loadMainScene();
+    // this.loadMainScene();
   }
 
   loadMainScene() {
-    setTimeout(() => {
-      UIManager.instance.closeMenu();
-      Engine.instance.loadScene(new MainScene());
-    }, 1000); // 2000 milliseconds = 2 seconds
+    UIManager.instance.closeMenu();
+    Engine.instance.loadScene(new MainScene());
   }
 }
