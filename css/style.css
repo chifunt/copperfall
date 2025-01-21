@@ -314,7 +314,7 @@ h2 {
 
 #ship-menu-container {
   display: flex;
-  background-color: #191724;
+  background-color: var(--base-color);
   position: absolute;
   width: 70%;
   height: 70%;
@@ -326,6 +326,7 @@ h2 {
   font-size: 2vw;
   gap: 2vw;
   border-radius: 3vw;
+  box-shadow: 0 0 2vw black, 0 0 3vw var(--overlay-color) inset;
   display: none;
 }
 
