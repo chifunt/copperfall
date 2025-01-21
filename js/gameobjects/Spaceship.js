@@ -39,9 +39,10 @@ export class Spaceship extends GameObject {
     });
     this.addComponent(mainCollider);
 
-    const triggerCollider = new CircleCollider({
-      radius: 120,
-      offset: { x: 0, y: 19 },
+    const triggerCollider = new BoxCollider({
+      width: 150,
+      height: 300,
+      offset: { x: 0, y: 50 },
       isTrigger: true,
     });
     this.addComponent(triggerCollider);
