@@ -19,3 +19,10 @@ We now have pickups. We can pick stuff up. But not any stuff. It's copper, and j
 Today I implemented the copper pickup UI flash effect when the method gets called. Destructible rocks were also implemented, including screen shake and rumble effects when that happens. But can't test some of that stuff cause I'm away from home rn and didn't bring along my controller. Experimented with code to colorize a gameobject's spriterenderer but so far no success, backtracked on that for a bit to maybe implement in the future.
 
 ## 2025-01-19
+Main menu scene has been created but non functional at the moment being. Implemented vertical bobbing for the pickup objects. Player can now interact with the sapceship, controller rumbles added, adjusted main scene to be more suitable for testing. Added drop shadows to destructible rocks. Added more test pixels for the shits and gigs (actually for more diversity in colors).
+
+
+## 2025-01-20
+Implemented the UI management system to figure out which UI to be opened and when. Added a test enemy to test out damage system. Added the damage vignette to happen during damaged state. Added more easing functions, made the copper pickups follow the player for a bit before actually getting picked up.
+
+## 2025-01-21
