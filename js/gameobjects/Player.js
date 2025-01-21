@@ -11,6 +11,7 @@ import { DropShadow } from "../components/DropShadow.js";
 import { Actions } from "../utils/Actions.js";
 import { ScreenShake } from "/js/components/ScreenShake.js";
 import { HUD } from "/js/components/HUD.js";
+import { UIManager } from "./UIManager.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -379,6 +380,7 @@ export class Player extends GameObject {
         // Implement interaction logic, e.g., open a door, pick up an item
         if (this.isInSpaceshipZone) {
             console.log("PLAYER INTERACTED WITH SPACESHIP");
+            UIManager.instance.openShipMenu();
         }
     }
 
@@ -407,6 +409,7 @@ export class Player extends GameObject {
     back(collector) {
         console.log(`${this.name} went back!`);
         // Implement back logic, e.g., close a menu, return to previous state
+        UIManager.instance.closeMenu();
     }
 
     /**

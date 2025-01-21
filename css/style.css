@@ -70,6 +70,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  font-size: 3vw;
 }
 
 canvas {
@@ -221,7 +222,7 @@ canvas {
   transition: opacity 1s ease-out;
 }
 
-@keyframes damaged {
+@keyframes fadeout {
   0% {
     opacity: 100;
   }
@@ -230,27 +231,40 @@ canvas {
   }
 }
 
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+
+.menu.tofadein {
+  animation: fadein 0.2s ease-out;
+}
+
+.menu.tofadeout {
+  animation: fadeout 0.2s ease-out;
+}
+
 .vignette-damage.damaged {
-  animation: damaged 0.5s ease-out;
+  animation: fadeout 0.5s ease-out;
 }
 
 #copper-container p.flash {
   animation: flash 0.5s ease-out;
 }
 
-#menu-container {
-  background-color: #00000050;
-  display: flex;
-  align-items: end;
-  padding: 7%;
-}
-
-#menu-container h1 {
+#main-menu-container h1 {
   color: #eb961f;
   text-shadow: 0 0 1vw black, -.3vw -.3vw rgb(165, 103, 10), 0 0 .5vw;
 }
 
-#main-menu-container, #pause-menu-container {
+#main-menu-container {
+  display: flex;
+  align-items: end;
+  padding: 7%;
   width: 40%;
   height: 70%;
   display: flex;
@@ -258,7 +272,7 @@ canvas {
   font-size: 3.5vw;
 }
 
-#main-menu-container button, #pause-menu-container button {
+button {
   text-align: left;
   background-color: #00000000;
   color:#a7a6b9;
@@ -266,10 +280,8 @@ canvas {
   text-shadow: 0 0 1vw black;
 }
 
-#main-menu-container button:hover,
-#pause-menu-container button:hover,
-#main-menu-container button:focus,
-#pause-menu-container button:focus {
+button:hover,
+button:focus {
   background-color: #00000050;
   color:#ffffff;
   border: #00000000;
@@ -279,22 +291,87 @@ canvas {
 #main-menu-container {
   /* background-color: #eb6f927a; */
 
-  /* display: none; */
+  display: none;
+}
+
+h2 {
+  text-shadow: 0 0 1vw white;
 }
 
 #pause-menu-container {
-  background-color: #7a4b08;
+  width: 100%;
+  height: 100%;
+  background-color: #10000099;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   display: none;
 }
 
 #ship-menu-container {
-  display: none;
+  display: flex;
   background-color: #191724;
   position: absolute;
   width: 70%;
   height: 70%;
-  align-self: center;
-  justify-self: center;
+  left: 15%;
+  top: 15%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 2vw;
+  gap: 2vw;
+  border-radius: 3vw;
+  display: none;
+}
+
+#ship-menu-container h2 {
+  font-size: 4vw;
+}
+
+.ship-line-container {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  background-color: var(--overlay-color);
+  border-radius: 1vw;
+  padding: 0.25vw 2vw;
+}
+
+#copper-count-container {
+  display: flex;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+
+.ship-line-container button {
+  border: rgb(72, 81, 255) 1vw;
+  padding: 1vw;
+}
+
+#game-over-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 3.5vw;
+  width: 100%;
+  height: 100%;
+  background-color: #05000050;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+#help-menu-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 3.5vw;
+  width: 100%;
+  height: 100%;
+  background-color: #05000050;
+  justify-content: center;
+  align-items: center;
+  display: none;
 }
 
 .vignette {
@@ -311,5 +388,5 @@ canvas {
 }
 
 #menu-container {
-  display: none;
+  /* display: none; */
 }

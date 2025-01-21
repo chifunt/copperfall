@@ -9,12 +9,14 @@ import { Pickup } from "/js/gameobjects/Pickup.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
 import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
+import { UIManager } from "../gameobjects/UIManager.js";
 
 export class MainScene extends Scene {
   onStart() {
     const background = new Background();
 
     const inputHandler = new InputHandler();
+    const uiManager = new UIManager();
     const player = new Player();
 
     new TestThing2(250, 100);

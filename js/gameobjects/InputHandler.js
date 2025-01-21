@@ -17,7 +17,7 @@ export class InputHandler extends GameObject {
      */
     constructor(config = {}) {
         if (InputHandler.instance) {
-            console.warn("InputHandler is a singleton and has already been created.");
+            console.log("InputHandler is a singleton and has already been created.");
             return InputHandler.instance;
         }
 
