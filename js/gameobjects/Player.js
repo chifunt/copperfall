@@ -60,7 +60,7 @@ export class Player extends GameObject {
         this.invulnerabilityTimer = 0; // Time left in invulnerability
 
         // Resource Management (Copper)
-        this.copper = 0;
+        this.copper = 69420;
 
         // Dash Charge Management
         this.maxDashCharges = 3;
@@ -171,6 +171,8 @@ export class Player extends GameObject {
 
         const shipMenuManager = ShipMenuManager.getInstance();
         shipMenuManager.playerObject = this;
+
+        this.shipLevel = 0;
     }
 
     /**
@@ -518,7 +520,7 @@ export class Player extends GameObject {
      * Upgrades the player's dash speed by a fixed increment of 300 units.
      */
     upgradeDashSpeed() {
-        this.dashSpeed += 300;
+        this.dashSpeed += 250;
         console.log(`Dash speed upgraded. Current Dash Speed: ${this.dashSpeed}`);
     }
 
@@ -527,8 +529,16 @@ export class Player extends GameObject {
      * Ensures that the cooldown does not go below zero.
      */
     upgradeDashCooldown() {
-        this.dashCooldown = Math.max(0, this.dashCooldown - 0.5);
-        console.log(`Dash cooldown upgraded. Current Dash Cooldown: ${this.dashCooldown}s`);
+        this.dashChargeRechargeDuration = Math.max(0, this.dashChargeRechargeDuration - 0.5);
+        console.log(`Dash cooldown upgraded. Current Dash Cooldown: ${this.dashChargeRechargeDuration}s`);
+    }
+
+    repairShip() {
+        this.shipLevel += 1;
+        console.log("PLAYER REPAIRED SHIP TO ", this.shipLevel);
+        if (this.shipLevel == 2) {
+            console.log("PPLAYER HAS BEATEN TEH GSAME !!!");
+        }
     }
 
     /**

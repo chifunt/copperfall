@@ -6,6 +6,6 @@ const engine = new Engine("canvas");
 
 engine.debugMode = true;
 
-// engine.loadScene(new MainMenuScene());
-engine.loadScene(new MainScene());
+engine.loadScene(new MainMenuScene());
+// engine.loadScene(new MainScene());
 engine.start();

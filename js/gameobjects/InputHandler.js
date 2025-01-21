@@ -174,7 +174,7 @@ export class InputHandler extends GameObject {
         if (this.actionCallbacks[action]) {
             this.actionCallbacks[action].forEach(callback => callback(collector));
         }
-        if (action == Actions.INTERACT || action == Actions.DASH || action == Actions.UP || action == Actions.DOWN) {
+        if (action == Actions.INTERACT || action == Actions.DASH) {
             document.activeElement.click();
         }
     }
