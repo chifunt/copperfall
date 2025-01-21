@@ -15,6 +15,7 @@ export class Pickup extends GameObject {
     this.isPickedUp = false;
     this.pickupAnimationDuration = 0.5;
     this.pickupAnimationElapsed = 0;
+    this.rotationSpeed = Math.random() * (70 - 50) + 50;
 
     this.playerObject = null;
     this.startPos = { ...position };
@@ -68,7 +69,7 @@ export class Pickup extends GameObject {
   update(deltaTime) {
     super.update(deltaTime);
 
-    this.transform.rotation += 60 * deltaTime;
+    this.transform.rotation += this.rotationSpeed * deltaTime;
 
     // Ensure rotation stays within 0-360 degrees for consistency
     if (this.transform.rotation >= 360) {
