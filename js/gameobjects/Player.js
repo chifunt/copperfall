@@ -1,4 +1,3 @@
-// Player.js
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/easing.js";
@@ -13,6 +12,7 @@ import { Actions } from "../utils/Actions.js";
 import { ScreenShake } from "/js/components/ScreenShake.js";
 import { HUD } from "/js/components/HUD.js";
 import { UIManager } from "./UIManager.js";
+import { ShipMenuManager } from "./ShipMenuManager.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -168,6 +168,9 @@ export class Player extends GameObject {
         uiManager.addEventListener("menuClosed", this.onMenuClosed.bind(this));
 
         this.isDead = false;
+
+        const shipMenuManager = ShipMenuManager.getInstance();
+        shipMenuManager.playerObject = this;
     }
 
     /**
@@ -300,7 +303,6 @@ export class Player extends GameObject {
 
         console.log(`Player spent ${amount} copper. Remaining Copper: ${this.copper}`);
     }
-
 
     /**
      * Initiates the dash action if possible.
@@ -498,6 +500,35 @@ export class Player extends GameObject {
     disableDebugLogs() {
         this.debugLogs = false;
         console.log("Player debug logs disabled.");
+    }
+
+    /**
+     * Heals the player by 1 HP, not exceeding max health.
+     */
+    heal() {
+        if (this.currentHealth < this.maxHealth) {
+            this.currentHealth += 1;
+            console.log(`Player healed. Current Health: ${this.currentHealth}/${this.maxHealth}`);
+        } else if (this.debugLogs) {
+            console.log("Player health is already at maximum.");
+        }
+    }
+
+    /**
+     * Upgrades the player's dash speed by a fixed increment of 300 units.
+     */
+    upgradeDashSpeed() {
+        this.dashSpeed += 300;
+        console.log(`Dash speed upgraded. Current Dash Speed: ${this.dashSpeed}`);
+    }
+
+    /**
+     * Upgrades the player's dash cooldown by reducing it by 0.5 seconds.
+     * Ensures that the cooldown does not go below zero.
+     */
+    upgradeDashCooldown() {
+        this.dashCooldown = Math.max(0, this.dashCooldown - 0.5);
+        console.log(`Dash cooldown upgraded. Current Dash Cooldown: ${this.dashCooldown}s`);
     }
 
     /**
