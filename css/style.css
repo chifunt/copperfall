@@ -212,6 +212,30 @@ canvas {
   }
 }
 
+@keyframes fadeinout {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#blackscreen {
+  background-color: black;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+#blackscreen.activated {
+  animation: fadeinout 1s ease-in-out;
+}
+
 .vignette-damage {
   opacity: 0;
   position: absolute;
