@@ -303,7 +303,7 @@ canvas {
   display: flex;
   flex-direction: column;
   font-size: 3.5vw;
-  gap: 1vw;
+  gap: 2vw;
 }
 
 button {
