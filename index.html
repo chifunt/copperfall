@@ -47,20 +47,33 @@
         <p>0</p>
       </div>
       <div class="ship-line-container">
-        <p>5000</p>
-        <button>Repair Ship</button>
-      </div>
-      <div class="ship-line-container">
         <p>100</p>
         <button>Heal 1HP</button>
+        <div class="health health-active"></div>
+      </div>
+      <div class="ship-line-container">
+        <p>5000</p>
+        <button>Repair Ship</button>
+        <div class="ship-upgrade-bars-container">
+          <div class="upgrade-bar"></div>
+          <div class="upgrade-bar"></div>
+        </div>
       </div>
       <div class="ship-line-container">
         <p>200</p>
         <button>Upgrade Dash Cooldown</button>
+        <div class="ship-upgrade-bars-container">
+          <div class="upgrade-bar upgrade-bar-active"></div>
+          <div class="upgrade-bar"></div>
+        </div>
       </div>
       <div class="ship-line-container">
         <p>400</p>
-        <button>Upgrade Movement Speed</button>
+        <button disabled>Upgrade Movement Speed</button>
+        <div class="ship-upgrade-bars-container">
+          <div class="upgrade-bar upgrade-bar-active"></div>
+          <div class="upgrade-bar upgrade-bar-active"></div>
+        </div>
       </div>
     </div>
     <div id="game-over-container" class="menu">

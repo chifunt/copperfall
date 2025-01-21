@@ -316,13 +316,26 @@ button {
   border-radius: 3vw;
 }
 
-button:hover,
-button:active {
+button:focus-visible, button:hover {
   background-color: #00000050;
   color:#ffffff;
   border: #000000ff;
-  /* outline: none; */
+  outline: none;
   text-shadow: 0 0 1vw white;
+  box-shadow: 0 0 1vw black, 0 0 1vw black inset;
+}
+
+button:disabled, button[disabled] {
+  color: #000000;
+  box-shadow: none;
+  text-shadow: none;
+  pointer-events: none;
+}
+
+button:active {
+  color: var(--gold-color);
+  text-shadow: 0 0 1vw var(--love-color);
+  box-shadow: 0 0 1vw var(--gold-color), 0 0 1vw var(--gold-color) inset;
 }
 
 #main-menu-container {
@@ -351,10 +364,10 @@ h2 {
   display: flex;
   background-color: var(--base-color);
   position: absolute;
-  width: 70%;
-  height: 70%;
-  left: 15%;
-  top: 15%;
+  width: 80%;
+  height: 80%;
+  left: 10%;
+  top: 10%;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -383,11 +396,32 @@ h2 {
   position: absolute;
   top: 5%;
   left: 5%;
+  font-size: 4vw;
 }
 
 .ship-line-container button {
   border: rgb(72, 81, 255) 1vw;
   padding: 1vw;
+  border-radius: 0.5vw;
+}
+
+.ship-upgrade-bars-container {
+  display: flex;
+  gap: 1vw;
+}
+
+.upgrade-bar {
+  width: 1.5vw;
+  height: 3vw;
+  background-color: #1a172a;
+  box-shadow: 0 0 0.3vw black, 0 0 0.5vw black inset;
+  border-radius: 0.5vw;
+  transition: background-color 0.4s ease-in-out;
+}
+
+.upgrade-bar-active {
+  background-color: #439ec1;
+  box-shadow: 0 0 2vw #3a8aaa, 0 0 0.8vw #95d6ef inset;
 }
 
 #game-over-container {
