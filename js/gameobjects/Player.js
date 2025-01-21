@@ -166,6 +166,8 @@ export class Player extends GameObject {
         const uiManager = UIManager.getInstance();
         uiManager.addEventListener("menuOpened", this.onMenuOpened.bind(this));
         uiManager.addEventListener("menuClosed", this.onMenuClosed.bind(this));
+
+        this.isDead = false;
     }
 
     /**
@@ -243,6 +245,7 @@ export class Player extends GameObject {
         this.getComponent(HUD).removeHud();
         console.log("Player has died!");
         UIManager.instance.openGameOverMenu();
+        this.isDead = true;
         this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)
     }
@@ -417,6 +420,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the interact action.
      */
     interact(collector) {
+        if (this.isDead) return;
         if (!this.playerCanMove) {
             if (this.debugLogs) {
                 console.log("Interact attempted while player cannot move (menu active).");
@@ -437,6 +441,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the pause action.
      */
     pause(collector) {
+        if (this.isDead) return;
         if (!this.playerCanMove) {
             if (this.debugLogs) {
                 console.log("Pause attempted while player cannot move (menu active).");
@@ -454,6 +459,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the help action.
      */
     help(collector) {
+        if (this.isDead) return;
         if (!this.playerCanMove) {
             if (this.debugLogs) {
                 console.log("Help attempted while player cannot move (menu active).");
@@ -471,8 +477,10 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the back action.
      */
     back(collector) {
+        if (this.isDead) return;
         // console.log(`${this.name} went back!`);
         // Implement back logic, e.g., close a menu, return to previous state
+        if (!this) return;
         UIManager.instance.closeMenu();
     }
 
