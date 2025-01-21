@@ -15,16 +15,16 @@ export class MainMenuScene extends Scene {
 
     uiManager.openMainMenu();
 
-    new Pickup({x: 50, y: -100});
-    new Pickup({x: 100, y: -50});
-    new Pickup({x: 150, y: 0});
-    new Pickup({x: 200, y: 50});
-    new Pickup({x: 250, y: 100});
-    new Pickup({x: -50, y: -100});
-    new Pickup({x: -100, y: -50});
-    new Pickup({x: -150, y: 0});
-    new Pickup({x: -200, y: 50});
-    new Pickup({x: -250, y: 100});
+    new Pickup({ x: 50, y: -100 });
+    new Pickup({ x: 100, y: -50 });
+    new Pickup({ x: 150, y: 0 });
+    new Pickup({ x: 200, y: 50 });
+    new Pickup({ x: 250, y: 100 });
+    new Pickup({ x: -50, y: -100 });
+    new Pickup({ x: -100, y: -50 });
+    new Pickup({ x: -150, y: 0 });
+    new Pickup({ x: -200, y: 50 });
+    new Pickup({ x: -250, y: 100 });
     new TestThing2(0, 250, 900, 10);
     new TestThing2(0, -250, 900, 10);
     new TestThing2(440, 0, 10, 500);
@@ -35,7 +35,9 @@ export class MainMenuScene extends Scene {
   }
 
   loadMainScene() {
-    UIManager.getInstance().closeMainMenu();
-    Engine.instance.loadScene(new MainScene());
+    setTimeout(() => {
+      UIManager.instance.closeMenu();
+      Engine.instance.loadScene(new MainScene());
+    }, 1000); // 2000 milliseconds = 2 seconds
   }
 }
