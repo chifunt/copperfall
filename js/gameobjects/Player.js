@@ -209,6 +209,7 @@ export class Player extends GameObject {
     die() {
         this.getComponent(HUD).removeHud();
         console.log("Player has died!");
+        UIManager.instance.openGameOverMenu();
         this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)
     }
@@ -391,6 +392,7 @@ export class Player extends GameObject {
     pause(collector) {
         // console.log(`${this.name} paused the game!`);
         // Implement pause logic, e.g., show pause menu
+        UIManager.instance.openPauseMenu();
     }
 
     /**
@@ -398,8 +400,9 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the help action.
      */
     help(collector) {
-        console.log(`${this.name} requested help!`);
+        // console.log(`${this.name} requested help!`);
         // Implement help logic, e.g., display help screen
+        UIManager.instance.openHelpMenu();
     }
 
     /**
@@ -407,7 +410,7 @@ export class Player extends GameObject {
      * @param {Gamepad|GameObject} collector - The source of the back action.
      */
     back(collector) {
-        console.log(`${this.name} went back!`);
+        // console.log(`${this.name} went back!`);
         // Implement back logic, e.g., close a menu, return to previous state
         UIManager.instance.closeMenu();
     }

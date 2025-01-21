@@ -13,13 +13,14 @@ export class UIManager extends GameObject {
 
     UIManager.instance = this;
 
-    this.activeMenu = null;
+    // Menu Elements
     this.mainMenu = document.querySelector("#main-menu-container");
     this.shipMenu = document.querySelector("#ship-menu-container");
     this.gameOverMenu = document.querySelector("#game-over-container");
     this.helpMenu = document.querySelector("#help-menu-container");
     this.pauseMenu = document.querySelector("#pause-menu-container");
 
+    this.activeMenu = null;
     this.isAnimating = false; // Flag to handle animation state
   }
 
@@ -34,8 +35,17 @@ export class UIManager extends GameObject {
     return UIManager.instance;
   }
 
-  openShipMenu() {
-    if (this.activeMenu != null) {
+  /**
+   * Generic method to open any menu.
+   * @param {HTMLElement} menu - The menu element to open.
+   */
+  openMenu(menu) {
+    if (!menu) {
+      console.error("Menu element does not exist.");
+      return;
+    }
+
+    if (this.activeMenu !== null) {
       console.log("Another menu is currently active.");
       return;
     }
@@ -47,7 +57,7 @@ export class UIManager extends GameObject {
 
     this.isAnimating = true; // Set animation flag
 
-    this.activeMenu = this.shipMenu;
+    this.activeMenu = menu;
     this.activeMenu.style.display = "flex";
 
     // **Remove both animation classes to reset any previous states**
@@ -65,10 +75,52 @@ export class UIManager extends GameObject {
     this.activeMenu.addEventListener("animationend", onAnimationEnd);
   }
 
+  /**
+   * Opens the Ship Menu.
+   */
+  openShipMenu() {
+    this.openMenu(this.shipMenu);
+  }
+
+  /**
+   * Opens the Pause Menu.
+   */
+  openPauseMenu() {
+    this.openMenu(this.pauseMenu);
+  }
+
+  /**
+   * Opens the Help Menu.
+   */
+  openHelpMenu() {
+    this.openMenu(this.helpMenu);
+  }
+
+  /**
+   * Opens the Game Over Menu.
+   */
+  openGameOverMenu() {
+    this.openMenu(this.gameOverMenu);
+  }
+
+  /**
+   * Opens the Main Menu.
+   */
+  openMainMenu() {
+    this.openMenu(this.mainMenu);
+  }
+
+  /**
+   * Closes the currently active menu.
+   */
   closeMenu() {
     if (this.activeMenu == null) return;
+
     // Prevent closing critical menus manually
-    if (this.activeMenu == this.gameOverMenu || this.activeMenu == this.mainMenu) return;
+    if (this.activeMenu == this.gameOverMenu || this.activeMenu == this.mainMenu) {
+      console.log("Cannot close the Game Over or Main Menu manually.");
+      return;
+    }
 
     if (this.isAnimating) {
       console.log("Animation in progress. Please wait.");
