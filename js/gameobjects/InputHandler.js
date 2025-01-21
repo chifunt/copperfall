@@ -1,3 +1,4 @@
+// InputHandler.js
 import { GameObject } from "../core/GameObject.js";
 import { Actions } from "../utils/Actions.js";
 
@@ -68,6 +69,11 @@ export class InputHandler extends GameObject {
             Escape: [Actions.BACK, Actions.PAUSE],
             " ": Actions.DASH,
             e: Actions.INTERACT,
+            // Added mappings for up and down actions
+            w: Actions.UP,
+            s: Actions.DOWN,
+            ArrowUp: Actions.UP,
+            ArrowDown: Actions.DOWN,
         };
 
         // Define controller button mappings
@@ -79,12 +85,19 @@ export class InputHandler extends GameObject {
             7: Actions.DASH,     // LB
             6: Actions.DASH,     // RB
             9: Actions.PAUSE,    // Start/Menu
+            // Added mappings for D-pad up and down
+            12: Actions.UP,      // D-pad Up
+            13: Actions.DOWN,    // D-pad Down
         };
 
         // Define controller axis mappings
         this.controllerAxisActionMap = {
-            // 2: Actions.DASH,
-            // 5: Actions.DASH,
+            // Left Stick Vertical (usually axis 1)
+            1: { // Axis index for vertical movement
+                positive: Actions.DOWN, // Pushing down on the joystick
+                negative: Actions.UP,    // Pushing up on the joystick
+            },
+            // You can add more axis mappings here if needed
         };
 
         // Threshold for axis actions
@@ -161,7 +174,7 @@ export class InputHandler extends GameObject {
         if (this.actionCallbacks[action]) {
             this.actionCallbacks[action].forEach(callback => callback(collector));
         }
-        if (action == Actions.INTERACT || action == Actions.DASH) {
+        if (action == Actions.INTERACT || action == Actions.DASH || action == Actions.UP || action == Actions.DOWN) {
             document.activeElement.click();
         }
     }
@@ -171,13 +184,12 @@ export class InputHandler extends GameObject {
      * @param {KeyboardEvent} event
      */
     handleKeyDown(event) {
-        // const key = event.key.toLowerCase();
         const key = event.key;
 
         // Handle movement keys
-        if (this.keyMap[key]) {
+        if (this.keyMap[key.toLowerCase()]) {
             event.preventDefault(); // Prevent default behavior for mapped keys
-            const { axis, value } = this.keyMap[key];
+            const { axis, value } = this.keyMap[key.toLowerCase()];
             this.addKey(axis, value);
             this.updateKeyboardDirection();
             this.usingController = false; // Switch to keyboard input
@@ -275,7 +287,10 @@ export class InputHandler extends GameObject {
         this.previousGamepadButtonStates[gamepad.index] = gamepad.buttons.map(b => b.pressed);
         this.previousGamepadAxisStates[gamepad.index] = {};
         for (const axisIndex in this.controllerAxisActionMap) {
-            this.previousGamepadAxisStates[gamepad.index][axisIndex] = false;
+            this.previousGamepadAxisStates[gamepad.index][axisIndex] = {
+                positive: false,
+                negative: false,
+            };
         }
     }
 
@@ -314,7 +329,10 @@ export class InputHandler extends GameObject {
                 if (!this.previousGamepadAxisStates[gp.index]) {
                     this.previousGamepadAxisStates[gp.index] = {};
                     for (const axisIndex in this.controllerAxisActionMap) {
-                        this.previousGamepadAxisStates[gp.index][axisIndex] = false;
+                        this.previousGamepadAxisStates[gp.index][axisIndex] = {
+                            positive: false,
+                            negative: false,
+                        };
                     }
                 }
 
@@ -335,20 +353,29 @@ export class InputHandler extends GameObject {
 
                 // Handle axis actions
                 for (const axisIndex in this.controllerAxisActionMap) {
-                    const action = this.controllerAxisActionMap[axisIndex];
+                    const axisConfig = this.controllerAxisActionMap[axisIndex];
                     const axisValue = gp.axes[axisIndex];
-                    const isPressed = axisValue > this.AXIS_THRESHOLD;
-                    const wasPressed = this.previousGamepadAxisStates[gp.index][axisIndex];
+                    const isPositive = axisValue > this.AXIS_THRESHOLD;
+                    const isNegative = axisValue < -this.AXIS_THRESHOLD;
 
-                    if (isPressed && !wasPressed) {
-                        // Axis just exceeded the threshold
-                        this.emit(action, gp); // 'collector' is the Gamepad object
+                    const wasPositive = this.previousGamepadAxisStates[gp.index][axisIndex].positive;
+                    const wasNegative = this.previousGamepadAxisStates[gp.index][axisIndex].negative;
+
+                    // Check for positive direction crossing the threshold
+                    if (isPositive && !wasPositive) {
+                        this.emit(axisConfig.positive, gp);
                     }
 
-                    // Update previous axis state
-                    this.previousGamepadAxisStates[gp.index][axisIndex] = isPressed;
+                    // Check for negative direction crossing the threshold
+                    if (isNegative && !wasNegative) {
+                        this.emit(axisConfig.negative, gp);
+                    }
 
-                    if (isPressed) {
+                    // Update previous axis states
+                    this.previousGamepadAxisStates[gp.index][axisIndex].positive = isPositive;
+                    this.previousGamepadAxisStates[gp.index][axisIndex].negative = isNegative;
+
+                    if (isPositive || isNegative) {
                         anyGamepadInput = true;
                         // For dash, direction might not matter, but if needed, modify here
                         // Example: this.gamepadDirection.x += some_value;
