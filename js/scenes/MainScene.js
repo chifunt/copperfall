@@ -5,6 +5,7 @@ import { InputHandler } from "/js/gameobjects/InputHandler.js";
 import { CameraObject } from "/js/gameobjects/CameraObject.js";
 import { UIManager } from "../gameobjects/UIManager.js";
 import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { ChunkManager } from "../gameobjects/ChunkManager.js";
 
 export class MainScene extends Scene {
   onStart() {
@@ -20,5 +21,6 @@ export class MainScene extends Scene {
     });
 
     // Instantiate Chunk Generator Here
+    const chunkManager = new ChunkManager(player, {});
   }
 }
