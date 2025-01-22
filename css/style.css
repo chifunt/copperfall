@@ -129,7 +129,7 @@ canvas {
 }
 
 #charge-container.charge-container-flash {
-  animation: chargeflash 1s ease-out
+  animation: chargeflash 1s ease-in-out
 }
 
 @keyframes chargeflash {
@@ -310,6 +310,7 @@ canvas {
   top: 85%;
   left: 70%;
   font-size: 2vw;
+  margin-bottom: 1.5vw;
 }
 
 #main-menu-container {
