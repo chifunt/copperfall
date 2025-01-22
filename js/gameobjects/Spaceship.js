@@ -7,11 +7,11 @@ import { DropShadow } from "../components/DropShadow.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 
 export class Spaceship extends GameObject {
-  constructor() {
+  constructor(posx, posy) {
     super("Spaceship");
 
     // Set initial position and scale
-    this.transform.position = { x: 0, y: 100 };
+    this.transform.position = { x: posx, y: posy };
     this.transform.scale = { x: 100, y: 200 };
 
     // Add SpriteRenderer

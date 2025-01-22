@@ -1,4 +1,3 @@
-// /js/scenes/MainScene.js
 import { Scene } from "/js/core/Scene.js";
 import { Background } from "/js/gameobjects/Background.js";
 import { Player } from "/js/gameobjects/Player.js";
@@ -35,7 +34,7 @@ export class MainScene extends Scene {
       lookAheadDist: 10,
     });
 
-    new Spaceship();
+    new Spaceship(0, 150);
 
     new Pickup({x: 100, y: -200});
     new Pickup({x: 50, y: -200});
