@@ -41,7 +41,7 @@ export class EnemyTest extends GameObject {
 
     const mainCollider = new BoxCollider({
       width: this.transform.scale.x,
-      height: this.transform.scale.y,
+      height: this.transform.scale.y - 10,
       offset: { x: 0, y: height / 2 },
       isTrigger: false,
     });
@@ -55,7 +55,7 @@ export class EnemyTest extends GameObject {
     this.addComponent(hitboxCollider);
 
     const damagingCollider = new CircleCollider({
-      radius: 5,
+      radius: 10,
       offset: { x: 0, y: height / 2 },
       isTrigger: true,
     });
