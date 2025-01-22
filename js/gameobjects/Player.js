@@ -523,6 +523,7 @@ export class Player extends GameObject {
 
         // console.log(`${this.name} paused the game!`);
         // Implement pause logic, e.g., show pause menu
+        // no need to implement pause for now?
         UIManager.instance.openPauseMenu();
     }
 
@@ -541,7 +542,8 @@ export class Player extends GameObject {
 
         // console.log(`${this.name} requested help!`);
         // Implement help logic, e.g., display help screen
-        UIManager.instance.openHelpMenu();
+        // gonna disable this, there's actually not a need anymore since I made tooltips.
+        // UIManager.instance.openHelpMenu();
     }
 
     /**
