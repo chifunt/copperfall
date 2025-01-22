@@ -21,14 +21,14 @@ export class DestructibleRock extends GameObject {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };
 
-    const dropShadow = new DropShadow({
-      offset: { x: 0, y: -23 },
-      width: 1.3,
-      height: 0.25,
-      color: "#00002266",
-      zOrderOffset: -10,
-    });
-    this.addComponent(dropShadow);
+    // const dropShadow = new DropShadow({
+    //   offset: { x: 0, y: -23 },
+    //   width: 1.3,
+    //   height: 0.25,
+    //   color: "#00002266",
+    //   zOrderOffset: -10,
+    // });
+    // this.addComponent(dropShadow);
 
     this.rockBurst = new ParticleSystemObject("RockBurst", {
       burst: true,
@@ -42,8 +42,7 @@ export class DestructibleRock extends GameObject {
       duration: 0.1, // only needed if we want the system to auto-destroy after
       startSize: 10
     });
-    this.rockBurst.transform.position.x = this.transform.position.x;
-    this.rockBurst.transform.position.y = this.transform.position.y;
+    this.rockBurst.transform.position = this.transform.position;
 
     const mainCollider = new BoxCollider({
       width: this.transform.scale.x,
