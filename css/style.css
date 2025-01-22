@@ -496,15 +496,15 @@ h2 {
 .tooltip {
   display: flex;
   position: absolute;
-  background-color: #191724aa;
+  background-color: #19172480;
   width: auto;
   bottom: 0;
   right: 0;
-  height: 10%;
+  height: 5%;
   padding: 0vw 2vw;
   border-radius: 3vw;
-  margin: 3%;
-  font-size: 1.5vw;
+  margin: 2%;
+  font-size: 1vw;
   justify-content: center;
   align-items: center;
   gap: 0.5vw;
@@ -519,8 +519,8 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2vw;
-  height: 2vw;
+  width: 1.5vw;
+  height: 1.5vw;
   box-shadow: 0 0 .3vw rgba(0, 0, 0, 1) inset;
 }
 .keyboard-key {
@@ -556,9 +556,9 @@ h2 {
 }
 
 .console-key.joystick {
-  font-size: 1vw;
+  font-size: .7vw;
   background-color: grey;
-  border: #a7a6b9 0.2vw solid;
+  border: #a7a6b9 0.1vw double;
 }
 
 #hud-container {
