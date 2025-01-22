@@ -5,6 +5,6 @@ export class StarterChunkC extends BaseChunk {
   constructor(cx, cy) {
     super(StarterChunkC.name, cx, cy, 400);
     this.loadChunkMap("/assets/images/chunk-maps/start-c.png");
-    this.addChildObject(new Spaceship(0, -50));
+    this.addChildObject(new Spaceship(0, -80));
   }
 }
