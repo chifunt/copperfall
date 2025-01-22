@@ -1,0 +1,27 @@
+import { Rock } from "/js/gameobjects/Rock.js";
+import { EnemyTest } from "/js/gameobjects/EnemyTest.js";
+import { Pickup } from "/js/gameobjects/Pickup.js";
+import { DestructibleRock } from "/js/gameobjects/DestructibleRock.js";
+
+/**
+ * ChunkColorMap maps each game object to its corresponding color.
+ * This allows accessing classes like ChunkColorMap.Rock and also facilitates color-to-class mapping.
+ */
+export const ChunkColorMap = {
+  Rock: {
+    color: "#ffffff",          // White
+    class: Rock
+  },
+  EnemyTest: {
+    color: "#ff0000",          // Red
+    class: EnemyTest
+  },
+  Pickup: {
+    color: "#00ff00",          // Green
+    class: Pickup
+  },
+  DestructibleRock: {
+    color: "#0000ff",          // Blue
+    class: DestructibleRock
+  }
+};

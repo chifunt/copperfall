@@ -1,19 +1,6 @@
 import { GameObject } from "/js/core/GameObject.js";
 import { Engine } from "/js/core/Engine.js";
-
-// Example imports of classes to spawn:
-import { Rock } from "/js/gameobjects/Rock.js";
-import { EnemyTest } from "/js/gameobjects/EnemyTest.js";
-import { Pickup } from "/js/gameobjects/Pickup.js";
-import { DestructibleRock } from "/js/gameobjects/DestructibleRock.js";
-
-// OPTIONAL: If you prefer a dynamic approach, you could store this mapping externally.
-const COLOR_TO_CLASS = {
-  "#ffffff": Rock,              // White
-  "#ff0000": EnemyTest,         // Red
-  "#00ff00": Pickup,            // Green
-  "#0000ff": DestructibleRock   // Blue
-};
+import { ChunkColorMap } from "./ChunkColorMap.js";
 
 export class BaseChunk extends GameObject {
   constructor(name, cx, cy, chunkSize = 400) {
@@ -75,17 +62,26 @@ export class BaseChunk extends GameObject {
   }
 
   /**
- * Loads a chunk map (.png) and spawns objects based on colors.
- * Ensures that only one object is instantiated per cell.
- *
- * @param {string} imagePath - e.g. "/assets/images/chunk-maps/start-a.png"
- * @param {Object} customMap - optional color->class mapping if you want to override or extend
- * @param {number} cellsX - number of cells horizontally (default: 8)
- * @param {number} cellsY - number of cells vertically (default: 8)
- * @returns {Promise<void>}
- */
+   * Loads a chunk map (.png) and spawns objects based on colors.
+   * Ensures that only one object is instantiated per cell.
+   *
+   * @param {string} imagePath - e.g. "/assets/images/chunk-maps/start-a.png"
+   * @param {Object} customMap - optional color->class mapping if you want to override or extend
+   * @param {number} cellsX - number of cells horizontally (default: 8)
+   * @param {number} cellsY - number of cells vertically (default: 8)
+   * @returns {Promise<void>}
+   */
   async loadChunkMap(imagePath, customMap = {}, cellsX = 8, cellsY = 8) {
-    const colorMap = { ...COLOR_TO_CLASS, ...customMap };
+    // Build the color to class map from ChunkColorMap
+    const colorMap = {};
+
+    for (const key in ChunkColorMap) {
+      const { color, class: cls } = ChunkColorMap[key];
+      colorMap[color.toLowerCase()] = cls;
+    }
+
+    // Override or extend with customMap if provided
+    Object.assign(colorMap, customMap);
 
     // 1. Load the image
     const img = await this.loadImageAsync(imagePath);
@@ -117,18 +113,28 @@ export class BaseChunk extends GameObject {
             const g = data[i + 1];
             const b = data[i + 2];
             const a = data[i + 3];
+            if (a === 0) continue; // Skip transparent pixels
             const colorKey = this.rgbToHex(r, g, b);
             colorsInCell.add(colorKey);
           }
         }
 
         // Determine which object to spawn based on colors in the cell
-        // For example, prioritize certain colors
+        // For example, prioritize certain colors based on ChunkColorMap's order
         let objectClass = null;
-        for (const color of Object.keys(colorMap)) {
-          if (colorsInCell.has(color)) {
-            objectClass = colorMap[color];
+        for (const key in ChunkColorMap) {
+          const { color, class: cls } = ChunkColorMap[key];
+          if (colorsInCell.has(color.toLowerCase())) {
+            objectClass = cls;
             break; // Stop at first matching color based on priority
+          }
+        }
+
+        // Check if a custom map overrides the selection
+        for (const color in customMap) {
+          if (colorsInCell.has(color.toLowerCase())) {
+            objectClass = customMap[color];
+            break;
           }
         }
 
@@ -155,20 +161,21 @@ export class BaseChunk extends GameObject {
   loadImageAsync(src) {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      img.crossOrigin = "Anonymous"; // Handle CORS if necessary
       img.onload = () => resolve(img);
-      img.onerror = reject;
+      img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
       img.src = src;
     });
   }
 
   /**
-   * Converts (r,g,b,a) => "#rrggbbaa" hex string (lowercase).
+   * Converts (r,g,b) => "#rrggbb" hex string (lowercase).
    */
   rgbToHex(r, g, b) {
-    // clamp each to [0..255], then convert to 2-digit hex
-    const rh = r.toString(16).padStart(2, "0");
-    const gh = g.toString(16).padStart(2, "0");
-    const bh = b.toString(16).padStart(2, "0");
+    // Clamp each to [0..255], then convert to 2-digit hex
+    const rh = Math.max(0, Math.min(255, r)).toString(16).padStart(2, "0");
+    const gh = Math.max(0, Math.min(255, g)).toString(16).padStart(2, "0");
+    const bh = Math.max(0, Math.min(255, b)).toString(16).padStart(2, "0");
     return `#${rh}${gh}${bh}`.toLowerCase();
   }
 }
