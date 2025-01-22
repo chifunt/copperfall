@@ -2,28 +2,37 @@
 import { Component } from "/js/core/Component.js";
 import { Engine } from "/js/core/Engine.js";
 
+/**
+ * ParticleSystem Component
+ * Manages the emission, updating, and rendering of particles.
+ */
 export class ParticleSystem extends Component {
   /**
-   * @param {Object} config
-   * @param {boolean} [config.loop=true]        - If true, the system continuously emits particles (unless manually stopped).
-   * @param {boolean} [config.playOnWake=true]  - If true, emission starts immediately.
+   * @param {Object} config - Configuration object for the particle system.
+   * @param {boolean} [config.loop=true] - If true, the system continuously emits particles (unless manually stopped).
+   * @param {boolean} [config.playOnWake=true] - If true, emission starts immediately.
    * @param {number} [config.duration=Infinity] - System lifetime in seconds if not looping.
-   * @param {number} [config.rateOverTime=10]   - Particles to emit per second (if not burst).
-   * @param {boolean} [config.burst=false]      - If true, all particles are emitted at once.
-   * @param {number} [config.burstCount=20]     - Number of particles to emit in a burst.
-   * @param {number} [config.spawnRadius=0]     - Radius around the system's position for spawning.
-   * @param {string} [config.color="#ffffff"]   - Particle color (hex or CSS string).
-   * @param {number} [config.particleLifetime=1]- How long each particle lives, in seconds.
-   * @param {number} [config.startSize=10]      - Starting radius of each particle.
+   * @param {number} [config.rateOverTime=10] - Particles to emit per second (if not burst).
+   * @param {boolean} [config.burst=false] - If true, all particles are emitted at once.
+   * @param {number} [config.burstCount=20] - Number of particles to emit in a burst.
+   * @param {number} [config.spawnRadius=0] - Radius around the system's position for spawning.
+   * @param {string} [config.color="#ffffff"] - Particle color (hex or CSS string).
+   * @param {number} [config.particleLifetime=1] - How long each particle lives, in seconds.
+   * @param {number} [config.startSize=10] - Starting radius of each particle.
    * @param {boolean} [config.sizeOverTime=false] - If true, the size shrinks (or changes) over time.
    * @param {function} [config.sizeOverTimeFunction] - Custom function for size changes over time.
-   * @param {number} [config.zOrder=0]          - Z-order for rendering these particles.
+   * @param {number} [config.zOrder=0] - Z-order for rendering these particles.
+   * @param {number} [config.minInitialSpeed=0] - Minimum initial speed of particles.
+   * @param {number} [config.maxInitialSpeed=100] - Maximum initial speed of particles.
+   * @param {number} [config.minAngle=0] - Minimum emission angle in degrees.
+   * @param {number} [config.maxAngle=360] - Maximum emission angle in degrees.
+   * @param {Object} [config.acceleration={x: 0, y: 0}] - Acceleration applied to particles.
    */
   constructor(config = {}) {
     super();
     // Emission/Update States
     this.isEmitting = config.playOnWake ?? true; // Spawns new particles if true
-    this.isSystemActive = true;  // If false, system won't update or render at all (optional)
+    this.isSystemActive = true; // If false, system won't update or render at all (optional)
 
     // Basic configs
     this.loop = config.loop ?? true;
@@ -40,9 +49,16 @@ export class ParticleSystem extends Component {
     this.sizeOverTimeFunction = config.sizeOverTimeFunction || null;
     this.zOrder = config.zOrder ?? 0;
 
-    this.elapsedTime = 0;
-    this.particles = [];            // Array of active particles
-    this.emissionAccumulator = 0;   // For rateOverTime logic
+    // Velocity and Acceleration configs
+    this.minInitialSpeed = config.minInitialSpeed ?? 0;
+    this.maxInitialSpeed = config.maxInitialSpeed ?? 100;
+    this.minAngle = config.minAngle ?? 0; // in degrees
+    this.maxAngle = config.maxAngle ?? 360; // in degrees
+    this.acceleration = config.acceleration || { x: 0, y: 0 };
+
+    this.elapsedTime = 0; // Tracks the system's running time
+    this.particles = []; // Store particles in an array
+    this.emissionAccumulator = 0; // For rateOverTime emissions
   }
 
   start() {
@@ -95,29 +111,50 @@ export class ParticleSystem extends Component {
     }
   }
 
+  /**
+   * Spawns a single particle with random velocity within the configured parameters.
+   */
   spawnParticle() {
-    // random angle + distance
-    const angle = Math.random() * Math.PI * 2;
+    // Random angle in radians between minAngle and maxAngle
+    const angleDeg = this.minAngle + Math.random() * (this.maxAngle - this.minAngle);
+    const angleRad = (angleDeg * Math.PI) / 180;
+
+    // Random speed between min and max
+    const speed = this.minInitialSpeed + Math.random() * (this.maxInitialSpeed - this.minInitialSpeed);
+
+    // Velocity components
+    const vx = speed * Math.cos(angleRad);
+    const vy = speed * Math.sin(angleRad);
+
+    // Random distance within spawnRadius
+    const angleSpawn = Math.random() * Math.PI * 2;
     const dist = Math.random() * this.spawnRadius;
 
-    // gameObject transform
+    // Get GameObject's current position
     const gx = this.gameObject.transform.position.x;
     const gy = this.gameObject.transform.position.y;
 
-    // local position
-    const px = gx + dist * Math.cos(angle);
-    const py = gy + dist * Math.sin(angle);
+    // Spawn position with spawnRadius
+    const px = gx + dist * Math.cos(angleSpawn);
+    const py = gy + dist * Math.sin(angleSpawn);
 
+    // Create particle object
     this.particles.push({
       x: px,
       y: py,
+      vx: vx,
+      vy: vy,
       size: this.startSize,
       lifetime: this.particleLifetime,
-      age: 0
-      // velocity, color, alpha, etc. can be added here
+      age: 0,
+      // You can add more properties like color variations, etc.
     });
   }
 
+  /**
+   * Updates all particles and handles emission.
+   * @param {number} deltaTime - Time elapsed since the last frame in seconds.
+   */
   update(deltaTime) {
     // If the entire system is inactive, skip everything
     if (!this.isSystemActive) return;
@@ -148,16 +185,20 @@ export class ParticleSystem extends Component {
         continue;
       }
 
-      // Example: velocity if you want
-      // p.x += p.vx * deltaTime;
-      // p.y += p.vy * deltaTime;
+      // Update velocity with acceleration
+      p.vx += this.acceleration.x * deltaTime;
+      p.vy += this.acceleration.y * deltaTime;
+
+      // Update position with velocity
+      p.x += p.vx * deltaTime;
+      p.y += p.vy * deltaTime;
 
       // Size over time
       if (this.sizeOverTime) {
         if (this.sizeOverTimeFunction) {
           p.size = this.sizeOverTimeFunction(p.age, p.lifetime, this.startSize);
         } else {
-          // default linear scale from startSize -> 0
+          // Default: linear shrink
           const t = p.age / p.lifetime; // 0 -> 1
           p.size = this.startSize * (1 - t);
         }
@@ -171,8 +212,12 @@ export class ParticleSystem extends Component {
     }
   }
 
+  /**
+   * Renders all active particles as ellipses.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   render(ctx) {
-    if (!this.isSystemActive) return;  // If fully paused
+    if (!this.isSystemActive) return; // If fully paused
 
     const engine = Engine.instance;
     const camera = engine.camera;
@@ -182,12 +227,26 @@ export class ParticleSystem extends Component {
       const screenX = (p.x - camera.position.x) * camera.scale + engine.canvas.width / 2;
       const screenY = (-p.y + camera.position.y) * camera.scale + engine.canvas.height / 2;
 
-      // If you want alpha fade
-      // let alpha = 1 - (p.age / p.lifetime);
-      // let fillColor = `rgba(255,255,255,${alpha})`;
+      // If you want alpha fade based on age
+      let alpha = 1;
+      if (this.sizeOverTime) {
+        alpha = 1 - p.age / p.lifetime; // Simple linear fade
+      }
+
+      // Modify color with alpha if needed
+      let fillColor = this.color;
+      if (alpha < 1) {
+        // Assuming color is in format "#RRGGBB" or "#RRGGBBAA"
+        if (this.color.length === 7) { // e.g., "#ffffff"
+          fillColor = this.color + Math.round(alpha * 255).toString(16).padStart(2, '0');
+        } else {
+          // If already includes alpha, overwrite it
+          fillColor = this.color.slice(0, 7) + Math.round(alpha * 255).toString(16).padStart(2, '0');
+        }
+      }
 
       ctx.save();
-      ctx.fillStyle = this.color; // Or fillColor if alpha fade
+      ctx.fillStyle = fillColor;
       ctx.beginPath();
       ctx.ellipse(screenX, screenY, p.size * camera.scale, p.size * camera.scale, 0, 0, 2 * Math.PI);
       ctx.fill();

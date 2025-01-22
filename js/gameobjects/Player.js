@@ -178,31 +178,38 @@ export class Player extends GameObject {
         this.trail = new ParticleSystemObject("PlayerTrail", {
             rateOverTime: 20,
             spawnRadius: 5,
-            color: "#ffffff40",
+            color: "#e0def440",
             particleLifetime: 0.5,
             sizeOverTime: true,
             startSize: 7,
+            minInitialSpeed: 10,
+            maxInitialSpeed: 50,
+            acceleration: { x: 0, y: 10}
         });
         this.dashTrail = new ParticleSystemObject("PlayerTrail", {
             rateOverTime: 50,
             spawnRadius: 10,
-            color: "#1010eeaa",
+            color: "#1010ee44",
             particleLifetime: 0.5,
             sizeOverTime: true,
             startSize: 20,
+            playOnWake: false,
         });
-        this.dashTrail.stopSystem();
         this.dashBurst = new ParticleSystemObject("DashBurst", {
             burst: true,
             burstCount: 20,
             spawnRadius: 40,
-            color: "rgba(0, 10, 128, 1.0)",
+            color: "rgba(0, 255, 0, 1)",
             particleLifetime: 0.6,
             sizeOverTime: true,
             playOnWake: false,
             loop: false,
-            duration: 0.1, // only needed if we want the system to auto-destroy after
-            startSize: 10
+            duration: 0.5, // only needed if we want the system to auto-destroy after
+            startSize: 10,
+            minAngle: 0,
+            maxAngle: 360,
+            minInitialSpeed: 200,
+            maxInitialSpeed: 300
         });
         this.trailOffset = { x: 0, y: 12 }; // offset behind player if desired
     }
