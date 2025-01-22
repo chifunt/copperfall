@@ -15,6 +15,7 @@ export class MainMenuScene extends Scene {
 
     uiManager.openMainMenu();
     uiManager.startButton.addEventListener("click", function () {
+      uiManager.startButton.disabled = true;
       UIManager.instance.closeMenu();
       uiManager.blackScreen.classList.remove("activated");
       void uiManager.blackScreen.offsetWidth;
@@ -22,7 +23,6 @@ export class MainMenuScene extends Scene {
       setTimeout(() => {
         Engine.instance.loadScene(new MainScene());
       }, 500);
-
     });
     uiManager.retryButton.addEventListener("click", function () {
       UIManager.instance.closeMenu();
