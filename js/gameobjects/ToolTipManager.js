@@ -1,5 +1,3 @@
-// File: /js/managers/ToolTipManager.js
-
 import { GameObject } from "../core/GameObject.js";
 
 export class ToolTipManager extends GameObject {
@@ -30,8 +28,9 @@ export class ToolTipManager extends GameObject {
     // Initialize EventTarget for event handling
     this.eventTarget = new EventTarget();
 
-    // Initialize the tooltip queue
-    this.tooltipQueue = [];
+    // Initialize the action queue
+    this.actionQueue = [];
+    this.isProcessing = false;
   }
 
   /**
@@ -74,63 +73,144 @@ export class ToolTipManager extends GameObject {
   }
 
   /**
-   * Generic method to show any tooltip with queueing.
-   * Ensures the same tooltip isn't queued multiple times.
-   * @param {HTMLElement} toolTip - The tooltip element to show.
+   * Enqueues an action (show or close) to the action queue.
+   * Prevents duplicate show actions for the same tooltip and multiple close actions.
+   * @param {Object} action - The action object containing type and toolTip.
    */
-  showToolTip(toolTip) {
-    if (!toolTip) {
-      console.error("Tooltip element does not exist.");
-      return;
+  enqueueAction(action) {
+    if (action.type === 'show') {
+      // Prevent duplicate show actions for the same tooltip
+      const isAlreadyQueued = this.actionQueue.some(
+        (a) => a.type === 'show' && a.toolTip === action.toolTip
+      );
+      if (isAlreadyQueued) {
+        console.log(`Tooltip "${action.toolTip.id}" is already queued to be shown.`);
+        return;
+      }
     }
 
-    // If the tooltip is already active, do nothing
-    if (this.activeToolTip === toolTip) {
-      console.log("Tooltip is already active.");
-      return;
+    if (action.type === 'close') {
+      // Prevent multiple close actions in the queue
+      const isCloseQueued = this.actionQueue.some((a) => a.type === 'close');
+      if (isCloseQueued) {
+        console.log(`A close action is already queued.`);
+        return;
+      }
+
+      // Also, prevent queuing close if no tooltip is active
+      if (!this.activeToolTip && !this.isAnimating) {
+        console.log("No active tooltip to close.");
+        return;
+      }
     }
 
-    // If the tooltip is already in the queue, do not add it again
-    if (this.tooltipQueue.includes(toolTip)) {
-      console.log("Tooltip is already in the queue.");
-      return;
+    // Add the action to the queue
+    this.actionQueue.push(action);
+    console.log(`Action queued: ${action.type}${action.toolTip ? ` (${action.toolTip.id})` : ''}`);
+
+    // Start processing the queue if not already doing so
+    this.processQueue();
+  }
+
+  /**
+   * Processes the action queue sequentially.
+   */
+  async processQueue() {
+    if (this.isProcessing || this.actionQueue.length === 0) return;
+
+    this.isProcessing = true;
+    const action = this.actionQueue.shift();
+
+    try {
+      if (action.type === 'show') {
+        await this._displayToolTip(action.toolTip);
+      } else if (action.type === 'close') {
+        await this._hideToolTip();
+      }
+    } catch (error) {
+      console.error(`Error processing action "${action.type}":`, error);
     }
 
-    // If no tooltip is active and not animating, show immediately
-    if (!this.activeToolTip && !this.isAnimating) {
-      this._displayToolTip(toolTip);
-    } else {
-      // Otherwise, add to the queue
-      this.tooltipQueue.push(toolTip);
-      console.log(`Tooltip queued: ${toolTip.id}`);
-    }
+    this.isProcessing = false;
+
+    // Continue processing the next action in the queue
+    this.processQueue();
   }
 
   /**
    * Internal method to handle the actual display of the tooltip.
    * @param {HTMLElement} toolTip - The tooltip element to display.
+   * @returns {Promise} - Resolves when the show animation ends.
    */
   _displayToolTip(toolTip) {
-    this.isAnimating = true; // Set animation flag
-    this.activeToolTip = toolTip;
-    this.activeToolTip.style.display = "flex";
+    return new Promise((resolve) => {
+      this.isAnimating = true; // Set animation flag
+      this.activeToolTip = toolTip;
+      this.activeToolTip.style.display = "flex";
 
-    // Remove both animation classes to reset any previous states
-    this.activeToolTip.classList.remove("tofadein", "tofadeout");
+      // Remove both animation classes to reset any previous states
+      this.activeToolTip.classList.remove("tofadein", "tofadeout");
 
-    void this.activeToolTip.offsetWidth; // Trigger reflow
+      void this.activeToolTip.offsetWidth; // Trigger reflow
 
-    this.activeToolTip.classList.add("tofadein");
+      this.activeToolTip.classList.add("tofadein");
 
-    const onAnimationEnd = () => {
-      this.isAnimating = false; // Reset animation flag
-      this.activeToolTip.removeEventListener("animationend", onAnimationEnd);
+      const onAnimationEnd = () => {
+        this.isAnimating = false; // Reset animation flag
+        this.activeToolTip.removeEventListener("animationend", onAnimationEnd);
 
-      // Dispatch event indicating a tooltip has been shown
-      this.dispatchEvent("toolTipOpened", { toolTip: this.activeToolTip });
-    };
+        // Dispatch event indicating a tooltip has been shown
+        this.dispatchEvent("toolTipOpened", { toolTip: this.activeToolTip });
+        resolve();
+      };
 
-    this.activeToolTip.addEventListener("animationend", onAnimationEnd);
+      this.activeToolTip.addEventListener("animationend", onAnimationEnd);
+    });
+  }
+
+  /**
+   * Internal method to handle the actual hiding of the tooltip.
+   * @returns {Promise} - Resolves when the hide animation ends.
+   */
+  _hideToolTip() {
+    return new Promise((resolve) => {
+      if (!this.activeToolTip) {
+        console.log("No active tooltip to hide.");
+        resolve();
+        return;
+      }
+
+      this.isAnimating = true; // Set animation flag
+
+      // Remove both animation classes to reset any previous states
+      this.activeToolTip.classList.remove("tofadein", "tofadeout");
+
+      void this.activeToolTip.offsetWidth; // Trigger reflow
+
+      this.activeToolTip.classList.add("tofadeout");
+
+      const onAnimationEnd = () => {
+        this.isAnimating = false; // Reset animation flag
+        this.activeToolTip.removeEventListener("animationend", onAnimationEnd);
+        this.activeToolTip.style.display = "none";
+
+        // Dispatch event indicating a tooltip has been closed
+        this.dispatchEvent("toolTipClosed", { toolTip: this.activeToolTip });
+
+        this.activeToolTip = null;
+        resolve();
+      };
+
+      this.activeToolTip.addEventListener("animationend", onAnimationEnd);
+    });
+  }
+
+  /**
+   * Generic method to show any tooltip with queueing.
+   * @param {HTMLElement} toolTip - The tooltip element to show.
+   */
+  showToolTip(toolTip) {
+    this.enqueueAction({ type: 'show', toolTip });
   }
 
   /**
@@ -176,55 +256,19 @@ export class ToolTipManager extends GameObject {
   }
 
   /**
-   * Closes the currently active tooltip and displays the next one in the queue, if any.
+   * Closes the currently active tooltip.
+   * This action is also queued to maintain order.
    */
   closeToolTip() {
-    if (this.activeToolTip == null) {
-      console.log("No active tooltip to close.");
-      return;
-    }
-
-    if (this.isAnimating) {
-      console.log("Animation in progress. Please wait.");
-      return;
-    }
-
-    this.isAnimating = true; // Set animation flag
-
-    // Remove both animation classes to reset any previous states
-    this.activeToolTip.classList.remove("tofadein", "tofadeout");
-
-    void this.activeToolTip.offsetWidth; // Trigger reflow
-
-    this.activeToolTip.classList.add("tofadeout");
-
-    const onAnimationEnd = () => {
-      this.isAnimating = false; // Reset animation flag
-      this.activeToolTip.removeEventListener("animationend", onAnimationEnd);
-      this.activeToolTip.style.display = "none";
-
-      // Dispatch event indicating a tooltip has been closed
-      this.dispatchEvent("toolTipClosed", { toolTip: this.activeToolTip });
-
-      this.activeToolTip = null;
-
-      // Check if there are tooltips in the queue
-      if (this.tooltipQueue.length > 0) {
-        const nextToolTip = this.tooltipQueue.shift();
-        console.log(`Displaying next tooltip from queue: ${nextToolTip.id}`);
-        this._displayToolTip(nextToolTip);
-      }
-    };
-
-    this.activeToolTip.addEventListener("animationend", onAnimationEnd);
+    this.enqueueAction({ type: 'close' });
   }
 
   /**
-   * Clears the entire tooltip queue.
+   * Clears the entire action queue.
    */
   clearQueue() {
-    this.tooltipQueue = [];
-    console.log("Tooltip queue cleared.");
+    this.actionQueue = [];
+    console.log("Action queue cleared.");
   }
 
   /**
@@ -233,7 +277,12 @@ export class ToolTipManager extends GameObject {
    * @returns {boolean} - True if the tooltip is active or in the queue, else false.
    */
   isToolTipActiveOrQueued(toolTip) {
-    return this.activeToolTip === toolTip || this.tooltipQueue.includes(toolTip);
+    return (
+      this.activeToolTip === toolTip ||
+      this.actionQueue.some(
+        (action) => action.type === 'show' && action.toolTip === toolTip
+      )
+    );
   }
 
   update(deltatime) {
