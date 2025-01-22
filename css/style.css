@@ -365,9 +365,9 @@ h2 {
   display: flex;
   background-color: var(--base-color);
   position: absolute;
-  width: 80%;
+  width: 50%;
   height: 80%;
-  left: 10%;
+  left: 25%;
   top: 10%;
   align-items: center;
   justify-content: center;

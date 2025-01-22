@@ -25,6 +25,7 @@ export class ShipMenuManager extends GameObject {
 
     // Reference to the Ship menu in the DOM
     this.shipMenu = UIManager.getInstance().shipMenu;
+    this.copperCounter = document.querySelector("#copper-count-container p");
 
     // Our data structure for the shop items.
     // Each item includes:
@@ -235,6 +236,7 @@ export class ShipMenuManager extends GameObject {
   refreshButtons() {
     const player = this.playerObject;
     if (!player) return;
+    this.copperCounter.textContent = player.copper;
 
     this.shopItems.forEach((item, i) => {
       const btn = this.buttons[i];
