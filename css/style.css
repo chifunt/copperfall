@@ -128,6 +128,24 @@ canvas {
   border-radius: .5vw;
 }
 
+#charge-container.charge-container-flash {
+  animation: chargeflash 1s ease-out
+}
+
+@keyframes chargeflash {
+  0% {
+    box-shadow: 0 0 5vw rgb(9, 21, 255);
+    background-color: #31748f;
+  }
+  50% {
+
+  }
+  100% {
+    background-color: var(--text-color);
+    box-shadow: 0 0 0.5vw black;
+  }
+}
+
 .charge {
   width: 90%;
   height: 25%;

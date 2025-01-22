@@ -52,6 +52,12 @@ export class HUD extends Component {
 
         // Avoid unnecessary updates
         if (currentCharges === this.prevDashCharges) return;
+        if (currentCharges < this.prevDashCharges) {
+            console.warn("CHONTATINER FLASH");
+            this.chargeContainer.classList.remove("charge-container-flash");
+            void this.chargeContainer.offsetWidth;
+            this.chargeContainer.classList.add("charge-container-flash");
+        }
         this.prevDashCharges = currentCharges;
 
         const chargeDivs = this.chargeContainer.querySelectorAll(".charge");
