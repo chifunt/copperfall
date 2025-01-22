@@ -13,6 +13,7 @@ import { ScreenShake } from "/js/components/ScreenShake.js";
 import { HUD } from "/js/components/HUD.js";
 import { UIManager } from "./UIManager.js";
 import { ShipMenuManager } from "./ShipMenuManager.js";
+import { ParticleSystemObject } from "./ParticleSystemObject.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -173,6 +174,37 @@ export class Player extends GameObject {
         shipMenuManager.playerObject = this;
 
         this.shipLevel = 0;
+
+        this.trail = new ParticleSystemObject("PlayerTrail", {
+            rateOverTime: 20,
+            spawnRadius: 5,
+            color: "#ffffff40",
+            particleLifetime: 0.5,
+            sizeOverTime: true,
+            startSize: 7,
+        });
+        this.dashTrail = new ParticleSystemObject("PlayerTrail", {
+            rateOverTime: 50,
+            spawnRadius: 10,
+            color: "#1010eeaa",
+            particleLifetime: 0.5,
+            sizeOverTime: true,
+            startSize: 20,
+        });
+        this.dashTrail.stopSystem();
+        this.dashBurst = new ParticleSystemObject("DashBurst", {
+            burst: true,
+            burstCount: 20,
+            spawnRadius: 40,
+            color: "rgba(0, 10, 128, 1.0)",
+            particleLifetime: 0.6,
+            sizeOverTime: true,
+            playOnWake: false,
+            loop: false,
+            duration: 0.1, // only needed if we want the system to auto-destroy after
+            startSize: 10
+        });
+        this.trailOffset = { x: 0, y: 12 }; // offset behind player if desired
     }
 
     /**
@@ -339,6 +371,11 @@ export class Player extends GameObject {
         if (this.debugLogs) {
             console.log(`Dash charge consumed. Remaining Dash Charges: ${this.currentDashCharges}`);
         }
+
+        this.dashTrail.playSystem();
+        this.dashBurst.transform.position.x = this.transform.position.x;
+        this.dashBurst.transform.position.y = this.transform.position.y + this.trailOffset.y;
+        this.dashBurst.playSystem(); // Emission happens immediately for a burst
 
         // Determine dash direction based on last movement or default
         const dir = this.lastDirection;
@@ -548,6 +585,10 @@ export class Player extends GameObject {
     update(deltaTime) {
         super.update(deltaTime);
 
+        this.trail.transform.position.x = this.transform.position.x + this.trailOffset.x;
+        this.trail.transform.position.y = this.transform.position.y + this.trailOffset.y;
+        this.dashTrail.transform.position.x = this.transform.position.x + this.trailOffset.x;
+        this.dashTrail.transform.position.y = this.transform.position.y + this.trailOffset.y;
         // Handle invulnerability timer
         this.updateInvulnerability(deltaTime);
 
@@ -568,6 +609,7 @@ export class Player extends GameObject {
             if (progress >= 1) {
                 progress = 1;
                 this.isDashing = false; // Dash complete
+                this.dashTrail.stopSystem();
                 if (this.debugLogs) {
                     console.log("Dash completed.");
                 }
@@ -636,6 +678,7 @@ export class Player extends GameObject {
 
         // State transitions for normal movement
         if (isMoving) {
+            this.trail.playSystem();
             // Update lastDirection every frame we have a nonzero direction
             this.lastDirection = { ...direction };
 
@@ -662,6 +705,7 @@ export class Player extends GameObject {
             }
 
         } else {
+            this.trail.stopSystem();
             // If no input, transition to decelerating if we were moving
             if (this.movementState === "accelerating" || this.movementState === "full") {
                 this.movementState = "decelerating";

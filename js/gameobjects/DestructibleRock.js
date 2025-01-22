@@ -4,6 +4,7 @@ import { BoxCollider } from "../components/BoxCollider.js";
 import { ScreenShake } from "../components/ScreenShake.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
+import { ParticleSystemObject } from "./ParticleSystemObject.js";
 
 export class DestructibleRock extends GameObject {
   constructor(posx = 0, posy = 0, width = 50, height = 50) {
@@ -29,6 +30,21 @@ export class DestructibleRock extends GameObject {
     });
     this.addComponent(dropShadow);
 
+    this.rockBurst = new ParticleSystemObject("RockBurst", {
+      burst: true,
+      burstCount: 20,
+      spawnRadius: 40,
+      color: "#895129aa",
+      particleLifetime: 0.6,
+      sizeOverTime: true,
+      playOnWake: false,
+      loop: false,
+      duration: 0.1, // only needed if we want the system to auto-destroy after
+      startSize: 10
+    });
+    this.rockBurst.transform.position.x = this.transform.position.x;
+    this.rockBurst.transform.position.y = this.transform.position.y;
+
     const mainCollider = new BoxCollider({
       width: this.transform.scale.x,
       height: this.transform.scale.y,
@@ -41,6 +57,7 @@ export class DestructibleRock extends GameObject {
       if (!other.gameObject.name == "Player") return;
       if (!other.gameObject.isDashing) return;
       console.log("PLAYER BROKE ROCK");
+      this.rockBurst.playSystem();
       if (ScreenShake.instance) {
         ScreenShake.instance.trigger(
           0.05,   // duration in seconds
