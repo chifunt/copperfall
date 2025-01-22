@@ -5,7 +5,7 @@ import { BoxCollider } from "../components/BoxCollider.js";
 
 export class TestThing2 extends GameObject {
     constructor(posx = 0, posy = 0, width = 100, height = 100) {
-        super("TestThing");
+        super("TestThing2");
 
         // Set initial position and scale
         this.transform.position = { x: posx, y: posy };
