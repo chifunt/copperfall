@@ -184,7 +184,8 @@ export class Player extends GameObject {
             startSize: 7,
             minInitialSpeed: 10,
             maxInitialSpeed: 50,
-            acceleration: { x: 0, y: 10}
+            acceleration: { x: 0, y: 10 },
+            opacityOverTime: true,
         });
         this.dashTrail = new ParticleSystemObject("PlayerTrail", {
             rateOverTime: 50,
@@ -199,12 +200,12 @@ export class Player extends GameObject {
             burst: true,
             burstCount: 20,
             spawnRadius: 40,
-            color: "rgba(0, 255, 0, 1)",
-            particleLifetime: 0.6,
+            color: "rgba(156, 207, 255, .7)",
+            particleLifetime: 0.2,
             sizeOverTime: true,
             playOnWake: false,
             loop: false,
-            duration: 0.5, // only needed if we want the system to auto-destroy after
+            duration: 0.6, // only needed if we want the system to auto-destroy after
             startSize: 10,
             minAngle: 0,
             maxAngle: 360,
