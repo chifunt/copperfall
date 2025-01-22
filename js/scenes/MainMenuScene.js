@@ -16,6 +16,7 @@ export class MainMenuScene extends Scene {
     const toolTipManager = new ToolTipManager();
 
     uiManager.openMainMenu();
+    ToolTipManager.getInstance().showMainMenuToolTip();
     // This stuff down here should probably go to the ui manager itself not here lol but whatevs.
     uiManager.startButton.disabled = false;
     uiManager.startButton.addEventListener("click", function () {
@@ -27,9 +28,11 @@ export class MainMenuScene extends Scene {
       setTimeout(() => {
         Engine.instance.loadScene(new MainScene());
       }, 500);
+      ToolTipManager.getInstance().closeToolTip();
     });
     uiManager.retryButton.addEventListener("click", function () {
       UIManager.instance.closeMenu();
+      ToolTipManager.getInstance().closeToolTip();
       Engine.instance.loadScene(new MainScene());
     });
 

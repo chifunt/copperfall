@@ -14,6 +14,7 @@ import { HUD } from "/js/components/HUD.js";
 import { UIManager } from "./UIManager.js";
 import { ShipMenuManager } from "./ShipMenuManager.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
+import { ToolTipManager } from "./ToolTipManager.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -139,6 +140,7 @@ export class Player extends GameObject {
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
                 this.isInSpaceshipZone = true;
+                ToolTipManager.getInstance().showOpenShipMenuToolTip();
             }
         };
 
@@ -146,6 +148,7 @@ export class Player extends GameObject {
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER OUTSIDE RANGE FOR SPACESHIP INTERACtION");
                 this.isInSpaceshipZone = false;
+                ToolTipManager.getInstance().closeToolTip();
             }
         };
 

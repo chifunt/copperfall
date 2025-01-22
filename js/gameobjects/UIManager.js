@@ -1,4 +1,5 @@
 import { GameObject } from "../core/GameObject.js";
+import { ToolTipManager } from "./ToolTipManager.js";
 
 export class UIManager extends GameObject {
   static instance = null;
@@ -120,6 +121,8 @@ export class UIManager extends GameObject {
    */
   openShipMenu() {
     this.openMenu(this.shipMenu);
+    ToolTipManager.getInstance().closeToolTip();
+    ToolTipManager.getInstance().showShipMenuToolTip();
   }
 
   /**
@@ -157,6 +160,10 @@ export class UIManager extends GameObject {
    */
   closeMenu() {
     if (this.activeMenu == null) return;
+
+    if (this.activeMenu == this.shipMenu) {
+      ToolTipManager.getInstance().closeToolTip();
+    }
 
     // Prevent closing critical menus manually
     // if (
