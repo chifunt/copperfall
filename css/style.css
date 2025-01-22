@@ -10,6 +10,7 @@
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  user-select: none;
 }
 
 img, picture, video, canvas, svg {
