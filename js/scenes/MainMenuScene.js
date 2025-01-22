@@ -36,16 +36,16 @@ export class MainMenuScene extends Scene {
       Engine.instance.loadScene(new MainScene());
     });
 
-    new Pickup({ x: 100, y: -100 });
-    new Pickup({ x: 150, y: -50 });
-    new Pickup({ x: 200, y: 0 });
-    new Pickup({ x: 250, y: 50 });
-    new Pickup({ x: 300, y: 100 });
-    new Pickup({ x: -100, y: -100 });
-    new Pickup({ x: -150, y: -50 });
-    new Pickup({ x: -200, y: 0 });
-    new Pickup({ x: -250, y: 50 });
-    new Pickup({ x: -300, y: 100 });
+    new Pickup(100, -100);
+    new Pickup(150, -50);
+    new Pickup(200, 0);
+    new Pickup(250, 50);
+    new Pickup(300, 100);
+    new Pickup(-100, -100);
+    new Pickup(-150, -50);
+    new Pickup(-200, 0);
+    new Pickup(-250, 50);
+    new Pickup(-300, 100);
     new TestThing2(0, 250, 900, 10);
     new TestThing2(0, -250, 900, 10);
     new TestThing2(440, 0, 10, 500);
