@@ -9,10 +9,10 @@ import { DestructibleRock } from "/js/gameobjects/DestructibleRock.js";
 
 // OPTIONAL: If you prefer a dynamic approach, you could store this mapping externally.
 const COLOR_TO_CLASS = {
-  "#ffffffff": Rock,              // White
-  "#ff0000ff": EnemyTest,         // Red
-  "#00ff00ff": Pickup,            // Green
-  "#0000ffff": DestructibleRock   // Blue
+  "#ffffff": Rock,              // White
+  "#ff0000": EnemyTest,         // Red
+  "#00ff00": Pickup,            // Green
+  "#0000ff": DestructibleRock   // Blue
 };
 
 export class BaseChunk extends GameObject {
@@ -117,7 +117,7 @@ export class BaseChunk extends GameObject {
             const g = data[i + 1];
             const b = data[i + 2];
             const a = data[i + 3];
-            const colorKey = this.rgbaToHex(r, g, b, a);
+            const colorKey = this.rgbToHex(r, g, b);
             colorsInCell.add(colorKey);
           }
         }
@@ -150,21 +150,6 @@ export class BaseChunk extends GameObject {
   }
 
   /**
-   * Converts RGBA values to a hexadecimal string in the format #rrggbbaa.
-   *
-   * @param {number} r - Red component (0-255)
-   * @param {number} g - Green component (0-255)
-   * @param {number} b - Blue component (0-255)
-   * @param {number} a - Alpha component (0-255)
-   * @returns {string} Hexadecimal color string
-   */
-  rgbaToHex(r, g, b, a) {
-    const toHex = (component) => component.toString(16).padStart(2, '0');
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}${toHex(a)}`;
-  }
-
-
-  /**
    * Loads an image as a Promise, so we can await it in an async function.
    */
   loadImageAsync(src) {
@@ -179,12 +164,11 @@ export class BaseChunk extends GameObject {
   /**
    * Converts (r,g,b,a) => "#rrggbbaa" hex string (lowercase).
    */
-  rgbaToHex(r, g, b, a) {
+  rgbToHex(r, g, b) {
     // clamp each to [0..255], then convert to 2-digit hex
     const rh = r.toString(16).padStart(2, "0");
     const gh = g.toString(16).padStart(2, "0");
     const bh = b.toString(16).padStart(2, "0");
-    const ah = a.toString(16).padStart(2, "0");
-    return `#${rh}${gh}${bh}${ah}`.toLowerCase();
+    return `#${rh}${gh}${bh}`.toLowerCase();
   }
 }
