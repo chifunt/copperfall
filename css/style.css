@@ -1,5 +1,7 @@
 /* CSS RESET */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -13,21 +15,35 @@ body {
   user-select: none;
 }
 
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
 p {
   text-wrap: pretty;
 }
-h1, h2, h3, h4, h5, h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
+
 /* --- */
 :root {
   --base-color: #191724;
@@ -38,6 +54,7 @@ h1, h2, h3, h4, h5, h6 {
   --rose-color: #ebbcba;
   --pine-color: #31748f;
 }
+
 /* --- */
 @font-face {
   font-family: 'Iosevka';
@@ -59,6 +76,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   font-style: normal;
 }
+
 /* --- */
 
 body {
@@ -98,7 +116,8 @@ canvas {
   font-size: 10%;
 }
 
-#hud-container, #menu-container {
+#hud-container,
+#menu-container {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -137,9 +156,9 @@ canvas {
     box-shadow: 0 0 5vw rgb(9, 21, 255);
     background-color: #31748f;
   }
-  50% {
 
-  }
+  50% {}
+
   100% {
     background-color: var(--text-color);
     box-shadow: 0 0 0.5vw black;
@@ -186,10 +205,54 @@ canvas {
   box-shadow: 0 0 0.5vw black;
   border: solid .2vw var(--text-color);
   transition: background-color 0.4s ease-in-out;
+
 }
 
 .health-active {
   background-color: red;
+  position: relative;
+  overflow: hidden;
+}
+
+.health-active::after {
+  content: "";
+  position: absolute;
+  top: -75%;
+  /* Start position above the element */
+  left: -150%;
+  /* Start position to the left */
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transform: rotate(45deg);
+  /* Angle of the shine */
+  opacity: 0.5;
+  /* Adjust opacity as needed */
+  pointer-events: none;
+  /* Allow clicks through the shine */
+
+  /* Animation properties */
+  animation: shineAnimation 2s linear infinite;
+}
+
+@keyframes shineAnimation {
+  0% {
+    top: -75%;
+    left: -150%;
+  }
+
+  50% {
+    top: 25%;
+    left: 50%;
+  }
+
+  100% {
+    top: -75%;
+    left: 150%;
+  }
 }
 
 #copper-container {
@@ -221,9 +284,9 @@ canvas {
     font-size: 4.5vw;
     text-shadow: 0 0 0.5vw black, 0 0 1.5vw white;
   }
-  50% {
 
-  }
+  50% {}
+
   100% {
     color: var(--text-color);
     background-color: transparent;
@@ -235,9 +298,11 @@ canvas {
   0% {
     opacity: 0;
   }
+
   50% {
     opacity: 100;
   }
+
   100% {
     opacity: 0;
   }
@@ -280,6 +345,7 @@ canvas {
   0% {
     opacity: 100;
   }
+
   100% {
     opacity: 0;
   }
@@ -289,6 +355,7 @@ canvas {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 100;
   }
@@ -302,7 +369,16 @@ canvas {
   animation: fadeout 0.2s ease-out;
 }
 
-.vignette-damage.damaged, .vignette-dash.damaged{
+.tooltip.tofadein {
+  animation: fadein 0.2s ease-out;
+}
+
+.tooltip.tofadeout {
+  animation: fadeout 0.2s ease-out;
+}
+
+.vignette-damage.damaged,
+.vignette-dash.damaged {
   animation: fadeout 0.5s ease-out;
 }
 
@@ -339,23 +415,25 @@ canvas {
 button {
   text-align: left;
   background-color: #00000000;
-  color:#a7a6b9;
+  color: #a7a6b9;
   border: #00000000;
   text-shadow: 0 0 1vw black;
   padding: 1vw 2vw;
   border-radius: 3vw;
 }
 
-button:focus-visible, button:hover {
+button:focus-visible,
+button:hover {
   background-color: #00000050;
-  color:#ffffff;
+  color: #ffffff;
   border: #000000ff;
   outline: none;
   text-shadow: 0 0 1vw white;
   box-shadow: 0 0 1vw black, 0 0 1vw black inset;
 }
 
-button:disabled, button[disabled] {
+button:disabled,
+button[disabled] {
   color: #000000;
   box-shadow: none;
   text-shadow: none;
@@ -397,7 +475,7 @@ h2 {
   width: 50%;
   height: 80%;
   left: 25%;
-  top: 10%;
+  top: 5%;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -500,29 +578,29 @@ h2 {
   width: auto;
   bottom: 0;
   right: 0;
-  height: 5%;
+  height: 8%;
   padding: 0vw 2vw;
   border-radius: 3vw;
   margin: 2%;
-  font-size: 1vw;
+  font-size: 2vw;
   justify-content: center;
   align-items: center;
   gap: 0.5vw;
 }
 
-.tooltip p {
+.tooltip p {}
 
-}
-
-.keyboard-key, .console-key {
+.keyboard-key,
+.console-key {
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5vw;
-  height: 1.5vw;
+  width: 2vw;
+  height: 2vw;
   box-shadow: 0 0 .3vw rgba(0, 0, 0, 1) inset;
 }
+
 .keyboard-key {
   color: #1a172a;
   background-color: #e0def4;
@@ -530,11 +608,11 @@ h2 {
 }
 
 .keyboard-key.spacebar {
-  width: 7vw;
+  width: 9vw;
 }
 
 .keyboard-key.esc {
-  width: 3vw;
+  width: 4vw;
 }
 
 .console-key {
@@ -556,9 +634,18 @@ h2 {
 }
 
 .console-key.joystick {
-  font-size: .7vw;
+  font-size: 1vw;
   background-color: grey;
   border: #a7a6b9 0.1vw double;
+}
+
+#main-menu-tooltip,
+#game-over-tooltip,
+#open-ship-menu-tooltip,
+#ship-menu-tooltip,
+#movement-tooltip,
+#dash-tooltip {
+  display: none;
 }
 
 #hud-container {
