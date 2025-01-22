@@ -312,6 +312,7 @@ export class Player extends GameObject {
         this.getComponent(HUD).removeHud();
         console.log("Player has died!");
         UIManager.instance.openGameOverMenu();
+        ToolTipManager.getInstance().showGameOverToolTip();
         this.isDead = true;
         this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)
