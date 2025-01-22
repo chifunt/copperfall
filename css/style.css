@@ -312,7 +312,7 @@ canvas {
 
 #main-menu-container h1 {
   color: #eb961f;
-  text-shadow: 0 0 1vw black, -.3vw -.3vw rgb(165, 103, 10), 0 0 .5vw;
+  text-shadow: 0 0 1vw black, -.3vw -.3vw rgb(165, 103, 10), 0 0 .5vw, 0 0 3vw #ffa629;
 }
 
 #main-menu-container h2 {
