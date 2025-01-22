@@ -1,6 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { BoxCollider } from "../components/BoxCollider.js";
+import { CircleCollider } from "../components/CircleCollider.js";
 
 export class Rock extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -24,5 +25,18 @@ export class Rock extends GameObject {
       isTrigger: false,
     });
     this.addComponent(mainCollider);
+
+    // One method of going about knowing which tile image to use.
+    // const triggerCollider = new CircleCollider({
+    //   radius: 51,
+    //   offset: { x: 0, y: 0 },
+    //   isTrigger: true,
+    // });
+    // this.addComponent(triggerCollider);
+    // triggerCollider.onTriggerEnter = (other) => {
+    //   if (other.gameObject.name == "Rock") {
+    //     console.log('hey theres a rock next to me');
+    //   }
+    // }
   }
 }
