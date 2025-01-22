@@ -212,6 +212,24 @@ export class Player extends GameObject {
             minInitialSpeed: 200,
             maxInitialSpeed: 300
         });
+        this.damagedBurst = new ParticleSystemObject("DamagedBurst", {
+            burst: true,
+            burstCount: 30,
+            spawnRadius: 40,
+            color: "rgba(10, 0, 10, .6)",
+            particleLifetime: .8,
+            sizeOverTime: true,
+            opacityOverTime: true,
+            playOnWake: false,
+            loop: false,
+            duration: 0.7, // only needed if we want the system to auto-destroy after
+            startSize: 10,
+            minAngle: 0,
+            maxAngle: 360,
+            minInitialSpeed: 100,
+            maxInitialSpeed: 200
+        });
+        this.damagedBurst.transform.position = this.transform.position;
         this.trailOffset = { x: 0, y: 12 }; // offset behind player if desired
     }
 
@@ -252,6 +270,7 @@ export class Player extends GameObject {
         }
 
         this.currentHealth -= 1;
+        this.damagedBurst.playSystem();
         if (this.debugLogs) {
             console.log(`Player took damage. Current Health: ${this.currentHealth}`);
         }
