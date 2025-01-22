@@ -21,7 +21,7 @@ export class Player extends GameObject {
         super("Player");
 
         // Initial position and scale
-        this.transform.position = { x: 0, y: 0 };
+        this.transform.position = { x: 0, y: -20 };
         this.transform.scale = { x: 0.03, y: 0.03 };
         this.transform.rotation = 10;
 

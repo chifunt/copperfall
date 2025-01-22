@@ -11,7 +11,7 @@ export class EnemyTest extends GameObject {
     super("EnemyTest");
 
     // Set initial position and scale
-    this.transform.position = { x: posx, y: posy };
+    this.transform.position = { x: posx, y: posy - height / 2 };
     this.transform.scale = { x: width, y: height };
 
     // Add SpriteRenderer
