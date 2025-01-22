@@ -588,8 +588,6 @@ h2 {
   gap: 0.5vw;
 }
 
-.tooltip p {}
-
 .keyboard-key,
 .console-key {
   font-weight: bold;
