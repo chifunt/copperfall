@@ -14,12 +14,12 @@ export class ToolTipManager extends GameObject {
 
     ToolTipManager.instance = this;
 
-    this.mainMenuToolTip = document.querySelector("");
-    this.gameOverToolTip = document.querySelector("");
-    this.openShipMenuToolTip = document.querySelector("");
-    this.shipMenuToolTip = document.querySelector("");
-    this.movementToolTip = document.querySelector("");
-    this.dashToolTip = document.querySelector("");
+    // this.mainMenuToolTip = document.querySelector("");
+    // this.gameOverToolTip = document.querySelector("");
+    // this.openShipMenuToolTip = document.querySelector("");
+    // this.shipMenuToolTip = document.querySelector("");
+    // this.movementToolTip = document.querySelector("");
+    // this.dashToolTip = document.querySelector("");
 
     this.activeToolTip = null;
     this.isAnimating = false; // Flag to handle animation state
@@ -103,33 +103,30 @@ export class ToolTipManager extends GameObject {
       this.isAnimating = false; // Reset animation flag
       this.activeToolTip.removeEventListener("animationend", onAnimationEnd);
 
-      // Dispatch event indicating a menu has been opened
-      this.dispatchEvent("menuOpened", { menu: this.activeToolTip });
+      // Dispatch event indicating a tooltip has been shown.
+      this.dispatchEvent("toolTipOpened", { menu: this.activeToolTip });
     };
 
     this.activeToolTip.addEventListener("animationend", onAnimationEnd);
   }
 
-  openShipMenu() {
-    this.openMenu(this.shipMenu);
+  showMainMenuToolTip() {
+    this.showToolTip(this.mainMenuToolTip);
   }
-
-  openPauseMenu() {
-    this.openMenu(this.pauseMenu);
+  showGameOverToolTip() {
+    this.showToolTip(this.gameOverToolTip);
   }
-
-  openHelpMenu() {
-    this.openMenu(this.helpMenu);
+  showOpenShipMenuToolTip() {
+    this.showToolTip(this.openShipMenuToolTip);
   }
-
-  openGameOverMenu() {
-    this.openMenu(this.gameOverMenu);
-    this.retryButton.focus();
+  showShipMenuToolTip() {
+    this.showToolTip(this.shipMenuToolTip);
   }
-
-  openTooltip() {
-    this.openMenu(this.mainMenu);
-    this.startButton.focus();
+  showMovementToolTip() {
+    this.showToolTip(this.movementToolTip);
+  }
+  showDashToolTip() {
+    this.showToolTip(this.dashToolTip);
   }
 
   /**

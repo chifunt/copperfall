@@ -6,12 +6,14 @@ import { MainScene } from "./MainScene.js";
 import { UIManager } from "../gameobjects/UIManager.js";
 import { Pickup } from "../gameobjects/Pickup.js";
 import { TestThing2 } from "../gameobjects/TestThing2.js";
+import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js"
 
 export class MainMenuScene extends Scene {
   onStart() {
     const background = new Background();
     const inputHandler = new InputHandler();
     const uiManager = new UIManager();
+    const toolTipManager = new ToolTipManager();
 
     uiManager.openMainMenu();
     // This stuff down here should probably go to the ui manager itself not here lol but whatevs.

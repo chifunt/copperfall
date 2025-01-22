@@ -9,6 +9,7 @@ import { Spaceship } from "../gameobjects/Spaceship.js";
 import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { UIManager } from "../gameobjects/UIManager.js";
+import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
 
 export class MainScene extends Scene {
   onStart() {
@@ -16,6 +17,7 @@ export class MainScene extends Scene {
 
     const inputHandler = new InputHandler();
     const uiManager = new UIManager();
+    const toolTipManager = new ToolTipManager();
     const player = new Player();
 
     new TestThing2(250, 100);
