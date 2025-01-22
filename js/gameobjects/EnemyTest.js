@@ -47,23 +47,33 @@ export class EnemyTest extends GameObject {
     });
     this.addComponent(mainCollider);
 
-    const triggerCollider = new CircleCollider({
+    const hitboxCollider = new CircleCollider({
       radius: 20,
       offset: { x: 0, y: height / 2 },
       isTrigger: true,
     });
-    this.addComponent(triggerCollider);
+    this.addComponent(hitboxCollider);
 
-    triggerCollider.onTriggerStay = (other) => {
-      if (other.gameObject.name === "Player") {
-        if (other.gameObject.isDashing) {
-          this.dieBurst.playSystem();
-          InputHandler.getInstance().triggerRumble(200, 100, .1, .3);
-          this.destroy();
-          return;
-        }
-        other.gameObject.takeDamage();
-      }
+    const damagingCollider = new CircleCollider({
+      radius: 5,
+      offset: { x: 0, y: height / 2 },
+      isTrigger: true,
+    });
+    this.addComponent(damagingCollider);
+
+    hitboxCollider.onTriggerStay = (other) => {
+      if (other.gameObject.name !== "Player") return;
+      if (!other.gameObject.isDashing) return;
+      this.dieBurst.playSystem();
+      InputHandler.getInstance().triggerRumble(200, 100, .1, .3);
+      this.destroy();
+      return;
     };
+
+    damagingCollider.onTriggerStay = (other) => {
+      if (other.gameObject.name !== "Player") return;
+      if (other.gameObject.isDashing) return;
+      other.gameObject.takeDamage();
+    }
   }
 }
