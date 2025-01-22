@@ -18,7 +18,7 @@ export class Spaceship extends GameObject {
     const img = new Image();
     img.src = "/assets/images/test3.png";
     img.onload = () => {
-      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 5 }));
+      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 6 }));
     };
 
     // Add SquashAndStretch component
