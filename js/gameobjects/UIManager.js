@@ -194,4 +194,14 @@ export class UIManager extends GameObject {
 
     this.activeMenu.addEventListener("animationend", onAnimationEnd);
   }
+
+  update(deltatime) {
+    super.update(deltatime)
+    if (this.activeMenu == this.mainMenu) {
+      this.startButton.focus();
+    }
+    if (this.activeMenu == this.gameOverMenu) {
+      this.retryButton.focus();
+    }
+  }
 }
