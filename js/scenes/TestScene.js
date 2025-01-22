@@ -9,13 +9,17 @@ import { Spaceship } from "../gameobjects/Spaceship.js";
 import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { UIManager } from "../gameobjects/UIManager.js";
+import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { MovementToolTipZone } from "../gameobjects/MovementToolTipZone.js";
+import { DashToolTipZone } from "../gameobjects/DashToolTipZone.js";
 
-export class MainScene extends Scene {
+export class TestScene extends Scene {
   onStart() {
     const background = new Background();
 
     const inputHandler = new InputHandler();
     const uiManager = new UIManager();
+    const toolTipManager = new ToolTipManager();
     const player = new Player();
 
     new TestThing2(250, 100);
@@ -28,6 +32,8 @@ export class MainScene extends Scene {
     new TestThing2(700, 0, 50, 1450);
     new TestThing2(-700, 0, 50, 1450);
 
+    new MovementToolTipZone(500, -400, 100, 100);
+    new DashToolTipZone(500, -600, 100, 100);
 
     const cameraObj = new CameraObject(player, {
       smoothness: 0.175,
