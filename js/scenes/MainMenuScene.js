@@ -14,6 +14,8 @@ export class MainMenuScene extends Scene {
     const uiManager = new UIManager();
 
     uiManager.openMainMenu();
+    // This stuff down here should probably go to the ui manager itself not here lol but whatevs.
+    uiManager.startButton.disabled = false;
     uiManager.startButton.addEventListener("click", function () {
       uiManager.startButton.disabled = true;
       UIManager.instance.closeMenu();
