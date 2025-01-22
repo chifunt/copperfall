@@ -44,6 +44,7 @@ export class Pickup extends GameObject {
         if (this.isPickedUp) return;
         this.isPickedUp = true;
         this.playerObject = other.gameObject;
+        this.startPos = { ...this.transform.position };
       }
     };
 
