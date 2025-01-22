@@ -7,10 +7,10 @@ import { DropShadow } from "../components/DropShadow.js";
 import { VerticalBob } from "../components/VerticalBob.js";
 
 export class Pickup extends GameObject {
-  constructor(position = { x: 0, y: 0 }) {
+  constructor(posx, posy) {
     super("Pickup");
 
-    this.transform.position = position;
+    this.transform.position = {x: posx, y: posy};
     this.transform.scale = { x: 0.015, y: 0.015 };
     this.isPickedUp = false;
     this.pickupAnimationDuration = 0.5;
@@ -18,7 +18,7 @@ export class Pickup extends GameObject {
     this.rotationSpeed = Math.random() * (70 - 50) + 50;
 
     this.playerObject = null;
-    this.startPos = { ...position };
+    this.startPos = { ...this.transform.position };
     this.targetPos = { x: 0, y: 0 };
 
     const img = new Image();
