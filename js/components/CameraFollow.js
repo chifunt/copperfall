@@ -1,6 +1,6 @@
 import { Component } from "/js/core/Component.js";
 import { Engine } from "/js/core/Engine.js";
-import { EasingFunctions } from "/js/utils/easing.js";
+import { EasingFunctions } from "/js/utils/EasingFunctions.js";
 
 export class CameraFollow extends Component {
   /**

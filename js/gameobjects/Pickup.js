@@ -2,7 +2,7 @@ import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
-import { EasingFunctions } from "../utils/easing.js";
+import { EasingFunctions } from "../utils/EasingFunctions.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { VerticalBob } from "../components/VerticalBob.js";
 

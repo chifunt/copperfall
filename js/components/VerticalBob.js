@@ -1,5 +1,3 @@
-// /js/components/VerticalBob.js
-
 import { Component } from "/js/core/Component.js";
 import { SpriteRenderer } from "./SpriteRenderer.js";
 

@@ -1,4 +1,3 @@
-// /js/gameobjects/ParticleSystemObject.js
 import { GameObject } from "/js/core/GameObject.js";
 import { ParticleSystem } from "/js/components/ParticleSystem.js";
 

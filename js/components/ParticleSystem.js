@@ -1,4 +1,3 @@
-// /js/components/ParticleSystem.js
 import { Component } from "/js/core/Component.js";
 import { Engine } from "/js/core/Engine.js";
 

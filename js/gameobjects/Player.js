@@ -1,6 +1,6 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
-import { EasingFunctions } from "../utils/easing.js";
+import { EasingFunctions } from "../utils/EasingFunctions.js";
 import { SquashAndStretch } from "/js/components/SquashAndStretch.js";
 import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
 import { BoxCollider } from "../components/BoxCollider.js";

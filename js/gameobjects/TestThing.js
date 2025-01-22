@@ -1,7 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
-import { EasingFunctions } from "../utils/easing.js";
+import { EasingFunctions } from "../utils/EasingFunctions.js";
 
 export class TestThing extends GameObject {
     constructor() {

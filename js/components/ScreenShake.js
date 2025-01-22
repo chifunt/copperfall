@@ -1,5 +1,5 @@
 import { Component } from "/js/core/Component.js";
-import { EasingFunctions } from "/js/utils/easing.js";
+import { EasingFunctions } from "/js/utils/EasingFunctions.js";
 import { Engine } from "../core/Engine.js";
 
 export class ScreenShake extends Component {

@@ -1,4 +1,3 @@
-// /js/components/Collider.js
 import { Component } from "/js/core/Component.js";
 
 export class Collider extends Component {

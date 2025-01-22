@@ -1,6 +1,6 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
-import { EasingFunctions } from "../utils/easing.js";
+import { EasingFunctions } from "../utils/EasingFunctions.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
