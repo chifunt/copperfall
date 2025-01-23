@@ -32,7 +32,7 @@ export class CollisionSystem {
 
     // debug draw after checking collisions
     if (this.engine.debugMode) {
-      // this.debugDrawColliders(colliders);
+      this.debugDrawColliders(colliders);
     }
   }
 

@@ -23,8 +23,8 @@ export class Player extends GameObject {
 
         // Initial position and scale
         this.transform.position = { x: 0, y: -20 };
-        this.transform.scale = { x: 0.03, y: 0.03 };
-        this.transform.rotation = 10;
+        this.transform.scale = { x: 0.065, y: 0.065 };
+        this.transform.rotation = -2;
 
         // Reference to InputHandler
         this.inputHandler = InputHandler.getInstance();
@@ -77,17 +77,21 @@ export class Player extends GameObject {
         // Add DropShadow component
         const dropShadow = new DropShadow({
             offset: { x: 0, y: 5 },
-            width: 1500,
-            height: 600,
+            width: 700,
+            height: 250,
             color: "#00002288",
         });
         this.addComponent(dropShadow);
 
         // Add a SpriteRenderer component
-        const img = new Image();
-        img.src = "/assets/images/rafli.png";
-        img.onload = () => {
-            this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 5 }));
+        this.img = new Image();
+        this.img.src = "/assets/images/curo.png";
+        this.dashimg = new Image();
+        this.dashimg.src = "/assets/images/curo-dash.png";
+        this.hurtimg = new Image();
+        this.hurtimg.src = "/assets/images/curo-hurt.png";
+        this.img.onload = () => {
+            this.addComponent(new SpriteRenderer(this.img, { pivot: "bottom", zOrder: 5 }));
         };
 
         // Add SquashAndStretch component
@@ -284,6 +288,7 @@ export class Player extends GameObject {
         if (this.debugLogs) {
             console.log(`Player took damage. Current Health: ${this.currentHealth}`);
         }
+        this.getComponent(SpriteRenderer).setImage(this.hurtimg);
 
         this.getComponent(HUD).updateDamaged();
 
@@ -335,6 +340,7 @@ export class Player extends GameObject {
             this.invulnerabilityTimer -= deltaTime;
             if (this.invulnerabilityTimer <= 0) {
                 this.isInvulnerable = false;
+                this.getComponent(SpriteRenderer).setImage(this.img);
                 this.invulnerabilityTimer = 0;
                 if (this.debugLogs) {
                     console.log("Player is no longer invulnerable.");
@@ -410,6 +416,8 @@ export class Player extends GameObject {
         if (this.debugLogs) {
             console.log(`Dash charge consumed. Remaining Dash Charges: ${this.currentDashCharges}`);
         }
+
+        this.getComponent(SpriteRenderer).setImage(this.dashimg);
 
         this.dashTrail.playSystem();
         this.dashBurst.transform.position.x = this.transform.position.x;
@@ -663,6 +671,8 @@ export class Player extends GameObject {
                 if (this.debugLogs) {
                     console.log("Dash completed.");
                 }
+
+                this.getComponent(SpriteRenderer).setImage(this.img);
 
                 // Restore original SquashAndStretch config
                 if (this.sAndS) {

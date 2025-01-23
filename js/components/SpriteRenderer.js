@@ -12,6 +12,14 @@ export class SpriteRenderer extends Component {
   }
 
   /**
+   * Sets a new image for this sprite.
+   * @param {HTMLImageElement} newImage - The new image to use.
+   */
+  setImage(newImage) {
+    this.image = newImage;
+  }
+
+  /**
    * Sets the vertical offset for the sprite.
    * @param {number} offset - The vertical offset in game units.
    */
@@ -32,12 +40,15 @@ export class SpriteRenderer extends Component {
     const { x: scaleX, y: scaleY } = transform.scale;
     const rotation = transform.rotationInRadians;
 
-    // Apply vertical offset to the Y position
+    // Apply vertical offset
     const modifiedWorldY = worldY + this.verticalOffset;
 
     // Convert world coordinates to canvas coordinates
-    const canvasX = (worldX - camera.position.x) * camera.scale + engine.canvas.width / 2;
-    const canvasY = (-modifiedWorldY + camera.position.y) * camera.scale + engine.canvas.height / 2; // invert y
+    const canvasX =
+      (worldX - camera.position.x) * camera.scale + engine.canvas.width / 2;
+    const canvasY =
+      (-modifiedWorldY + camera.position.y) * camera.scale +
+      engine.canvas.height / 2; // invert y
 
     // Save context and apply transforms
     ctx.save();
