@@ -1,20 +1,27 @@
 import { BaseChunk } from "./BaseChunk.js";
-import { getChunkMapPath, randomChoice} from "./ChunkMapImages.js";
+import { getChunkMapPath, randomChoice } from "./ChunkMapImages.js";
+import { TextureBG } from "../TextureBG.js";
 
 export class ChunkTypeB extends BaseChunk {
   constructor(cx, cy) {
     super(ChunkTypeB.name, cx, cy, 400);
+    this.addChildObject(new TextureBG(100, 100, 0.395, 0.395));
+    this.addChildObject(new TextureBG(-100, -100, 0.395, 0.395));
+    this.addChildObject(new TextureBG(-100, 100, 0.395, 0.395));
+    this.addChildObject(new TextureBG(100, -100, 0.395, 0.395));
 
     const possibleMaps = [
-      "slashcoin",
-      "coinHaven",
-      "scatterEnemies",
-      "zipzop",
-      "corderDawgs",
-      "ladder",
-      "sidei",
-      "rotor",
-      "crack"
+      "actually",
+      "woops",
+      "gaol",
+      "monsie",
+      "capsule",
+      "watch",
+      "cross",
+      "aye",
+      "smile",
+      "legma",
+      "coinHaven"
     ];
     const chosenKey = randomChoice(possibleMaps);
 

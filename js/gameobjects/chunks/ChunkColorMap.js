@@ -26,7 +26,7 @@ export const ChunkColorMap = {
     class: DestructibleRock
   },
   EnemyPatrol: {
-    color: "ff00ff",           // Magenta
+    color: "#ff00ff",           // Magenta
     class: EnemyPatrol
   }
 };

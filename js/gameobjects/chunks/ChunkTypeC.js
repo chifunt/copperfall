@@ -6,15 +6,7 @@ export class ChunkTypeC extends BaseChunk {
     super(ChunkTypeC.name, cx, cy, 400);
 
     const possibleMaps = [
-      "slashcoin",
-      "coinHaven",
-      "scatterEnemies",
-      "zipzop",
-      "corderDawgs",
-      "ladder",
-      "sidei",
-      "rotor",
-      "crack"
+      "coinHaven"
     ];
     const chosenKey = randomChoice(possibleMaps);
 

@@ -14,7 +14,7 @@ export class ChunkTypeA extends BaseChunk {
       "slashcoin",
       "scatterEnemies",
       "zipzop",
-      "corderDawgs",
+      "cornerDawgs",
       "ladder",
       "sidei",
       "rotor",

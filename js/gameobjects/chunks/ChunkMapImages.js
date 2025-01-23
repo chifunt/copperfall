@@ -10,11 +10,21 @@ export const ChunkMapImages = {
   scatterEnemies: "scatter-enemies.png",
   slashcoin: "slashcoin.png",
   zipzop: "zipzop.png",
-  corderDawgs: "corner-dawgs.png",
+  cornerDawgs: "corner-dawgs.png",
   ladder: "ladder.png",
   sidei: "sidei.png",
   rotor: "rotor.png",
-  crack: "crack.png"
+  crack: "crack.png",
+  actually: "actually.png",
+  woops: "woops.png",
+  gaol: "gaol.png",
+  monsie: "monsie.png",
+  capsule: "capsule.png",
+  watch: "watch.png",
+  cross: "cross.png",
+  aye: "aye.png",
+  smile: "smile.png",
+  legma: "legma.png"
 };
 
 /**
