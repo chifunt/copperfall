@@ -56,15 +56,15 @@ export class ShipMenuManager extends GameObject {
       },
       {
         name: "UpgradeDashSpeed",
-        cost: 300,
+        cost: 420,
         label: "Upgrade Dash Speed",
         upgradeBars: 2,
-        increment: 100,
+        increment: 120,
         currentLevel: 0,
       },
       {
         name: "UpgradeDashCooldown",
-        cost: 400,
+        cost: 555,
         label: "Upgrade Dash Cooldown",
         upgradeBars: 2,
         increment: 150,
