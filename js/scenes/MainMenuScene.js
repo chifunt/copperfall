@@ -11,6 +11,7 @@ import { TextureBG } from "../gameobjects/TextureBG.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
 import { EnemyPatrol } from "../gameobjects/EnemyPatrol.js";
+import { Rock } from "../gameobjects/Rock.js";
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -95,6 +96,23 @@ export class MainMenuScene extends Scene {
     this.spaceship = new Spaceship(0, 0);
     this.spaceship.repairSpaceShip();
     this.spaceship.repairSpaceShip();
+
+    new Rock(450, 0);
+    new Rock(400, 0);
+    new Rock(350, 0);
+    new Rock(300, 0);
+    new Rock(-450, 0);
+    new Rock(-400, 0);
+    new Rock(-350, 0);
+    new Rock(-300, 0);
+    new Rock(450, 50);
+    new Rock(400, 50);
+    new Rock(350, 50);
+    new Rock(300, 50);
+    new Rock(-450, 50);
+    new Rock(-400, 50);
+    new Rock(-350, 50);
+    new Rock(-300, 50);
 
     // For now just load the main scene
     // this.loadMainScene();
