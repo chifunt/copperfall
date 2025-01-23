@@ -36,7 +36,7 @@ export class EnemyPatrol extends GameObject {
       burst: true,
       burstCount: 20,
       spawnRadius: 40,
-      color: "rgba(255, 10, 10, .5)",
+      color: "rgba(255, 10, 200, .5)",
       particleLifetime: 0.5,
       sizeOverTime: true,
       playOnWake: false,
