@@ -7,88 +7,80 @@ export class CompassIndicator extends Component {
         this.target = target;
         this.distanceThreshold = distanceThreshold;
 
-        // Appearance of the arrow in screen space
-        this.arrowLength = 75;
-        this.arrowWidth = 20;
-        this.margin = 60;  // how close to the edges we clamp
+        // These values are now in "virtual" units
+        this.arrowLength = 20;  // e.g. 75 units tall in virtual space
+        this.arrowWidth  = 10;  // e.g. 20 units wide at the base
+        this.margin      = 50;  // how close (in virtual units) to keep from screen edges
 
-        // Flag to show/hide the indicator entirely
-        this.active = true;
+        this.active = true; // Flag to fully hide/show the indicator
     }
 
-    /** Enable or disable this compass indicator. */
     setActive(isActive) {
         this.active = isActive;
     }
 
-    /** Update the target GameObject to point at a different object. */
     setTarget(newTarget) {
         this.target = newTarget;
     }
 
-    /**
-     * Renders the arrow at the edge of the screen (rotated toward the target)
-     */
     render(ctx) {
         if (!this.active || !this.target || !this.gameObject) return;
 
-        // Grab positions
+        // Grab positions in world space
         const playerPos = this.gameObject.transform.position;
         const targetPos = this.target.transform.position;
 
-        // Compute distance
+        // Check distance in world units
         const dx = targetPos.x - playerPos.x;
         const dy = targetPos.y - playerPos.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance <= this.distanceThreshold) return; // don't show if close
+        if (distance <= this.distanceThreshold) return; // arrow is hidden if too close
 
-        // --- Convert the target's world position to screen space ---
+        // Get engine references
         const engine = Engine.instance;
         const cam = engine.camera;
-        const scale = cam.scale;
+        const scale = cam.scale;  // how many screen pixels per 1 virtual unit
 
-        const screenCenterX = engine.canvas.width / 2;
+        const screenCenterX = engine.canvas.width  / 2;
         const screenCenterY = engine.canvas.height / 2;
 
+        // Convert target from world to screen coords
         const targetScreenX = (targetPos.x - cam.position.x) * scale + screenCenterX;
         const targetScreenY = (-targetPos.y + cam.position.y) * scale + screenCenterY;
 
-        // Direction from center → target in screen space
+        // Direction from center to target (in screen space)
         let dirX = targetScreenX - screenCenterX;
         let dirY = targetScreenY - screenCenterY;
 
-        // If dir is zero (extremely unlikely here), bail out
+        // If direction is ~0, bail
         const length = Math.sqrt(dirX * dirX + dirY * dirY);
         if (length < 0.001) return;
 
-        // Normalize
+        // Normalize the screen-space direction
         dirX /= length;
         dirY /= length;
 
-        // --- Find intersection with bounding box [margin, margin, w-margin, h-margin] ---
-        const left   = this.margin;
-        const right  = engine.canvas.width  - this.margin;
-        const top    = this.margin;
-        const bottom = engine.canvas.height - this.margin;
+        // --- Convert our "virtual" margin into actual pixels ---
+        const marginPx = this.margin * scale;
 
-        // We'll do a line param:  X(t) = centerX + t*dirX,  Y(t) = centerY + t*dirY
-        // We want the smallest t > 0 that hits one of the 4 edges.
+        // Define the bounding box in pixels, shrunk by marginPx
+        const left   = marginPx;
+        const right  = engine.canvas.width  - marginPx;
+        const top    = marginPx;
+        const bottom = engine.canvas.height - marginPx;
 
-        // For each vertical boundary, solve: centerX + t*dirX = boundary
-        // Then check if the Y(t) is within top..bottom
+        // We’ll find t for the ray from (screenCenterX, screenCenterY) in direction (dirX, dirY)
         const tCandidates = [];
 
-        // If dirX != 0, check left/right
+        // If dirX != 0, find intersection with left/right
         if (Math.abs(dirX) > 0.0001) {
-            // t at left edge
             const tLeft = (left - screenCenterX) / dirX;
-            if (tLeft > 0) { // only forward
+            if (tLeft > 0) {
                 const yLeft = screenCenterY + tLeft * dirY;
                 if (yLeft >= top && yLeft <= bottom) {
                     tCandidates.push(tLeft);
                 }
             }
-            // t at right edge
             const tRight = (right - screenCenterX) / dirX;
             if (tRight > 0) {
                 const yRight = screenCenterY + tRight * dirY;
@@ -98,9 +90,8 @@ export class CompassIndicator extends Component {
             }
         }
 
-        // If dirY != 0, check top/bottom
+        // If dirY != 0, find intersection with top/bottom
         if (Math.abs(dirY) > 0.0001) {
-            // t at top edge
             const tTop = (top - screenCenterY) / dirY;
             if (tTop > 0) {
                 const xTop = screenCenterX + tTop * dirX;
@@ -108,7 +99,6 @@ export class CompassIndicator extends Component {
                     tCandidates.push(tTop);
                 }
             }
-            // t at bottom edge
             const tBottom = (bottom - screenCenterY) / dirY;
             if (tBottom > 0) {
                 const xBottom = screenCenterX + tBottom * dirX;
@@ -118,46 +108,45 @@ export class CompassIndicator extends Component {
             }
         }
 
-        // If we found no valid intersection, just skip
-        if (tCandidates.length === 0) return;
+        if (!tCandidates.length) return;
 
-        // We want the SMALLEST t > 0 among them => earliest intersection
+        // Smallest positive t => earliest intersection
         const tFinal = Math.min(...tCandidates);
 
-        // Intersection coordinates
+        // Intersection point in screen space
         const arrowX = screenCenterX + tFinal * dirX;
         const arrowY = screenCenterY + tFinal * dirY;
 
-        // --- Now rotate the arrow to point in dirX, dirY ---
-        // Because our shape "points up" (negative Y), we compute the angle with standard atan2
-        // but we invert Y to match that shape's orientation
+        // --- Determine orientation ---
+        // Our triangle is drawn "pointing up" (negative Y) in local space,
+        // but we want it pointing along (dirX, dirY) in screen space.
+        // We'll do standard angle = atan2(dirY, dirX),
+        // then add 90° (Math.PI/2) because "0°" in canvas is along +X axis,
+        // but our triangle's tip is drawn along -Y axis.
         const angleToTarget = Math.atan2(dirY, dirX);
+
+        // --- Convert arrow size from virtual to pixels ---
+        const arrowPxLength = this.arrowLength * scale;
+        const arrowPxWidth  = this.arrowWidth  * scale;
 
         // Draw the arrow
         ctx.save();
         ctx.translate(arrowX, arrowY);
         ctx.rotate(angleToTarget + Math.PI / 2);
-        // Our triangle by default has its tip at negative Y, so if you want it pointing "forward"
-        // (the direction of dirX,dirY), rotate by +angleToTarget instead of -angleToTarget,
-        // or tweak your path below.
 
-        // Triangle shape
+        // Triangle path: tip at (0, -arrowPxLength) in local coords
         ctx.beginPath();
-        // Tip at (0, -arrowLength)
-        ctx.moveTo(0, -this.arrowLength);
-        // Base left
-        ctx.lineTo(-this.arrowWidth, 0);
-        // Base right
-        ctx.lineTo(this.arrowWidth, 0);
+        ctx.moveTo(0, -arrowPxLength);
+        ctx.lineTo(-arrowPxWidth, 0);
+        ctx.lineTo( arrowPxWidth, 0);
         ctx.closePath();
 
-        // Fill & stroke
-        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-        ctx.fill();
+        ctx.fillStyle   = "rgba(255, 0, 0, 0.5)";
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.lineWidth   = 2;
 
+        ctx.fill();
+        ctx.stroke();
         ctx.restore();
     }
 }
