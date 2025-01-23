@@ -15,6 +15,7 @@ import { UIManager } from "./UIManager.js";
 import { ShipMenuManager } from "./ShipMenuManager.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 import { ToolTipManager } from "./ToolTipManager.js";
+import { CompassIndicator } from "../components/CompassIndicator.js";
 
 export class Player extends GameObject {
     constructor() {
@@ -139,6 +140,7 @@ export class Player extends GameObject {
             // console.log("Player trigger triggered by:", other.gameObject.name);
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
+                this.getComponent(CompassIndicator).setTarget(other.gameObject);
                 this.isInSpaceshipZone = true;
                 ToolTipManager.getInstance().showOpenShipMenuToolTip();
             }
@@ -234,6 +236,11 @@ export class Player extends GameObject {
         });
         this.damagedBurst.transform.position = this.transform.position;
         this.trailOffset = { x: 0, y: 12 }; // offset behind player if desired
+
+        this.addComponent(new CompassIndicator({
+            target: this.gameObject,
+            distanceThreshold: 800,
+        }));
     }
 
     /**
