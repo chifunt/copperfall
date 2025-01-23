@@ -66,7 +66,7 @@ export class DestructibleRock extends GameObject {
     triggerCollider.onTriggerStay = (other) => {
       if (!other.gameObject.name == "Player") return;
       if (!other.gameObject.isDashing) return;
-      console.log("PLAYER BROKE ROCK");
+      // console.log("PLAYER BROKE ROCK");
       this.rockBurst.playSystem();
       if (ScreenShake.instance) {
         ScreenShake.instance.trigger(
