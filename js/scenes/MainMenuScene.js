@@ -6,7 +6,9 @@ import { MainScene } from "./MainScene.js";
 import { UIManager } from "../gameobjects/UIManager.js";
 import { Pickup } from "../gameobjects/Pickup.js";
 import { TestThing2 } from "../gameobjects/TestThing2.js";
-import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js"
+import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { TextureBG } from "../gameobjects/TextureBG.js";
+import { EnemyTest } from "../gameobjects/EnemyTest.js";
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -58,6 +60,34 @@ export class MainMenuScene extends Scene {
     new TestThing2(0, -250, 900, 10);
     new TestThing2(440, 0, 10, 500);
     new TestThing2(-440, 0, 10, 500);
+
+    new TextureBG(100, 100, 0.395, 0.395);
+    new TextureBG(100, 300, 0.395, 0.395);
+    new TextureBG(100, -300, 0.395, 0.395);
+    new TextureBG(-100, -100, 0.395, 0.395);
+    new TextureBG(-300, 100, 0.395, 0.395);
+    new TextureBG(100, -100, 0.395, 0.395);
+    new TextureBG(300, 300, 0.395, 0.395);
+    new TextureBG(-300, -300, 0.395, 0.395);
+    new TextureBG(-300, 300, 0.395, 0.395);
+    new TextureBG(300, -300, 0.395, 0.395);
+    new TextureBG(300, -100, 0.395, 0.395);
+    new TextureBG(300, 100, 0.395, 0.395);
+    new TextureBG(500, 100, 0.395, 0.395);
+    new TextureBG(500, -100, 0.395, 0.395);
+    new TextureBG(500, -300, 0.395, 0.395);
+    new TextureBG(500, 300, 0.395, 0.395);
+    new TextureBG(-100, 300, 0.395, 0.395);
+    new TextureBG(-100, -300, 0.395, 0.395);
+    new TextureBG(-100, 100, 0.395, 0.395);
+    new TextureBG(-300, -100, 0.395, 0.395);
+    new TextureBG(-500, 100, 0.395, 0.395);
+    new TextureBG(-500, -100, 0.395, 0.395);
+    new TextureBG(-500, -300, 0.395, 0.395);
+    new TextureBG(-500, 300, 0.395, 0.395);
+
+    new EnemyTest(300, -120);
+    new EnemyTest(-300, -120);
 
     // For now just load the main scene
     // this.loadMainScene();

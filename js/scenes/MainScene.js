@@ -9,7 +9,7 @@ import { ChunkManager } from "../gameobjects/ChunkManager.js";
 
 export class MainScene extends Scene {
   onStart() {
-    const background = new Background();
+    // const background = new Background();
 
     const inputHandler = new InputHandler();
     const uiManager = new UIManager();

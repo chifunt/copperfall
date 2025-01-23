@@ -10,16 +10,16 @@ import { DropShadow } from "../components/DropShadow.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
 
 export class EnemyTest extends GameObject {
-  constructor(posx = 0, posy = 0, width = 30, height = 40) {
+  constructor(posx = 0, posy = 0) {
     super("EnemyTest");
 
     // Set initial position and scale
-    this.transform.position = { x: posx, y: posy - height / 2 };
-    this.transform.scale = { x: width, y: height };
+    this.transform.position = { x: posx, y: posy - 22 };
+    this.transform.scale = { x: .1, y: .1 };
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/test2.png";
+    img.src = "/assets/images/enemy-static.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 3 }));
     };
@@ -43,9 +43,9 @@ export class EnemyTest extends GameObject {
     this.dieBurst.transform.position = this.transform.position;
 
     const dropShadow = new DropShadow({
-      offset: { x: 0, y: 2 },
-      width: 1.3,
-      height: 0.25,
+      offset: { x: 0, y: 5 },
+      width: 450,
+      height: 180,
       color: "#00002266",
       zOrderOffset: -10,
     });
@@ -62,23 +62,23 @@ export class EnemyTest extends GameObject {
     this.sAndS.startAnimation();
 
     const mainCollider = new BoxCollider({
-      width: this.transform.scale.x,
-      height: this.transform.scale.y - 10,
-      offset: { x: 0, y: height / 2 },
+      width: 30,
+      height: 30,
+      offset: { x: 0, y: 22 },
       isTrigger: false,
     });
     this.addComponent(mainCollider);
 
     const hitboxCollider = new CircleCollider({
       radius: 20,
-      offset: { x: 0, y: height / 2 },
+      offset: { x: 0, y: 22 },
       isTrigger: true,
     });
     this.addComponent(hitboxCollider);
 
     const damagingCollider = new CircleCollider({
       radius: 10,
-      offset: { x: 0, y: height / 2 },
+      offset: { x: 0, y: 22},
       isTrigger: true,
     });
     this.addComponent(damagingCollider);

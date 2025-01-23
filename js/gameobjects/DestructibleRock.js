@@ -7,16 +7,20 @@ import { DropShadow } from "../components/DropShadow.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 
 export class DestructibleRock extends GameObject {
-  constructor(posx = 0, posy = 0, width = 50, height = 50) {
+  constructor(posx = 0, posy = 0) {
     super("DestructibleRock");
 
     // Set initial position and scale
     this.transform.position = { x: posx, y: posy };
-    this.transform.scale = { x: width, y: height };
+    this.transform.scale = { x: 0.158, y: 0.158 };
+
+    const rotations = [90, 180, 270];
+    const randomRotationDegrees = rotations[Math.floor(Math.random() * rotations.length)];
+    this.transform.rotation = randomRotationDegrees;
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/test.png";
+    img.src = "/assets/images/destructible-rock.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };
@@ -34,7 +38,7 @@ export class DestructibleRock extends GameObject {
       burst: true,
       burstCount: 20,
       spawnRadius: 40,
-      color: "#895129aa",
+      color: "#6e6a86aa",
       particleLifetime: 0.6,
       sizeOverTime: true,
       playOnWake: false,
@@ -45,8 +49,8 @@ export class DestructibleRock extends GameObject {
     this.rockBurst.transform.position = this.transform.position;
 
     const mainCollider = new BoxCollider({
-      width: this.transform.scale.x,
-      height: this.transform.scale.y,
+      width: 50,
+      height: 50,
       offset: { x: 0, y: 0 },
       isTrigger: false,
     });
