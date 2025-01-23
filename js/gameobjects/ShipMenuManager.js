@@ -72,6 +72,8 @@ export class ShipMenuManager extends GameObject {
       },
     ];
 
+    this.defaultShopItems = JSON.parse(JSON.stringify(this.shopItems));
+
     // We will store the newly created button elements to manage focus navigation.
     this.buttons = [];
 
@@ -112,6 +114,16 @@ export class ShipMenuManager extends GameObject {
       ShipMenuManager.instance = new ShipMenuManager();
     }
     return ShipMenuManager.instance;
+  }
+
+  resetShopItems() {
+    // Deep clone the default items to avoid mutating original references
+    this.shopItems = JSON.parse(JSON.stringify(this.defaultShopItems));
+
+    // Rebuild the UI so the new defaults are visible.
+    // You could also call this.refreshButtons() if you just want to update
+    // states, but typically you want the entire menu content rebuilt.
+    this.buildShipMenuUI();
   }
 
   /**

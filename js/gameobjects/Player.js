@@ -314,6 +314,7 @@ export class Player extends GameObject {
         UIManager.instance.openGameOverMenu();
         ToolTipManager.getInstance().showGameOverToolTip();
         this.isDead = true;
+        ShipMenuManager.getInstance().resetShopItems();
         this.destroy();
         // Implement additional death logic here (e.g., respawn, game over screen)
     }
@@ -615,6 +616,7 @@ export class Player extends GameObject {
             this.getComponent(HUD).removeHud();
             setTimeout(() => {
                 UIManager.getInstance().openWinMenu();
+                ShipMenuManager.getInstance().resetShopItems();
             }, 500);
         }
     }
