@@ -8,6 +8,8 @@ import { InputHandler } from "./InputHandler.js";
 import { ScreenShake } from "../components/ScreenShake.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
+import { soundManager } from '../utils/SoundManager.js';
+import { SoundEffects } from '../utils/SoundEffects.js';
 
 export class EnemyTest extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -97,6 +99,7 @@ export class EnemyTest extends GameObject {
           20     // frequency
         );
       }
+      soundManager.playSound(SoundEffects.SPLAT);
       this.destroy();
       return;
     };

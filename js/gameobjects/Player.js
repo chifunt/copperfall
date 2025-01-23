@@ -16,6 +16,8 @@ import { ShipMenuManager } from "./ShipMenuManager.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 import { ToolTipManager } from "./ToolTipManager.js";
 import { CompassIndicator } from "../components/CompassIndicator.js";
+import { soundManager } from '/js/utils/SoundManager.js';
+import { SoundEffects } from '/js/utils/SoundEffects.js';
 
 export class Player extends GameObject {
     constructor() {
@@ -306,6 +308,8 @@ export class Player extends GameObject {
             );
         }
 
+        soundManager.playSound(SoundEffects.HURT);
+
         // Trigger controller rumble for damage
         this.inputHandler.triggerRumble(200, 400, 1.0, 0.5); // 300ms duration, strong 1.0, weak 1.0
 
@@ -363,6 +367,7 @@ export class Player extends GameObject {
         }
         this.inputHandler.triggerRumble(200, 50, 0, .2);
         this.copper += amount;
+        soundManager.playSound(SoundEffects.COIN);
         // console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
     }
 
@@ -411,6 +416,7 @@ export class Player extends GameObject {
             if (this.debugLogs) {
                 console.log("Dash attempted with no available dash charges.");
             }
+            soundManager.playSound(SoundEffects.NOPE);
             return;
         }
 
@@ -419,6 +425,8 @@ export class Player extends GameObject {
         if (this.debugLogs) {
             console.log(`Dash charge consumed. Remaining Dash Charges: ${this.currentDashCharges}`);
         }
+
+        soundManager.playSound(SoundEffects.DASH);
 
         this.getComponent(SpriteRenderer).setImage(this.dashimg);
 
@@ -490,6 +498,7 @@ export class Player extends GameObject {
                 this.dashRechargeTimer = 0;
                 if (this.currentDashCharges < this.maxDashCharges) {
                     this.currentDashCharges += 1;
+                    soundManager.playSound(SoundEffects.RECHARGE);
                     if (this.debugLogs) {
                         console.log(`Dash charge recharged. Current Dash Charges: ${this.currentDashCharges}`);
                     }

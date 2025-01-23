@@ -5,6 +5,8 @@ import { ScreenShake } from "../components/ScreenShake.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
+import { soundManager } from '/js/utils/SoundManager.js';
+import { SoundEffects } from '/js/utils/SoundEffects.js';
 
 export class DestructibleRock extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -78,6 +80,7 @@ export class DestructibleRock extends GameObject {
         );
       }
       InputHandler.getInstance().triggerRumble(200, 100, .2, .5);
+      soundManager.playSound(SoundEffects.ROCK);
       this.destroy();
     }
   }

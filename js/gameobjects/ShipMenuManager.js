@@ -2,6 +2,8 @@ import { GameObject } from "../core/GameObject.js";
 import { UIManager } from "./UIManager.js";
 import { InputHandler } from "./InputHandler.js";
 import { Actions } from "../utils/Actions.js";
+import { soundManager } from '../utils/SoundManager.js';
+import { SoundEffects } from '../utils/SoundEffects.js';
 
 /**
  * Manages the Ship (Shop) UI, creating items from an internal data structure
@@ -99,6 +101,7 @@ export class ShipMenuManager extends GameObject {
         // (Optional) Or you can do it once in constructor and just call refresh
         this.buildShipMenuUI();
         this.focusFirstEnabledButton();
+        soundManager.playSound(SoundEffects.SHOPOPEN);
       }
     });
 
@@ -204,6 +207,8 @@ export class ShipMenuManager extends GameObject {
       console.log(`Not enough copper to purchase ${item.label}. Required: ${item.cost}, Available: ${player.copper}`);
       return;
     }
+
+    soundManager.playSound(SoundEffects.BUTTON);
 
     // (1) Deduct copper
     player.decreaseCopper(item.cost);
@@ -330,6 +335,7 @@ export class ShipMenuManager extends GameObject {
 
     // Focus new button
     enabledButtons[idx].focus();
+    soundManager.playSound(SoundEffects.SHOPSWITCH);
   }
 
   /**

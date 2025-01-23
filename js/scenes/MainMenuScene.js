@@ -13,6 +13,8 @@ import { Spaceship } from "../gameobjects/Spaceship.js";
 import { EnemyPatrol } from "../gameobjects/EnemyPatrol.js";
 import { Rock } from "../gameobjects/Rock.js";
 import { EnemyFast } from "../gameobjects/EnemyFast.js";
+import { soundManager } from '../utils/SoundManager.js';
+import { SoundEffects } from '../utils/SoundEffects.js';
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -28,6 +30,7 @@ export class MainMenuScene extends Scene {
     // This stuff down here should probably go to the ui manager itself not here lol but whatevs.
     uiManager.startButton.disabled = false;
     uiManager.startButton.addEventListener("click", function () {
+      soundManager.playSound(SoundEffects.BUTTON);
       uiManager.startButton.disabled = true;
       UIManager.instance.closeMenu();
       uiManager.blackScreen.classList.remove("activated");
@@ -42,9 +45,11 @@ export class MainMenuScene extends Scene {
       UIManager.instance.closeMenu();
       ToolTipManager.getInstance().closeToolTip();
       Engine.instance.loadScene(new MainScene());
+      soundManager.playSound(SoundEffects.BUTTON);
     });
     uiManager.backtoMenuButton.addEventListener("click", function () {
       UIManager.instance.closeMenu();
+      soundManager.playSound(SoundEffects.BUTTON);
       setTimeout(() => {
         Engine.instance.loadScene(new MainMenuScene());
       }, 500);
