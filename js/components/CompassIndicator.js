@@ -112,7 +112,7 @@ export class CompassIndicator extends Component {
         ctx.lineTo(this.arrowWidth, 0);
         ctx.closePath();
 
-        ctx.fillStyle = "brown";
+        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
         ctx.fill();
 
         // Outline
