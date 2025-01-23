@@ -1,6 +1,7 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { BoxCollider } from "../components/BoxCollider.js";
+import { DropShadow } from "../components/DropShadow.js";
 
 export class Rock extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -20,6 +21,15 @@ export class Rock extends GameObject {
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };
+
+    const dropShadow = new DropShadow({
+      offset: { x: 0, y: -23 },
+      width: 350,
+      height: 100,
+      color: "#00002266",
+      zOrderOffset: -10,
+    });
+    this.addComponent(dropShadow);
 
     const mainCollider = new BoxCollider({
       width: 40,

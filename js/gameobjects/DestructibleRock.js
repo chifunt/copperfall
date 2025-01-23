@@ -25,14 +25,14 @@ export class DestructibleRock extends GameObject {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };
 
-    // const dropShadow = new DropShadow({
-    //   offset: { x: 0, y: -23 },
-    //   width: 1.3,
-    //   height: 0.25,
-    //   color: "#00002266",
-    //   zOrderOffset: -10,
-    // });
-    // this.addComponent(dropShadow);
+    const dropShadow = new DropShadow({
+      offset: { x: 0, y: -23 },
+      width: 350,
+      height: 100,
+      color: "#00002266",
+      zOrderOffset: -10,
+    });
+    this.addComponent(dropShadow);
 
     this.rockBurst = new ParticleSystemObject("RockBurst", {
       burst: true,
