@@ -131,12 +131,12 @@ export class CompassIndicator extends Component {
         // --- Now rotate the arrow to point in dirX, dirY ---
         // Because our shape "points up" (negative Y), we compute the angle with standard atan2
         // but we invert Y to match that shape's orientation
-        const angleToTarget = Math.atan2(-dirY, dirX);
+        const angleToTarget = Math.atan2(dirY, dirX);
 
         // Draw the arrow
         ctx.save();
         ctx.translate(arrowX, arrowY);
-        ctx.rotate(angleToTarget);
+        ctx.rotate(angleToTarget + Math.PI / 2);
         // Our triangle by default has its tip at negative Y, so if you want it pointing "forward"
         // (the direction of dirX,dirY), rotate by +angleToTarget instead of -angleToTarget,
         // or tweak your path below.
