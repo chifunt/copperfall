@@ -239,7 +239,7 @@ export class Player extends GameObject {
 
         this.addComponent(new CompassIndicator({
             target: this.gameObject,
-            distanceThreshold: 800,
+            distanceThreshold: 600,
         }));
     }
 
