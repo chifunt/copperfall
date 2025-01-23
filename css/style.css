@@ -517,15 +517,18 @@ h2 {
   position: absolute;
   top: 5%;
   left: 5%;
-  font-size: 4vw;
+  font-size: 3vw;
   justify-content: center;
   align-items: center;
   gap: 1vw;
+  background-color: black;
+  border-radius: 1vw;
+  text-shadow: 0 0 2vw white;
 }
 
 #copper-count-container img {
-  width: 40%;
-  height: 40%;
+  width: 30%;
+  height: 30%;
   border-radius: 50%;
   box-shadow: 0 0 1vw black, 0 0 4vw black inset;
 }
