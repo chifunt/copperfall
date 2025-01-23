@@ -29,3 +29,6 @@ Implemented the UI management system to figure out which UI to be opened and whe
 Implement UI Functionality (Start screen and game over screen). Added controller support for those screens. Styled the Shipwreck UI. Implemented persistent gameobjects.
 
 ## 2025-01-22
+
+## 2025-01-23
+The game is currently experiencing a bug where the game lags really heavily the more the game is beaten and restarted. I am not going to bother to find the issue, I know for sure that not everything is destroyed and reinitialized when loading and deloading scenes. This was more of an architectural mistake that I made early on, since I didn't plan on having scenes and restarting the game. Compass was implemented but hella scuff implementation.
