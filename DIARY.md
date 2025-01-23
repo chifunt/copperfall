@@ -29,6 +29,7 @@ Implemented the UI management system to figure out which UI to be opened and whe
 Implement UI Functionality (Start screen and game over screen). Added controller support for those screens. Styled the Shipwreck UI. Implemented persistent gameobjects.
 
 ## 2025-01-22
+Finished the UIs completely with full support for controller and keyboard input methods. Charging now has a blue vignette. Simple circle based particle system was implemented, made a big difference in how the game feels. Tooltips are now added to guide player on which buttons to press and where. Chunk generation system was implemented and fully working, it took a while. You can also load images 8x8 pixel images in.
 
 ## 2025-01-23
-The game is currently experiencing a bug where the game lags really heavily the more the game is beaten and restarted. I am not going to bother to find the issue, I know for sure that not everything is destroyed and reinitialized when loading and deloading scenes. This was more of an architectural mistake that I made early on, since I didn't plan on having scenes and restarting the game. Compass was implemented but hella scuff implementation.
+The game is currently experiencing a bug where the game lags really heavily the more the game is beaten and restarted. I am not going to bother to find the issue, I know for sure that not everything is destroyed and reinitialized when loading and deloading scenes. This was more of an architectural mistake that I made early on, since I didn't plan on having scenes and restarting the game. Compass was implemented but hella scuff implementation. Screenshake was adjusted from queueing to adding up.
