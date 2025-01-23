@@ -21,11 +21,13 @@ export class UIManager extends GameObject {
     this.gameOverMenu = document.querySelector("#game-over-container");
     this.helpMenu = document.querySelector("#help-menu-container");
     this.pauseMenu = document.querySelector("#pause-menu-container");
+    this.winMenu = document.querySelector("#win-menu-container");
 
     this.blackScreen = document.querySelector("#blackscreen");
 
     this.startButton = document.querySelector("#main-menu-container button");
     this.retryButton = document.querySelector("#game-over-container button");
+    this.backtoMenuButton = document.querySelector("#win-menu-container button");
 
     this.activeMenu = null;
     this.isAnimating = false; // Flag to handle animation state
@@ -144,7 +146,6 @@ export class UIManager extends GameObject {
    */
   openGameOverMenu() {
     this.openMenu(this.gameOverMenu);
-    this.retryButton.focus();
   }
 
   /**
@@ -152,7 +153,10 @@ export class UIManager extends GameObject {
    */
   openMainMenu() {
     this.openMenu(this.mainMenu);
-    this.startButton.focus();
+  }
+
+  openWinMenu() {
+    this.openMenu(this.winMenu);
   }
 
   /**
@@ -209,6 +213,9 @@ export class UIManager extends GameObject {
     }
     if (this.activeMenu == this.gameOverMenu) {
       this.retryButton.focus();
+    }
+    if (this.activeMenu == this.winMenu) {
+      this.backtoMenuButton.focus();
     }
   }
 }

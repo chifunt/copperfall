@@ -15,6 +15,8 @@ export class MainMenuScene extends Scene {
     const uiManager = new UIManager();
     const toolTipManager = new ToolTipManager();
 
+    Engine.instance.camera.position = {x: 0, y: 0};
+
     uiManager.openMainMenu();
     ToolTipManager.getInstance().showMainMenuToolTip();
     // This stuff down here should probably go to the ui manager itself not here lol but whatevs.
@@ -34,6 +36,12 @@ export class MainMenuScene extends Scene {
       UIManager.instance.closeMenu();
       ToolTipManager.getInstance().closeToolTip();
       Engine.instance.loadScene(new MainScene());
+    });
+    uiManager.backtoMenuButton.addEventListener("click", function () {
+      UIManager.instance.closeMenu();
+      setTimeout(() => {
+        Engine.instance.loadScene(new MainMenuScene());
+      }, 500);
     });
 
     new Pickup(100, -100);

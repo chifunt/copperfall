@@ -607,7 +607,15 @@ export class Player extends GameObject {
         this.shipLevel += 1;
         console.log("PLAYER REPAIRED SHIP TO ", this.shipLevel);
         if (this.shipLevel == 2) {
+            this.playerCanMove = false;
             console.log("PPLAYER HAS BEATEN TEH GSAME !!!");
+            this.isDead = true;
+            UIManager.getInstance().closeMenu();
+            this.destroy();
+            this.getComponent(HUD).removeHud();
+            setTimeout(() => {
+                UIManager.getInstance().openWinMenu();
+            }, 500);
         }
     }
 
