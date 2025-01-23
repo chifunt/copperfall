@@ -1,5 +1,5 @@
 import { BaseChunk } from "./BaseChunk.js";
-import { getChunkMapPath, randomChoice, ChunkMapImages } from "./ChunkMapImages.js";
+import { getChunkMapPath, randomChoice} from "./ChunkMapImages.js";
 
 export class ChunkTypeA extends BaseChunk {
   constructor(cx, cy) {

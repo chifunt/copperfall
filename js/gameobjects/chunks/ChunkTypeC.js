@@ -1,8 +1,23 @@
 import { BaseChunk } from "./BaseChunk.js";
+import { getChunkMapPath, randomChoice} from "./ChunkMapImages.js";
 
 export class ChunkTypeC extends BaseChunk {
   constructor(cx, cy) {
     super(ChunkTypeC.name, cx, cy, 400);
-    this.loadChunkMap("/assets/images/chunk-maps/coin-haven.png");
+
+    const possibleMaps = [
+      "slashcoin",
+      "coinHaven",
+      "scatterEnemies",
+      "zipzop",
+    ];
+    const chosenKey = randomChoice(possibleMaps);
+
+    const fullPath = getChunkMapPath(chosenKey);
+    if (fullPath) {
+      this.loadChunkMap(fullPath);
+    } else {
+      console.warn(`ChunkTypeC: no valid map path for key="${chosenKey}"`);
+    }
   }
 }
