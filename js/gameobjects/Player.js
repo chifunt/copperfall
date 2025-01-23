@@ -144,6 +144,7 @@ export class Player extends GameObject {
             // console.log("Player trigger triggered by:", other.gameObject.name);
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
+                this.spaceship = other.gameObject;
                 this.getComponent(CompassIndicator).setTarget(other.gameObject);
                 this.isInSpaceshipZone = true;
                 ToolTipManager.getInstance().showOpenShipMenuToolTip();
@@ -245,6 +246,8 @@ export class Player extends GameObject {
             target: this.gameObject,
             distanceThreshold: 600,
         }));
+
+        this.spaceship = null;
     }
 
     /**
@@ -621,6 +624,7 @@ export class Player extends GameObject {
 
     repairShip() {
         this.shipLevel += 1;
+        this.spaceship.repairSpaceShip();
         console.log("PLAYER REPAIRED SHIP TO ", this.shipLevel);
         if (this.shipLevel == 2) {
             this.playerCanMove = false;

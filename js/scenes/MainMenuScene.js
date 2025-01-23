@@ -89,7 +89,9 @@ export class MainMenuScene extends Scene {
 
     new EnemyTest(300, -120);
     new EnemyTest(-300, -120);
-    new Spaceship(0, 0);
+    this.spaceship = new Spaceship(0, 0);
+    this.spaceship.repairSpaceShip();
+    this.spaceship.repairSpaceShip();
 
     // For now just load the main scene
     // this.loadMainScene();
