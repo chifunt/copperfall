@@ -118,7 +118,7 @@ export class Player extends GameObject {
         this.addComponent(mainCollider);
 
         mainCollider.onCollisionEnter = (other) => {
-            console.log("Player main collider collision with:", other.gameObject.name);
+            // console.log("Player main collider collision with:", other.gameObject.name);
             // e.g., check if the other is an Enemy
             if (other.gameObject.name === "Enemy") {
                 this.takeDamage();
@@ -136,7 +136,7 @@ export class Player extends GameObject {
         this.isInSpaceshipZone = false;
 
         triggerCollider.onTriggerEnter = (other) => {
-            console.log("Player trigger triggered by:", other.gameObject.name);
+            // console.log("Player trigger triggered by:", other.gameObject.name);
             if (other.gameObject.name === "Spaceship" && other.isTrigger) {
                 // console.log("PLAYER WITHIN RANGE FOR SPACESHIP INTERACtION");
                 this.isInSpaceshipZone = true;
@@ -346,7 +346,7 @@ export class Player extends GameObject {
         }
         this.inputHandler.triggerRumble(200, 50, 0, .2);
         this.copper += amount;
-        console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
+        // console.log(`Player gained ${amount} copper. Total Copper: ${this.copper}`);
     }
 
     /**

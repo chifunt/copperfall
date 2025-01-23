@@ -80,7 +80,7 @@ export class Engine {
   }
 
   addGameObject(gameObject) {
-    console.log(gameObject.name + " GameObject Added")
+    // console.log(gameObject.name + " GameObject Added")
     this.gameObjects.push(gameObject);
     if (this.activeScene) {
       this.activeScene.addGameObject(gameObject);

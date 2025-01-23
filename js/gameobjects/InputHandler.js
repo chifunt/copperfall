@@ -104,7 +104,7 @@ export class InputHandler extends GameObject {
         this.AXIS_THRESHOLD = 0.5;
 
         // Debug flag for logging actions
-        this.debug = true; // Set to true to enable action logs
+        this.debug = false; // Set to true to enable action logs
 
         // Attach event listeners
         window.addEventListener("keydown", (e) => this.handleKeyDown(e));
