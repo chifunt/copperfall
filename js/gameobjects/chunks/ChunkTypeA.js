@@ -12,7 +12,6 @@ export class ChunkTypeA extends BaseChunk {
 
     const possibleMaps = [
       "slashcoin",
-      "coinHaven",
       "scatterEnemies",
       "zipzop",
       "corderDawgs",
