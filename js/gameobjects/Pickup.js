@@ -11,7 +11,7 @@ export class Pickup extends GameObject {
     super("Pickup");
 
     this.transform.position = {x: posx, y: posy};
-    this.transform.scale = { x: 0.015, y: 0.015 };
+    this.transform.scale = { x: 0.04, y: 0.04 };
     this.isPickedUp = false;
     this.pickupAnimationDuration = 0.5;
     this.pickupAnimationElapsed = 0;
@@ -22,7 +22,7 @@ export class Pickup extends GameObject {
     this.targetPos = { x: 0, y: 0 };
 
     const img = new Image();
-    img.src = "/assets/images/rafli.png";
+    img.src = "/assets/images/copper.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 2 }));
 
@@ -60,8 +60,8 @@ export class Pickup extends GameObject {
 
     const dropShadow = new DropShadow({
       offset: { x: 0, y: -18 },
-      width: 1500,
-      height: 600,
+      width: 500,
+      height: 200,
       color: "#00002288",
     });
     this.addComponent(dropShadow);

@@ -19,8 +19,8 @@ export class Rock extends GameObject {
     };
 
     const mainCollider = new BoxCollider({
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       offset: { x: 0, y: 0 },
       isTrigger: false,
     });

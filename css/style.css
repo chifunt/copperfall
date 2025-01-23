@@ -268,9 +268,9 @@ canvas {
 #copper-image-container {
   height: 100%;
   width: 12.5%;
-  background-color: chocolate;
+  /* background-color: chocolate; */
   border-radius: 50%;
-  box-shadow: 0 0 0.5vw black;
+  box-shadow: 0 0 1vw black, 0 0 4vw black inset;
 }
 
 #copper-container p {
@@ -518,12 +518,29 @@ h2 {
   top: 5%;
   left: 5%;
   font-size: 4vw;
+  justify-content: center;
+  align-items: center;
+  gap: 1vw;
+}
+
+#copper-count-container img {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  box-shadow: 0 0 1vw black, 0 0 4vw black inset;
 }
 
 .ship-line-container button {
   border: rgb(72, 81, 255) 1vw;
   padding: 1vw;
   border-radius: 0.5vw;
+}
+
+.ship-line-container img {
+  width: 2.5vw;
+  height: 2.5vw;
+  box-shadow: 0 0 1vw black, 0 0 2vw black inset;
+  border-radius: 50%;
 }
 
 .ship-upgrade-bars-container {
