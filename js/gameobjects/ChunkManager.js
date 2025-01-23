@@ -11,6 +11,10 @@ export class ChunkManager extends GameObject {
     this.spawnDistance = 800; // chunks appear/disappear at 800 units
     this.chunkSize = 400;
 
+    // The chunk from which we calculate "distance from origin"
+    // This coordinate is in "chunk space", not in world units.
+    this.distanceOrigin = { x: 2, y: 0 };
+
     // Instead of a single "spawnedChunks" map, we keep
     // chunkState with an object: { chunkObj, isSpawned: bool }
     this.chunkStateMap = new Map(); // Key: "cx,cy", Value: { chunkObj, isSpawned }
@@ -23,7 +27,7 @@ export class ChunkManager extends GameObject {
     ];
     this.starterChunkSet = new Set(["0,0", "1,0", "2,0"]);
 
-    // If we want chunk (2,0) to never unload, store that or you can handle in logic
+    // If we want chunk (2,0) to never unload, store that or handle it in logic
     this.starterChunkSetToNotUnload = new Set(["2,0"]);
 
     this.start();
@@ -136,20 +140,25 @@ export class ChunkManager extends GameObject {
     if (!chunkState.isSpawned) {
       this.registerChunkToEngine(chunkState.chunkObj);
       chunkState.isSpawned = true;
-      console.log(`Spawned STARTER chunk at (${cx},${cy}).`);
+      // console.log(`Spawned STARTER chunk at (${cx},${cy}).`);
     }
   }
 
   /**
-   * Spawns a normal chunk (non-starter) based on distance from origin
+   * Spawns a normal chunk (non-starter) based on distance from a user-defined “origin chunk”.
    */
   spawnChunk(cx, cy) {
     const key = `${cx},${cy}`;
     let chunkState = this.chunkStateMap.get(key);
     if (chunkState && chunkState.isSpawned) return;
 
-    // distance from origin
-    const distFromOrigin = Math.sqrt(cx * cx + cy * cy) * this.chunkSize;
+    // These are chunk coordinates, so distance in chunk-space:
+    const dx = cx - this.distanceOrigin.x;
+    const dy = cy - this.distanceOrigin.y;
+    // Convert chunk distance to world distance by multiplying by chunkSize:
+    const distFromOrigin = Math.sqrt(dx * dx + dy * dy) * this.chunkSize;
+
+    // Decide chunk type by that distance
     let chosenChunkType = null;
     if (distFromOrigin < 1600) {
       chosenChunkType = ChunkRegistry.ChunkTypeA.class;
@@ -163,14 +172,14 @@ export class ChunkManager extends GameObject {
       return;
     }
 
-    // if chunk doesn't exist, create it
+    // If chunk doesn't exist, create it
     if (!chunkState) {
       const chunkObj = new chosenChunkType(cx, cy);
       chunkState = { chunkObj, isSpawned: false };
       this.chunkStateMap.set(key, chunkState);
     }
 
-    // register/spawn it if not already
+    // Register/spawn it if not already
     if (!chunkState.isSpawned) {
       this.registerChunkToEngine(chunkState.chunkObj);
       chunkState.isSpawned = true;
@@ -189,25 +198,18 @@ export class ChunkManager extends GameObject {
 
     this.unregisterChunkFromEngine(chunkState.chunkObj);
     chunkState.isSpawned = false;
-    console.log(`Unspawned chunk at coords (${cx},${cy}).`);
+    // console.log(`Unspawned chunk at coords (${cx},${cy}).`);
   }
 
   /**
    * Actually adds a chunk's objects to the engine.
-   * Typically, the chunk constructor's `super(...)` call already
-   * triggered addGameObject. So we might not need to do anything,
-   * *unless* we remove them in `unregisterChunkFromEngine`.
-   *
-   * We'll demonstrate a custom approach:
    */
   registerChunkToEngine(chunkObj) {
-    // If chunkObj is not in the engine's gameObjects, re-add it:
     const engine = Engine.instance;
     if (!engine.gameObjects.includes(chunkObj)) {
       engine.gameObjects.push(chunkObj);
     }
-    // If chunk has child objects that were also removed, re-add them
-    // (But if your engine calls addGameObject in child constructor, you might skip this.)
+    // If chunk has child objects, re-add them too
     for (const child of chunkObj.childObjects) {
       if (child.isDestroyed) continue; // skip permanently destroyed
       if (!engine.gameObjects.includes(child)) {
