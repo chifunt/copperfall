@@ -39,7 +39,7 @@ export class ShipMenuManager extends GameObject {
     this.shopItems = [
       {
         name: "Heal",
-        cost: 105,
+        cost: 90,
         label: "Heal 1HP",
         upgradeBars: 0,
         increment: 0,
