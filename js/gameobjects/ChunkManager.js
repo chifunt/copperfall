@@ -1,4 +1,3 @@
-// /js/gameobjects/ChunkManager.js
 import { GameObject } from "/js/core/GameObject.js";
 import { ChunkRegistry } from "./chunks/ChunkRegistry.js";
 import { Engine } from "/js/core/Engine.js";
