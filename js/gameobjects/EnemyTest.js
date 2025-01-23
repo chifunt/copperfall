@@ -6,6 +6,8 @@ import { CircleCollider } from "../components/CircleCollider.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 import { InputHandler } from "./InputHandler.js";
 import { ScreenShake } from "../components/ScreenShake.js";
+import { DropShadow } from "../components/DropShadow.js";
+import { SquashAndStretch } from "../components/SquashAndStretch.js";
 
 export class EnemyTest extends GameObject {
   constructor(posx = 0, posy = 0, width = 30, height = 40) {
@@ -39,6 +41,25 @@ export class EnemyTest extends GameObject {
       maxInitialSpeed: 300
     });
     this.dieBurst.transform.position = this.transform.position;
+
+    const dropShadow = new DropShadow({
+      offset: { x: 0, y: 2 },
+      width: 1.3,
+      height: 0.25,
+      color: "#00002266",
+      zOrderOffset: -10,
+    });
+    this.addComponent(dropShadow);
+
+    this.sAndS = new SquashAndStretch({
+      squashScale: 0.97,
+      stretchScale: 1.03,
+      easingFunction: EasingFunctions.easeInOutQuad,
+      duration: 1.5,
+      loop: true,
+    });
+    this.addComponent(this.sAndS);
+    this.sAndS.startAnimation();
 
     const mainCollider = new BoxCollider({
       width: this.transform.scale.x,
