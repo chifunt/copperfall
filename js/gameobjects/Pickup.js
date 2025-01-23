@@ -11,7 +11,7 @@ export class Pickup extends GameObject {
     super("Pickup");
 
     this.transform.position = {x: posx, y: posy};
-    this.transform.scale = { x: 0.04, y: 0.04 };
+    this.transform.scale = { x: 0.045, y: 0.045 };
     this.isPickedUp = false;
     this.pickupAnimationDuration = 0.5;
     this.pickupAnimationElapsed = 0;
