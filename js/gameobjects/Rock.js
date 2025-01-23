@@ -26,19 +26,20 @@ export class Rock extends GameObject {
     });
     this.addComponent(mainCollider);
 
-    // One method of going about knowing which tile image to use.
-    const triggerCollider = new CircleCollider({
-      radius: 25,
-      offset: { x: 0, y: 0 },
-      isTrigger: true,
-    });
-    this.addComponent(triggerCollider);
-    this.rockNeighbors = [];
-    triggerCollider.onTriggerEnter = (other) => {
-      if (other.gameObject.name == "Rock" && other.isTrigger) {
-        this.rockNeighbors.push(other.gameObject);
-      }
-    }
-    console.log(this.rockNeighbors);
+    // This thing below has too much performance cost!!
+    // // One method of going about knowing which tile image to use.
+    // const triggerCollider = new CircleCollider({
+    //   radius: 25,
+    //   offset: { x: 0, y: 0 },
+    //   isTrigger: true,
+    // });
+    // this.addComponent(triggerCollider);
+    // this.rockNeighbors = [];
+    // triggerCollider.onTriggerEnter = (other) => {
+    //   if (other.gameObject.name == "Rock" && other.isTrigger) {
+    //     this.rockNeighbors.push(other.gameObject);
+    //   }
+    // }
+    // console.log(this.rockNeighbors);
   }
 }
