@@ -8,6 +8,7 @@ import { InputHandler } from "./InputHandler.js";
 import { ScreenShake } from "../components/ScreenShake.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { SquashAndStretch } from "../components/SquashAndStretch.js";
+import { Rigidbody } from "../components/Rigidbody.js";
 
 export class EnemyPatrol extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -15,15 +16,22 @@ export class EnemyPatrol extends GameObject {
 
     // Set initial position and scale
     this.transform.position = { x: posx, y: posy - 22 };
-    this.transform.scale = { x: .1, y: .1 };
+    this.transform.scale = { x: 0.1, y: 0.1 };
+
+    const rb = new Rigidbody();
+    this.addComponent(rb);
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/enemy-static.png";
+    img.src = "/assets/images/enemy-patrol.png";
     img.onload = () => {
-      this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 3 }));
+      this.addComponent(new SpriteRenderer(img, {
+        pivot: "bottom",
+        zOrder: 3,
+      }));
     };
 
+    // -- Particle system for death burst --
     this.dieBurst = new ParticleSystemObject("DieBurst", {
       burst: true,
       burstCount: 20,
@@ -33,24 +41,26 @@ export class EnemyPatrol extends GameObject {
       sizeOverTime: true,
       playOnWake: false,
       loop: false,
-      duration: 0.7, // only needed if we want the system to auto-destroy after
+      duration: 0.7,
       startSize: 10,
       minAngle: 0,
       maxAngle: 360,
       minInitialSpeed: 200,
-      maxInitialSpeed: 300
+      maxInitialSpeed: 300,
     });
     this.dieBurst.transform.position = this.transform.position;
 
+    // -- DropShadow --
     const dropShadow = new DropShadow({
       offset: { x: 0, y: 5 },
-      width: 450,
-      height: 180,
+      width: 500,
+      height: 160,
       color: "#00002266",
       zOrderOffset: -10,
     });
     this.addComponent(dropShadow);
 
+    // -- SquashAndStretch (for idle) --
     this.sAndS = new SquashAndStretch({
       squashScale: 0.97,
       stretchScale: 1.03,
@@ -61,6 +71,7 @@ export class EnemyPatrol extends GameObject {
     this.addComponent(this.sAndS);
     this.sAndS.startAnimation();
 
+    // -- Colliders --
     const mainCollider = new BoxCollider({
       width: 30,
       height: 30,
@@ -78,33 +89,132 @@ export class EnemyPatrol extends GameObject {
 
     const damagingCollider = new CircleCollider({
       radius: 10,
-      offset: { x: 0, y: 22},
+      offset: { x: 0, y: 22 },
       isTrigger: true,
     });
     this.addComponent(damagingCollider);
 
+    // -- Attack logic (destroy self on player dash, etc.) --
     hitboxCollider.onTriggerStay = (other) => {
       if (other.gameObject.name !== "Player") return;
       if (!other.gameObject.isDashing) return;
+
+      // On kill:
       this.dieBurst.playSystem();
-      InputHandler.getInstance().triggerRumble(200, 100, .1, .3);
+      InputHandler.getInstance().triggerRumble(200, 100, 0.1, 0.3);
       if (ScreenShake.instance) {
         ScreenShake.instance.trigger(
-          0.25,   // duration in seconds
-          0,  // blendInTime in seconds
-          0.1,  // blendOutTime in seconds
+          0.25,  // duration
+          0,     // blendInTime
+          0.1,   // blendOutTime
           6,     // amplitude
           20     // frequency
         );
       }
       this.destroy();
-      return;
     };
 
     damagingCollider.onTriggerStay = (other) => {
       if (other.gameObject.name !== "Player") return;
       if (other.gameObject.isDashing) return;
       other.gameObject.takeDamage();
+    };
+
+    // -- State Variables --
+    this.movementState = "waiting";   // "waiting" or "moving"
+    this.stateTimer = 0;             // tracks countdown in current state
+    this.moveSpeed = 60;             // constant move speed
+    this.currentDirection = { x: 1, y: 0 };
+
+    this.originalSAndSConfig = {
+      squashScale: 0.97,
+      stretchScale: 1.03,
+      duration: 1.5,
+      easingFunction: EasingFunctions.easeInOutQuad,
+      loop: true,
+    };
+
+    // Initialize first wait time
+    this.setWaitTime();
+
+    // Optionally keep a debug flag if needed
+    this.debugLogs = false;
+  }
+
+  /**
+   * Helper function: sets a new random wait time in [1, 5].
+   */
+  setWaitTime() {
+    this.stateTimer = this.getRandomFloat(1, 5);
+    this.movementState = "waiting";
+
+    // Revert to gentler squash & stretch while idle:
+    this.sAndS.setConfig({
+      ...this.originalSAndSConfig,
+    });
+    if (!this.sAndS.isAnimating) {
+      this.sAndS.startAnimation();
+    }
+  }
+
+  /**
+   * Helper function: sets a new random move time in [1, 3]
+   * and picks a random direction.
+   */
+  setMoveTime() {
+    this.stateTimer = this.getRandomFloat(1, 3);
+    this.movementState = "moving";
+
+    // Pick a random direction by angle:
+    const angle = Math.random() * Math.PI * 2;
+    this.currentDirection = {
+      x: Math.cos(angle),
+      y: Math.sin(angle),
+    };
+
+    // Increase squash & stretch effect while moving:
+    this.sAndS.setConfig({
+      squashScale: 0.95,
+      stretchScale: 1.05,
+      duration: 0.12, // Faster "bob" while moving
+      easingFunction: EasingFunctions.easeInOutQuad,
+      loop: true,
+    });
+    if (!this.sAndS.isAnimating) {
+      this.sAndS.startAnimation();
+    }
+  }
+
+  /**
+   * Returns a random float between min and max.
+   */
+  getRandomFloat(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  /**
+   * Called every frame; handles the wait/move state logic.
+   */
+  update(deltaTime) {
+    super.update(deltaTime);
+
+    // Countdown the timer
+    this.stateTimer -= deltaTime;
+
+    if (this.movementState === "waiting") {
+      // Transition to "moving" once timer ends
+      if (this.stateTimer <= 0) {
+        this.setMoveTime();
+      }
+    } else if (this.movementState === "moving") {
+      // Move in currentDirection at moveSpeed
+      this.transform.position.x += this.currentDirection.x * this.moveSpeed * deltaTime;
+      this.transform.position.y += this.currentDirection.y * this.moveSpeed * deltaTime;
+
+      // Transition to "waiting" once timer ends
+      if (this.stateTimer <= 0) {
+        this.setWaitTime();
+      }
     }
   }
 }
