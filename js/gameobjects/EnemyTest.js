@@ -5,6 +5,7 @@ import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 import { InputHandler } from "./InputHandler.js";
+import { ScreenShake } from "../components/ScreenShake.js";
 
 export class EnemyTest extends GameObject {
   constructor(posx = 0, posy = 0, width = 30, height = 40) {
@@ -66,6 +67,15 @@ export class EnemyTest extends GameObject {
       if (!other.gameObject.isDashing) return;
       this.dieBurst.playSystem();
       InputHandler.getInstance().triggerRumble(200, 100, .1, .3);
+      if (ScreenShake.instance) {
+        ScreenShake.instance.trigger(
+          0.25,   // duration in seconds
+          0,  // blendInTime in seconds
+          0.1,  // blendOutTime in seconds
+          6,     // amplitude
+          20     // frequency
+        );
+      }
       this.destroy();
       return;
     };
