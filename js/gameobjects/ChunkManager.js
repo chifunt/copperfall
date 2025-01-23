@@ -22,6 +22,7 @@ export class ChunkManager extends GameObject {
       { x: 2, y: 0 },
     ];
     this.starterChunkSet = new Set(["0,0", "1,0", "2,0"]);
+    this.starterChunkSetToNotUnload = new Set(["2,0"]);
 
     this.start();
   }
@@ -93,7 +94,7 @@ export class ChunkManager extends GameObject {
 
     for (const [key, chunkObj] of this.spawnedChunks) {
       // skip unspawn for starter chunks if we want them always loaded
-      if (this.starterChunkSet.has(key)) continue;
+      if (this.starterChunkSetToNotUnload.has(key)) continue;
 
       // check distance
       const coords = key.split(",").map(n => parseInt(n));
