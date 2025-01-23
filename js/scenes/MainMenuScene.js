@@ -12,6 +12,7 @@ import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
 import { EnemyPatrol } from "../gameobjects/EnemyPatrol.js";
 import { Rock } from "../gameobjects/Rock.js";
+import { EnemyFast } from "../gameobjects/EnemyFast.js";
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -93,6 +94,8 @@ export class MainMenuScene extends Scene {
     new EnemyTest(-300, -120);
     new EnemyPatrol(150, 150);
     new EnemyPatrol(-150, 150);
+    new EnemyFast(300, 175)
+    new EnemyFast(-300, 175)
     this.spaceship = new Spaceship(0, 0);
     this.spaceship.repairSpaceShip();
     this.spaceship.repairSpaceShip();
