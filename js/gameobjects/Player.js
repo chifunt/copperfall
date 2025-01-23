@@ -50,7 +50,7 @@ export class Player extends GameObject {
         this.dashElapsedTime = 0;
         this.dashSpeed = 1200;             // Dash speed
         this.dashDirection = { x: 1, y: 0 }; // Default dash direction (facing right)
-        this.debugLogs = true;           // Debug logging flag
+        this.debugLogs = false;           // Debug logging flag
 
         // Optional: Dash cooldown (prevent spamming)
         this.dashCooldown = 0.4;          // 400ms cooldown
