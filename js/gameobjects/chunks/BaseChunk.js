@@ -35,8 +35,12 @@ export class BaseChunk extends GameObject {
 
     if (Engine.instance.debugMode) {
       const camera = Engine.instance.camera;
-      const canvasX = (this.transform.position.x - camera.position.x) * camera.scale + Engine.instance.canvas.width / 2;
-      const canvasY = (-this.transform.position.y + camera.position.y) * camera.scale + Engine.instance.canvas.height / 2;
+      const canvasX =
+        (this.transform.position.x - camera.position.x) * camera.scale +
+        Engine.instance.canvas.width / 2;
+      const canvasY =
+        (-this.transform.position.y + camera.position.y) * camera.scale +
+        Engine.instance.canvas.height / 2;
       const size = this.chunkSize * camera.scale;
 
       ctx.save();
@@ -69,9 +73,16 @@ export class BaseChunk extends GameObject {
    * @param {Object} customMap - optional color->class mapping if you want to override or extend
    * @param {number} cellsX - number of cells horizontally (default: 8)
    * @param {number} cellsY - number of cells vertically (default: 8)
+   * @param {boolean} rotate - whether to randomly rotate the image by 90/180/270 degrees. Default is true.
    * @returns {Promise<void>}
    */
-  async loadChunkMap(imagePath, customMap = {}, cellsX = 8, cellsY = 8) {
+  async loadChunkMap(
+    imagePath,
+    rotate = true,
+    customMap = {},
+    cellsX = 8,
+    cellsY = 8,
+  ) {
     // Build the color to class map from ChunkColorMap
     const colorMap = {};
 
@@ -86,29 +97,52 @@ export class BaseChunk extends GameObject {
     // 1. Load the image
     const img = await this.loadImageAsync(imagePath);
 
-    // 2. Draw it into an offscreen canvas
+    // 2. (Optional) Randomly rotate the image by 90, 180, or 270 degrees.
+    let rotationAngle = 0;
+    if (rotate) {
+      const possibleAngles = [90, 180, 270];
+      rotationAngle =
+        possibleAngles[Math.floor(Math.random() * possibleAngles.length)];
+    }
+
+    // 3. Draw it into an offscreen canvas with the chosen rotation.
     const offCanvas = document.createElement("canvas");
     offCanvas.width = img.width;
     offCanvas.height = img.height;
     const offCtx = offCanvas.getContext("2d");
-    offCtx.drawImage(img, 0, 0);
 
-    // 3. Read pixel data
-    const imageData = offCtx.getImageData(0, 0, img.width, img.height);
+    // Center and rotate, then draw
+    offCtx.save();
+    offCtx.translate(offCanvas.width / 2, offCanvas.height / 2);
+    offCtx.rotate((rotationAngle * Math.PI) / 180);
+    offCtx.drawImage(img, -img.width / 2, -img.height / 2);
+    offCtx.restore();
+
+    // 4. Read pixel data from the rotated offscreen canvas
+    const imageData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
     const data = imageData.data; // Uint8ClampedArray of RGBA
 
-    // 4. Define cell size in pixels
-    const cellWidth = Math.floor(img.width / cellsX);
-    const cellHeight = Math.floor(img.height / cellsY);
+    // 5. Define cell size in pixels
+    const cellWidth = Math.floor(offCanvas.width / cellsX);
+    const cellHeight = Math.floor(offCanvas.height / cellsY);
 
+    // 6. Iterate over each cell
     for (let cellY = 0; cellY < cellsY; cellY++) {
       for (let cellX = 0; cellX < cellsX; cellX++) {
         // Collect colors in the current cell
         const colorsInCell = new Set();
 
-        for (let y = cellY * cellHeight; y < (cellY + 1) * cellHeight && y < img.height; y++) {
-          for (let x = cellX * cellWidth; x < (cellX + 1) * cellWidth && x < img.width; x++) {
-            const i = (y * img.width + x) * 4;
+        for (
+          let y = cellY * cellHeight;
+          y < (cellY + 1) * cellHeight && y < offCanvas.height;
+          y++
+        ) {
+          for (
+            let x = cellX * cellWidth;
+            x < (cellX + 1) * cellWidth && x < offCanvas.width;
+            x++
+          ) {
+            const i = (y * offCanvas.width + x) * 4;
             const r = data[i + 0];
             const g = data[i + 1];
             const b = data[i + 2];
@@ -138,14 +172,15 @@ export class BaseChunk extends GameObject {
           }
         }
 
+        // If we found a matching object class, spawn it
         if (objectClass) {
           // Calculate world coordinates for the cell
           const cellSize = this.chunkSize / cellsX;
           const halfChunk = this.chunkSize / 2;
           const halfCell = cellSize / 2;
 
-          const worldX = (cellX * cellSize) - halfChunk + halfCell;
-          const worldY = halfChunk - (cellY * cellSize) - halfCell;
+          const worldX = cellX * cellSize - halfChunk + halfCell;
+          const worldY = halfChunk - cellY * cellSize - halfCell;
 
           // Create and add the object instance
           const obj = new objectClass(worldX, worldY);
