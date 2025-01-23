@@ -9,7 +9,7 @@ export class CompassIndicator extends Component {
 
         // Appearance of the arrow in screen space
         this.arrowLength = 75;
-        this.arrowWidth = 50;
+        this.arrowWidth = 20;
         this.margin = 60;  // how close to the edges we clamp
 
         // Flag to show/hide the indicator entirely
