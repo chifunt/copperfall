@@ -1,44 +1,42 @@
 // /js/gameobjects/ChunkManager.js
 import { GameObject } from "/js/core/GameObject.js";
 import { ChunkRegistry } from "./chunks/ChunkRegistry.js";
+import { Engine } from "/js/core/Engine.js";
 
 export class ChunkManager extends GameObject {
   constructor(player, config = {}) {
     super("ChunkManager");
     this.player = player;
 
-    // Distances for spawning/unspawning:
-    this.spawnDistance = 800;
-    // If the chunk is more than spawnDistance away from the player, we unspawn it.
-
+    // Distance for spawning/unspawning
+    this.spawnDistance = 800; // chunks appear/disappear at 800 units
     this.chunkSize = 400;
-    this.spawnedChunks = new Map();
-    // Key: "cx,cy"; Value: the chunk GameObject (if currently spawned)
 
-    // Starter chunk coordinates
+    // Instead of a single "spawnedChunks" map, we keep
+    // chunkState with an object: { chunkObj, isSpawned: bool }
+    this.chunkStateMap = new Map(); // Key: "cx,cy", Value: { chunkObj, isSpawned }
+
+    // Starter chunk coords
     this.starterChunkCoords = [
       { x: 0, y: 0 },
       { x: 1, y: 0 },
       { x: 2, y: 0 },
     ];
     this.starterChunkSet = new Set(["0,0", "1,0", "2,0"]);
+
+    // If we want chunk (2,0) to never unload, store that or you can handle in logic
     this.starterChunkSetToNotUnload = new Set(["2,0"]);
 
     this.start();
   }
 
-  /**
-   * Force-spawn the starter chunks immediately, so they're always loaded at game start.
-   */
   start() {
+    // Force-spawn the starter chunks
     for (const coord of this.starterChunkCoords) {
       this.spawnStarterChunk(coord.x, coord.y);
     }
   }
 
-  /**
-   * Check each frame for spawn/unspawn conditions.
-   */
   update(deltaTime) {
     super.update(deltaTime);
     this.checkChunksNearPlayer();
@@ -46,19 +44,15 @@ export class ChunkManager extends GameObject {
   }
 
   /**
-   * Checks if any unspawned chunks (within a certain coordinate range) should spawn,
-   * because the player is within spawnDistance.
+   * 1) For each chunk coordinate near the player, if not spawned => spawn
    */
   checkChunksNearPlayer() {
     const px = this.player.transform.position.x;
     const py = this.player.transform.position.y;
-
-    // Current chunk coords based on the player's position
     const currentChunkX = Math.floor(px / this.chunkSize);
     const currentChunkY = Math.floor(py / this.chunkSize);
 
-    // We'll search in a small range around the player
-    const chunkRange = 2; // or bigger if you like
+    const chunkRange = 2;
     for (let cx = currentChunkX - chunkRange; cx <= currentChunkX + chunkRange; cx++) {
       for (let cy = currentChunkY - chunkRange; cy <= currentChunkY + chunkRange; cy++) {
         const chunkPosX = cx * this.chunkSize;
@@ -69,15 +63,17 @@ export class ChunkManager extends GameObject {
         const spawnDistSq = this.spawnDistance * this.spawnDistance;
 
         const key = `${cx},${cy}`;
-        // If not spawned AND within spawnDistance => spawn
-        if (!this.spawnedChunks.has(key) && distSq <= spawnDistSq) {
-          if (this.starterChunkSet.has(key)) {
-            // It's a starter chunk, but might already be spawned in start().
-            // If not, spawn it again just to be sure:
-            this.spawnStarterChunk(cx, cy);
-          } else {
-            // Spawn normal chunk
-            this.spawnChunk(cx, cy);
+
+        // If within distance, we want to spawn
+        if (distSq <= spawnDistSq) {
+          const chunkState = this.chunkStateMap.get(key);
+          // If it's not spawned, we spawn it
+          if (!chunkState || !chunkState.isSpawned) {
+            if (this.starterChunkSet.has(key)) {
+              this.spawnStarterChunk(cx, cy);
+            } else {
+              this.spawnChunk(cx, cy);
+            }
           }
         }
       }
@@ -85,22 +81,18 @@ export class ChunkManager extends GameObject {
   }
 
   /**
-   * Checks each *spawned* chunk to see if the player is now beyond spawnDistance,
-   * and if so, unspawn/destroy it. Except for starter chunks if we want them always loaded.
+   * 2) For each *spawned* chunk, if now out of spawnDistance => unspawn it
    */
   checkForUnspawn() {
     const px = this.player.transform.position.x;
     const py = this.player.transform.position.y;
 
-    for (const [key, chunkObj] of this.spawnedChunks) {
-      // skip unspawn for starter chunks if we want them always loaded
-      if (this.starterChunkSetToNotUnload.has(key)) continue;
+    for (const [key, chunkState] of this.chunkStateMap) {
+      if (!chunkState.isSpawned) continue; // only check spawned chunks
+      if (this.starterChunkSetToNotUnload.has(key)) continue; // skip unspawn for certain chunk(s)
 
-      // check distance
-      const coords = key.split(",").map(n => parseInt(n));
-      const cx = coords[0];
-      const cy = coords[1];
-
+      // parse coords from key
+      const [cx, cy] = key.split(",").map(n => parseInt(n));
       const chunkPosX = cx * this.chunkSize;
       const chunkPosY = cy * this.chunkSize;
       const dx = px - chunkPosX;
@@ -108,7 +100,6 @@ export class ChunkManager extends GameObject {
       const distSq = dx * dx + dy * dy;
       const spawnDistSq = this.spawnDistance * this.spawnDistance;
 
-      // If chunk is beyond spawnDistance => unspawn it
       if (distSq > spawnDistSq) {
         this.unspawnChunk(cx, cy);
       }
@@ -116,38 +107,47 @@ export class ChunkManager extends GameObject {
   }
 
   /**
-   * Spawns one of the "starter" chunk prefabs at the given coords.
-   * Already-coded logic from your snippet.
+   * Spawns one of the starter chunk prefabs at (cx, cy).
+   * If it doesn't exist in chunkStateMap, create it; else re-spawn it.
    */
   spawnStarterChunk(cx, cy) {
     const key = `${cx},${cy}`;
-    if (this.spawnedChunks.has(key)) return; // Already spawned
+    let chunkState = this.chunkStateMap.get(key);
+    if (chunkState && chunkState.isSpawned) return; // already spawned
 
+    // Determine chunk class
     let chunkClass = null;
-    if (cx === 0 && cy === 0) {
-      chunkClass = ChunkRegistry.StarterChunkA.class;
-    } else if (cx === 1 && cy === 0) {
-      chunkClass = ChunkRegistry.StarterChunkB.class;
-    } else if (cx === 2 && cy === 0) {
-      chunkClass = ChunkRegistry.StarterChunkC.class;
-    }
+    if (cx === 0 && cy === 0) chunkClass = ChunkRegistry.StarterChunkA.class;
+    if (cx === 1 && cy === 0) chunkClass = ChunkRegistry.StarterChunkB.class;
+    if (cx === 2 && cy === 0) chunkClass = ChunkRegistry.StarterChunkC.class;
 
     if (!chunkClass) {
-      console.warn(`No starter chunk class found for coords (${cx}, ${cy})`);
+      console.warn(`No starter chunk for coords (${cx}, ${cy})`);
       return;
     }
 
-    const chunkObj = new chunkClass(cx, cy);
-    this.spawnedChunks.set(key, chunkObj);
-    console.log(`Spawned STARTER chunk [${chunkClass.name}] at chunk coords (${cx},${cy}).`);
+    // If chunk doesn't exist in chunkStateMap, create it
+    if (!chunkState) {
+      const chunkObj = new chunkClass(cx, cy);
+      chunkState = { chunkObj, isSpawned: false };
+      this.chunkStateMap.set(key, chunkState);
+    }
+
+    // Now ensure it's spawned
+    if (!chunkState.isSpawned) {
+      this.registerChunkToEngine(chunkState.chunkObj);
+      chunkState.isSpawned = true;
+      console.log(`Spawned STARTER chunk at (${cx},${cy}).`);
+    }
   }
 
   /**
-   * Spawns a chunk at coords (cx, cy), deciding chunk type by distance from origin
+   * Spawns a normal chunk (non-starter) based on distance from origin
    */
   spawnChunk(cx, cy) {
     const key = `${cx},${cy}`;
-    if (this.spawnedChunks.has(key)) return;
+    let chunkState = this.chunkStateMap.get(key);
+    if (chunkState && chunkState.isSpawned) return;
 
     // distance from origin
     const distFromOrigin = Math.sqrt(cx * cx + cy * cy) * this.chunkSize;
@@ -159,28 +159,85 @@ export class ChunkManager extends GameObject {
     } else {
       chosenChunkType = ChunkRegistry.ChunkTypeC.class;
     }
-
     if (!chosenChunkType) {
-      console.warn(`No chunk found for dist: ${distFromOrigin} at coords (${cx},${cy})`);
+      console.warn(`No chunk found for dist: ${distFromOrigin} at coords (${cx},${cy}).`);
       return;
     }
 
-    const chunkObj = new chosenChunkType(cx, cy);
-    this.spawnedChunks.set(key, chunkObj);
-    // console.log(`Spawned chunk [${chosenChunkType.name}] at coords (${cx},${cy}).`);
+    // if chunk doesn't exist, create it
+    if (!chunkState) {
+      const chunkObj = new chosenChunkType(cx, cy);
+      chunkState = { chunkObj, isSpawned: false };
+      this.chunkStateMap.set(key, chunkState);
+    }
+
+    // register/spawn it if not already
+    if (!chunkState.isSpawned) {
+      this.registerChunkToEngine(chunkState.chunkObj);
+      chunkState.isSpawned = true;
+      // console.log(`Spawned chunk [${chunkState.chunkObj.constructor.name}] at (${cx},${cy})`);
+    }
   }
 
   /**
-   * Unspawns/destroys a chunk (and all its child objects).
+   * Removes chunk from engine and marks isSpawned=false,
+   * but does NOT destroy the chunk object or its children.
    */
   unspawnChunk(cx, cy) {
     const key = `${cx},${cy}`;
-    const chunkObj = this.spawnedChunks.get(key);
-    if (!chunkObj) return;
+    const chunkState = this.chunkStateMap.get(key);
+    if (!chunkState || !chunkState.isSpawned) return; // Not currently active
 
-    chunkObj.destroy(); // This should remove all child objects as well
-    this.spawnedChunks.delete(key);
-
+    this.unregisterChunkFromEngine(chunkState.chunkObj);
+    chunkState.isSpawned = false;
     console.log(`Unspawned chunk at coords (${cx},${cy}).`);
+  }
+
+  /**
+   * Actually adds a chunk's objects to the engine.
+   * Typically, the chunk constructor's `super(...)` call already
+   * triggered addGameObject. So we might not need to do anything,
+   * *unless* we remove them in `unregisterChunkFromEngine`.
+   *
+   * We'll demonstrate a custom approach:
+   */
+  registerChunkToEngine(chunkObj) {
+    // If chunkObj is not in the engine's gameObjects, re-add it:
+    const engine = Engine.instance;
+    if (!engine.gameObjects.includes(chunkObj)) {
+      engine.gameObjects.push(chunkObj);
+    }
+    // If chunk has child objects that were also removed, re-add them
+    // (But if your engine calls addGameObject in child constructor, you might skip this.)
+    for (const child of chunkObj.childObjects) {
+      if (child.isDestroyed) continue; // skip permanently destroyed
+      if (!engine.gameObjects.includes(child)) {
+        engine.gameObjects.push(child);
+      }
+    }
+  }
+
+  /**
+   * Removes chunk object (and all children) from the engine's active gameObjects array
+   * so they no longer update/render/collide. But does NOT call .destroy().
+   */
+  unregisterChunkFromEngine(chunkObj) {
+    const engine = Engine.instance;
+    const allGOs = engine.gameObjects;
+
+    // remove chunkObj
+    const idx = allGOs.indexOf(chunkObj);
+    if (idx !== -1) {
+      allGOs.splice(idx, 1);
+    }
+
+    // remove chunk children
+    for (const child of chunkObj.childObjects) {
+      if (child.isDestroyed) continue; // skip destroyed
+      const i2 = allGOs.indexOf(child);
+      if (i2 !== -1) {
+        allGOs.splice(i2, 1);
+      }
+    }
   }
 }
