@@ -48,10 +48,10 @@ export class ShipMenuManager extends GameObject {
       },
       {
         name: "RepairShip",
-        cost: 2400,
+        cost: 2100,
         label: "Repair Ship",
         upgradeBars: 2,
-        increment: 600,
+        increment: 300,
         currentLevel: 0,
       },
       {
