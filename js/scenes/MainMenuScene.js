@@ -10,6 +10,7 @@ import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
 import { TextureBG } from "../gameobjects/TextureBG.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
+import { EnemyPatrol } from "../gameobjects/EnemyPatrol.js";
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -89,6 +90,8 @@ export class MainMenuScene extends Scene {
 
     new EnemyTest(300, -120);
     new EnemyTest(-300, -120);
+    new EnemyPatrol(150, 150);
+    new EnemyPatrol(-150, 150);
     this.spaceship = new Spaceship(0, 0);
     this.spaceship.repairSpaceShip();
     this.spaceship.repairSpaceShip();
