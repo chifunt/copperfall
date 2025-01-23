@@ -9,6 +9,7 @@ import { TestThing2 } from "../gameobjects/TestThing2.js";
 import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
 import { TextureBG } from "../gameobjects/TextureBG.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
+import { Spaceship } from "../gameobjects/Spaceship.js";
 
 export class MainMenuScene extends Scene {
   onStart() {
@@ -88,6 +89,7 @@ export class MainMenuScene extends Scene {
 
     new EnemyTest(300, -120);
     new EnemyTest(-300, -120);
+    new Spaceship(0, 0);
 
     // For now just load the main scene
     // this.loadMainScene();
