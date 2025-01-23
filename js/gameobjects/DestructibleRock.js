@@ -59,7 +59,7 @@ export class DestructibleRock extends GameObject {
       this.rockBurst.playSystem();
       if (ScreenShake.instance) {
         ScreenShake.instance.trigger(
-          0.05,   // duration in seconds
+          0.25,   // duration in seconds
           0,  // blendInTime in seconds
           0.1,  // blendOutTime in seconds
           6,     // amplitude

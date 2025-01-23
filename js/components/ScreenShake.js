@@ -3,100 +3,101 @@ import { EasingFunctions } from "/js/utils/EasingFunctions.js";
 import { Engine } from "../core/Engine.js";
 
 export class ScreenShake extends Component {
-    static instance = null; // Singleton instance
+    static instance = null;
 
-    constructor(config = {}) {
+    constructor() {
         if (ScreenShake.instance) {
-            console.warn("ScreenShake is a singleton and has already been created.");
+            // Singleton guard
             return ScreenShake.instance;
         }
-
         super();
         ScreenShake.instance = this;
 
-        // Initialize configuration with defaults
-        this.currentShake = null; // Current active shake
-        this.shakeQueue = [];      // Queue of pending shakes
-        this.shakeTime = 0;        // Elapsed time for current shake
-        this.isShaking = false;    // Shake active flag
+        // Instead of a queue, keep a list of active shakes
+        this.activeShakes = [];
+
+        // We’ll track the total offset from shakes so we can remove it each frame
+        this.lastOffsetX = 0;
+        this.lastOffsetY = 0;
     }
 
     /**
-     * Triggers a screen shake with specified parameters.
-     * @param {number} duration - Total duration of the shake in seconds.
-     * @param {number} blendInTime - Time to ramp up the shake in seconds.
+     * Triggers a new screen shake that will run independently
+     * of other shakes.
+     * @param {number} duration     - Total duration of the shake in seconds.
+     * @param {number} blendInTime  - Time to ramp up the shake in seconds.
      * @param {number} blendOutTime - Time to ramp down the shake in seconds.
-     * @param {number} amplitude - Maximum shake offset.
-     * @param {number} frequency - Oscillations per second.
+     * @param {number} amplitude    - Maximum shake offset.
+     * @param {number} frequency    - Oscillations per second.
      */
     trigger(duration, blendInTime, blendOutTime, amplitude, frequency) {
-        const shakeParams = { duration, blendInTime, blendOutTime, amplitude, frequency };
-        this.shakeQueue.push(shakeParams);
+        this.activeShakes.push({
+            time: 0,          // Elapsed time for this shake
+            duration,
+            blendInTime,
+            blendOutTime,
+            amplitude,
+            frequency
+        });
     }
 
     /**
-     * Initiates the next shake in the queue if not currently shaking.
-     */
-    initiateNextShake() {
-        if (this.isShaking || this.shakeQueue.length === 0) return;
-
-        this.currentShake = this.shakeQueue.shift();
-        this.shakeTime = 0;
-        this.isShaking = true;
-
-        // Destructure shake parameters
-        const { duration, blendInTime, blendOutTime, amplitude, frequency } = this.currentShake;
-        this.duration = duration;
-        this.blendInTime = blendInTime;
-        this.blendOutTime = blendOutTime;
-        this.amplitude = amplitude;
-        this.frequency = frequency;
-    }
-
-    /**
-     * Updates the screen shake effect each frame.
-     * @param {number} deltaTime - Time elapsed since the last frame.
+     * Update the screen shake effect each frame.
+     * @param {number} deltaTime - Time elapsed since the last frame (seconds).
      */
     update(deltaTime) {
-        // Initiate the next shake if available
-        this.initiateNextShake();
-
-        if (!this.isShaking) return;
-
-        this.shakeTime += deltaTime;
-
-        if (this.shakeTime > this.duration) {
-            this.isShaking = false;
-            this.currentShake = null;
-            return;
-        }
-
-        // Calculate progress ratio
-        let progress = this.shakeTime / this.duration;
-
-        // Determine current amplitude based on blend-in and blend-out
-        if (this.shakeTime < this.blendInTime) {
-            // Blend in
-            this.currentAmplitude = EasingFunctions.easeOutQuad(this.shakeTime / this.blendInTime) * this.amplitude;
-        } else if (this.shakeTime > (this.duration - this.blendOutTime)) {
-            // Blend out
-            const timeLeft = this.duration - this.shakeTime;
-            this.currentAmplitude = EasingFunctions.easeInQuad(timeLeft / this.blendOutTime) * this.amplitude;
-        } else {
-            // Full amplitude
-            this.currentAmplitude = this.amplitude;
-        }
-
-        // Calculate shake offset using sine and cosine waves
-        const shakeOffsetX = Math.sin(this.shakeTime * this.frequency * 2 * Math.PI) * this.currentAmplitude;
-        const shakeOffsetY = Math.cos(this.shakeTime * this.frequency * 2 * Math.PI) * this.currentAmplitude;
-
-        // Apply shake to camera position
+        // If there was any offset applied last frame, remove it before calculating a new one.
         const engine = Engine.instance;
         const camera = engine.camera;
+        camera.position.x -= this.lastOffsetX;
+        camera.position.y -= this.lastOffsetY;
 
-        // Add the shake offset to the current camera position
-        camera.position.x += shakeOffsetX;
-        camera.position.y += shakeOffsetY;
+        // We'll calculate the total offset from all active shakes
+        let totalOffsetX = 0;
+        let totalOffsetY = 0;
+
+        // Update each active shake and accumulate offsets
+        for (let i = this.activeShakes.length - 1; i >= 0; i--) {
+            const shake = this.activeShakes[i];
+
+            // Advance time
+            shake.time += deltaTime;
+
+            // If this shake is finished, remove it
+            if (shake.time > shake.duration) {
+                this.activeShakes.splice(i, 1);
+                continue;
+            }
+
+            // Determine current amplitude based on blend-in/blend-out
+            let currentAmplitude;
+            if (shake.time < shake.blendInTime) {
+                // Blend in
+                currentAmplitude = EasingFunctions.easeOutQuad(shake.time / shake.blendInTime) * shake.amplitude;
+            } else if (shake.time > (shake.duration - shake.blendOutTime)) {
+                // Blend out
+                const timeLeft = shake.duration - shake.time;
+                currentAmplitude = EasingFunctions.easeInQuad(timeLeft / shake.blendOutTime) * shake.amplitude;
+            } else {
+                // Full amplitude
+                currentAmplitude = shake.amplitude;
+            }
+
+            // Calculate shake offset using sine/cosine
+            const shakeOffsetX = Math.sin(shake.time * shake.frequency * 2 * Math.PI) * currentAmplitude;
+            const shakeOffsetY = Math.cos(shake.time * shake.frequency * 2 * Math.PI) * currentAmplitude;
+
+            // Accumulate the offset
+            totalOffsetX += shakeOffsetX;
+            totalOffsetY += shakeOffsetY;
+        }
+
+        // Apply the total offset for this frame
+        camera.position.x += totalOffsetX;
+        camera.position.y += totalOffsetY;
+
+        // Remember this offset so we can remove it next frame
+        this.lastOffsetX = totalOffsetX;
+        this.lastOffsetY = totalOffsetY;
     }
 }

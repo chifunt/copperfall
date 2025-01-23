@@ -284,9 +284,9 @@ export class Player extends GameObject {
         if (ScreenShake.instance) {
             ScreenShake.instance.trigger(
                 0.3,   // duration in seconds
-                0.05,  // blendInTime in seconds
-                0.05,  // blendOutTime in seconds
-                8,     // amplitude
+                0,  // blendInTime in seconds
+                0.1,  // blendOutTime in seconds
+                12,     // amplitude
                 20     // frequency
             );
         }
@@ -453,7 +453,7 @@ export class Player extends GameObject {
                 0.3,   // duration in seconds
                 0,     // blendInTime in seconds
                 0.2,   // blendOutTime in seconds
-                4,     // amplitude
+                7,     // amplitude
                 20     // frequency
             );
         }
