@@ -49,14 +49,21 @@ export class DestructibleRock extends GameObject {
     this.rockBurst.transform.position = this.transform.position;
 
     const mainCollider = new BoxCollider({
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       offset: { x: 0, y: 0 },
       isTrigger: false,
     });
     this.addComponent(mainCollider);
+    const triggerCollider = new BoxCollider({
+      width: 40,
+      height: 40,
+      offset: { x: 0, y: 0 },
+      isTrigger: true,
+    });
+    this.addComponent(triggerCollider);
 
-    mainCollider.onCollisionStay = (other) => {
+    triggerCollider.onTriggerStay = (other) => {
       if (!other.gameObject.name == "Player") return;
       if (!other.gameObject.isDashing) return;
       console.log("PLAYER BROKE ROCK");
