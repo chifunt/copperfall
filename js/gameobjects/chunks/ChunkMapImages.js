@@ -24,7 +24,14 @@ export const ChunkMapImages = {
   cross: "cross.png",
   aye: "aye.png",
   smile: "smile.png",
-  legma: "legma.png"
+  legma: "legma.png",
+  driven: "driven.png",
+  amog: "amog.png",
+  rainbow: "rainbow.png",
+  sosh: "sosh.png",
+  pool: "pool.png",
+  burp: "burp.png",
+  wheel: "wheel.png"
 };
 
 /**

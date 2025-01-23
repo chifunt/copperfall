@@ -3,6 +3,7 @@ import { EnemyTest } from "/js/gameobjects/EnemyTest.js";
 import { Pickup } from "/js/gameobjects/Pickup.js";
 import { DestructibleRock } from "/js/gameobjects/DestructibleRock.js";
 import { EnemyPatrol } from "/js/gameobjects/EnemyPatrol.js";
+import { EnemyFast } from "/js/gameobjects/EnemyFast.js";
 
 /**
  * ChunkColorMap maps each game object to its corresponding color.
@@ -28,5 +29,9 @@ export const ChunkColorMap = {
   EnemyPatrol: {
     color: "#ff00ff",           // Magenta
     class: EnemyPatrol
+  },
+  EnemyFast: {
+    color: "#ffff00",           // yella
+    class: EnemyFast
   }
 };

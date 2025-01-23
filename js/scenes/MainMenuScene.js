@@ -60,8 +60,8 @@ export class MainMenuScene extends Scene {
     new Pickup(-200, 0);
     new Pickup(-250, 50);
     new Pickup(-300, 100);
-    new TestThing2(0, 250, 900, 10);
-    new TestThing2(0, -250, 900, 10);
+    new TestThing2(0, 300, 900, 100);
+    new TestThing2(0, -300, 900, 100);
     new TestThing2(440, 0, 10, 500);
     new TestThing2(-440, 0, 10, 500);
 
