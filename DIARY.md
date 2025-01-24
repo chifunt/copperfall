@@ -33,3 +33,6 @@ Finished the UIs completely with full support for controller and keyboard input 
 
 ## 2025-01-23
 The game is currently experiencing a bug where the game lags really heavily the more the game is beaten and restarted. I am not going to bother to find the issue, I know for sure that not everything is destroyed and reinitialized when loading and deloading scenes. This was more of an architectural mistake that I made early on, since I didn't plan on having scenes and restarting the game. Compass was implemented but hella scuff implementation. Screenshake was adjusted from queueing to adding up. I found out that due to the physics calculations being done with delta time, low frame rates would cause the game to be quite unplayable and the collisions cease to work. Even a small dip in fps would be able to result in the player being able to dash through a rock. All the art was done and finished today, along with a whole bunch of finishing touches.
+
+## 2025-01-24
+Did all the sounds today, not enough time to make music for the game atm, went to bed instead. Need to implement fixed delta time to resolve collision issues.
