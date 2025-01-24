@@ -42,6 +42,7 @@ export class MainMenuScene extends Scene {
       ToolTipManager.getInstance().closeToolTip();
     });
     uiManager.retryButton.addEventListener("click", function () {
+      uiManager.retryButton.disabled = true;
       UIManager.instance.closeMenu();
       ToolTipManager.getInstance().closeToolTip();
       Engine.instance.loadScene(new MainScene());

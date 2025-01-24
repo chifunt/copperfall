@@ -145,6 +145,7 @@ export class UIManager extends GameObject {
    * Opens the Game Over Menu.
    */
   openGameOverMenu() {
+    this.retryButton.disabled = false;
     this.openMenu(this.gameOverMenu);
   }
 
