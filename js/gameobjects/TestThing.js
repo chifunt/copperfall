@@ -13,7 +13,7 @@ export class TestThing extends GameObject {
 
         // Add SpriteRenderer
         const img = new Image();
-        img.src = "/assets/images/test.png";
+        img.src = "../../assets/images/test.png";
         img.onload = () => {
             this.addComponent(new SpriteRenderer(img, { pivot: "bottom", zOrder: 4 }));
         };

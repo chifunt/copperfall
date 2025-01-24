@@ -1,23 +1,23 @@
 import { GameObject } from "../core/GameObject.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 import { EasingFunctions } from "../utils/EasingFunctions.js";
-import { SquashAndStretch } from "/js/components/SquashAndStretch.js";
-import { HorizontalFlip } from "/js/components/HorizontalFlip.js";
+import { SquashAndStretch } from "../components/SquashAndStretch.js";
+import { HorizontalFlip } from "../components/HorizontalFlip.js";
 import { BoxCollider } from "../components/BoxCollider.js";
 import { CircleCollider } from "../components/CircleCollider.js";
 import { Rigidbody } from "../components/Rigidbody.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { Actions } from "../utils/Actions.js";
-import { ScreenShake } from "/js/components/ScreenShake.js";
-import { HUD } from "/js/components/HUD.js";
+import { ScreenShake } from "../components/ScreenShake.js";
+import { HUD } from "../components/HUD.js";
 import { UIManager } from "./UIManager.js";
 import { ShipMenuManager } from "./ShipMenuManager.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
 import { ToolTipManager } from "./ToolTipManager.js";
 import { CompassIndicator } from "../components/CompassIndicator.js";
-import { soundManager } from '/js/utils/SoundManager.js';
-import { SoundEffects } from '/js/utils/SoundEffects.js';
+import { soundManager } from '../utils/SoundManager.js';
+import { SoundEffects } from '../utils/SoundEffects.js';
 
 export class Player extends GameObject {
     constructor() {
@@ -87,11 +87,11 @@ export class Player extends GameObject {
 
         // Add a SpriteRenderer component
         this.img = new Image();
-        this.img.src = "/assets/images/curo.png";
+        this.img.src = "../../assets/images/curo.png";
         this.dashimg = new Image();
-        this.dashimg.src = "/assets/images/curo-dash.png";
+        this.dashimg.src = "../../assets/images/curo-dash.png";
         this.hurtimg = new Image();
-        this.hurtimg.src = "/assets/images/curo-hurt.png";
+        this.hurtimg.src = "../../assets/images/curo-hurt.png";
         this.img.onload = () => {
             this.addComponent(new SpriteRenderer(this.img, { pivot: "bottom", zOrder: 5 }));
         };

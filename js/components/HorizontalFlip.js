@@ -1,5 +1,5 @@
-import { Component } from "/js/core/Component.js";
-import { SpriteRenderer } from "/js/components/SpriteRenderer.js";
+import { Component } from "../core/Component.js";
+import { SpriteRenderer } from "../components/SpriteRenderer.js";
 
 export class HorizontalFlip extends Component {
   constructor(defaultFacingRight = true) {

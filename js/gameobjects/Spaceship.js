@@ -15,11 +15,11 @@ export class Spaceship extends GameObject {
 
     // Add SpriteRenderer
     this.imgFull = new Image();
-    this.imgFull.src = "/assets/images/spaceship-full.png";
+    this.imgFull.src = "../../assets/images/spaceship-full.png";
     this.imgRepaired = new Image();
-    this.imgRepaired.src = "/assets/images/spaceship-repaired.png";
+    this.imgRepaired.src = "../../assets/images/spaceship-repaired.png";
     this.imgWrecked = new Image();
-    this.imgWrecked.src = "/assets/images/spaceship-wrecked.png";
+    this.imgWrecked.src = "../../assets/images/spaceship-wrecked.png";
 
     this.loaded = false;
     this.repairLevels = 0;

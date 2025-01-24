@@ -39,7 +39,7 @@ export const ChunkMapImages = {
  */
 export function getChunkMapPath(key) {
   // We assume all chunk maps are in /assets/images/chunk-maps/
-  const baseDir = "/assets/images/chunk-maps/";
+  const baseDir = "../../../assets/images/chunk-maps/";
   const filename = ChunkMapImages[key];
   if (!filename) {
     console.warn(`ChunkMapImages: No filename found for key="${key}"`);

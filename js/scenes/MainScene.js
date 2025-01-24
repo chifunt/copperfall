@@ -1,10 +1,10 @@
-import { Scene } from "/js/core/Scene.js";
-import { Background } from "/js/gameobjects/Background.js";
-import { Player } from "/js/gameobjects/Player.js";
-import { InputHandler } from "/js/gameobjects/InputHandler.js";
-import { CameraObject } from "/js/gameobjects/CameraObject.js";
+import { Scene } from "../core/Scene.js";
+import { Background } from "../gameobjects/Background.js";
+import { Player } from "../gameobjects/Player.js";
+import { InputHandler } from "../gameobjects/InputHandler.js";
+import { CameraObject } from "../gameobjects/CameraObject.js";
 import { UIManager } from "../gameobjects/UIManager.js";
-import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { ToolTipManager } from "../gameobjects/ToolTipManager.js";
 import { ChunkManager } from "../gameobjects/ChunkManager.js";
 
 export class MainScene extends Scene {

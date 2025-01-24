@@ -5,8 +5,8 @@ import { ScreenShake } from "../components/ScreenShake.js";
 import { InputHandler } from "./InputHandler.js";
 import { DropShadow } from "../components/DropShadow.js";
 import { ParticleSystemObject } from "./ParticleSystemObject.js";
-import { soundManager } from '/js/utils/SoundManager.js';
-import { SoundEffects } from '/js/utils/SoundEffects.js';
+import { soundManager } from '../utils/SoundManager.js';
+import { SoundEffects } from '../utils/SoundEffects.js';
 
 export class DestructibleRock extends GameObject {
   constructor(posx = 0, posy = 0) {
@@ -22,7 +22,7 @@ export class DestructibleRock extends GameObject {
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/destructible-rock.png";
+    img.src = "../../assets/images/destructible-rock.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };

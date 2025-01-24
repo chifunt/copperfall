@@ -1,4 +1,4 @@
-import { Component } from "/js/core/Component.js";
+import { Component } from "../core/Component.js";
 
 /**
  * A simple Rigidbody component:

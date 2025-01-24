@@ -1,5 +1,5 @@
-import { GameObject } from "/js/core/GameObject.js";
-import { ParticleSystem } from "/js/components/ParticleSystem.js";
+import { GameObject } from "../core/GameObject.js";
+import { ParticleSystem } from "../components/ParticleSystem.js";
 import { SpriteRenderer } from "../components/SpriteRenderer.js";
 
 export class ParticleSystemObject extends GameObject {

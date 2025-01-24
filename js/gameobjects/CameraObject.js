@@ -1,6 +1,6 @@
-import { GameObject } from "/js/core/GameObject.js";
-import { CameraFollow } from "/js/components/CameraFollow.js";
-import { ScreenShake } from "/js/components/ScreenShake.js";
+import { GameObject } from "../core/GameObject.js";
+import { CameraFollow } from "../components/CameraFollow.js";
+import { ScreenShake } from "../components/ScreenShake.js";
 
 export class CameraObject extends GameObject {
   /**

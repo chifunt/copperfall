@@ -1,5 +1,5 @@
-import { SpriteRenderer } from "/js/components/SpriteRenderer.js";
-import { CollisionSystem } from "/js/core/CollisionSystem.js";
+import { SpriteRenderer } from "../components/SpriteRenderer.js";
+import { CollisionSystem } from "../core/CollisionSystem.js";
 
 export class Engine {
   constructor(canvasId) {

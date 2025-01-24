@@ -22,7 +22,7 @@ export class Pickup extends GameObject {
     this.targetPos = { x: 0, y: 0 };
 
     const img = new Image();
-    img.src = "/assets/images/copper.png";
+    img.src = "../../assets/images/copper.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 2 }));
 

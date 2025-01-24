@@ -17,7 +17,7 @@ export class Rock extends GameObject {
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/rock.png";
+    img.src = "../../assets/images/rock.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };

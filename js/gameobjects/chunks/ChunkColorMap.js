@@ -1,9 +1,9 @@
-import { Rock } from "/js/gameobjects/Rock.js";
-import { EnemyTest } from "/js/gameobjects/EnemyTest.js";
-import { Pickup } from "/js/gameobjects/Pickup.js";
-import { DestructibleRock } from "/js/gameobjects/DestructibleRock.js";
-import { EnemyPatrol } from "/js/gameobjects/EnemyPatrol.js";
-import { EnemyFast } from "/js/gameobjects/EnemyFast.js";
+import { Rock } from "../../gameobjects/Rock.js";
+import { EnemyTest } from "../../gameobjects/EnemyTest.js";
+import { Pickup } from "../../gameobjects/Pickup.js";
+import { DestructibleRock } from "../../gameobjects/DestructibleRock.js";
+import { EnemyPatrol } from "../../gameobjects/EnemyPatrol.js";
+import { EnemyFast } from "../../gameobjects/EnemyFast.js";
 
 /**
  * ChunkColorMap maps each game object to its corresponding color.

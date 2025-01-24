@@ -1,5 +1,5 @@
-import { Transform } from "/js/core/Transform.js";
-import { Engine } from "/js/core/Engine.js";
+import { Transform } from "../core/Transform.js";
+import { Engine } from "../core/Engine.js";
 
 export class GameObject {
   constructor(name) {

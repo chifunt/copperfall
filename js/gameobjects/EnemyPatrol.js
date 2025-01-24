@@ -23,7 +23,7 @@ export class EnemyPatrol extends GameObject {
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/enemy-patrol.png";
+    img.src = "../../assets/images/enemy-patrol.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, {
         pivot: "bottom",

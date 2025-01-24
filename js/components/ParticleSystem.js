@@ -1,5 +1,5 @@
-import { Component } from "/js/core/Component.js";
-import { Engine } from "/js/core/Engine.js";
+import { Component } from "../core/Component.js";
+import { Engine } from "../core/Engine.js";
 
 /**
  * ParticleSystem Component

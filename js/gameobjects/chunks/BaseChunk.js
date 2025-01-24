@@ -1,5 +1,5 @@
-import { GameObject } from "/js/core/GameObject.js";
-import { Engine } from "/js/core/Engine.js";
+import { GameObject } from "../../core/GameObject.js";
+import { Engine } from "../../core/Engine.js";
 import { ChunkColorMap } from "./ChunkColorMap.js";
 
 export class BaseChunk extends GameObject {

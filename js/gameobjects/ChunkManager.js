@@ -1,6 +1,6 @@
-import { GameObject } from "/js/core/GameObject.js";
+import { GameObject } from "../core/GameObject.js";
 import { ChunkRegistry } from "./chunks/ChunkRegistry.js";
-import { Engine } from "/js/core/Engine.js";
+import { Engine } from "../core/Engine.js";
 
 export class ChunkManager extends GameObject {
   constructor(player, config = {}) {

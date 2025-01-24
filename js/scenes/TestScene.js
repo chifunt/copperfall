@@ -1,15 +1,15 @@
-import { Scene } from "/js/core/Scene.js";
-import { Background } from "/js/gameobjects/Background.js";
-import { Player } from "/js/gameobjects/Player.js";
-import { TestThing2 } from "/js/gameobjects/TestThing2.js";
-import { InputHandler } from "/js/gameobjects/InputHandler.js";
-import { CameraObject } from "/js/gameobjects/CameraObject.js";
-import { Pickup } from "/js/gameobjects/Pickup.js";
+import { Scene } from "../core/Scene.js";
+import { Background } from "../gameobjects/Background.js";
+import { Player } from "../gameobjects/Player.js";
+import { TestThing2 } from "../gameobjects/TestThing2.js";
+import { InputHandler } from "../gameobjects/InputHandler.js";
+import { CameraObject } from "../gameobjects/CameraObject.js";
+import { Pickup } from "../gameobjects/Pickup.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";
 import { DestructibleRock } from "../gameobjects/DestructibleRock.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { UIManager } from "../gameobjects/UIManager.js";
-import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { ToolTipManager } from "../gameobjects/ToolTipManager.js";
 import { MovementToolTipZone } from "../gameobjects/MovementToolTipZone.js";
 import { DashToolTipZone } from "../gameobjects/DashToolTipZone.js";
 

@@ -1,6 +1,6 @@
-import { BoxCollider } from "/js/components/BoxCollider.js";
-import { CircleCollider } from "/js/components/CircleCollider.js";
-import { Rigidbody } from "/js/components/Rigidbody.js";
+import { BoxCollider } from "../components/BoxCollider.js";
+import { CircleCollider } from "../components/CircleCollider.js";
+import { Rigidbody } from "../components/Rigidbody.js";
 
 export class CollisionSystem {
   constructor(engine) {

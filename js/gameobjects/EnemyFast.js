@@ -23,7 +23,7 @@ export class EnemyFast extends GameObject {
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "/assets/images/enemy-fast.png";
+    img.src = "../../assets/images/enemy-fast.png";
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, {
         pivot: "bottom",

@@ -1,4 +1,4 @@
-import { Component } from "/js/core/Component.js";
+import { Component } from "../core/Component.js";
 
 export class SquashAndStretch extends Component {
     constructor(config = {}) {

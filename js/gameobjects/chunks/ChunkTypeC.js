@@ -1,5 +1,5 @@
 import { BaseChunk } from "./BaseChunk.js";
-import { getChunkMapPath, randomChoice} from "./ChunkMapImages.js";
+import { getChunkMapPath, randomChoice } from "./ChunkMapImages.js";
 import { TextureBG } from "../TextureBG.js";
 
 export class ChunkTypeC extends BaseChunk {

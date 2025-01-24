@@ -11,7 +11,7 @@ export class TextureBG extends GameObject {
 
         // Add SpriteRenderer
         const img = new Image();
-        img.src = "/assets/images/texture.png";
+        img.src = "../../assets/images/texture.png";
         img.onload = () => {
             this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 0 }));
         };

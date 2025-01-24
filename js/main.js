@@ -1,5 +1,5 @@
-import { Engine } from "/js/core/Engine.js";
-import { MainMenuScene } from "/js/scenes/MainMenuScene.js";
+import { Engine } from "./core/Engine.js";
+import { MainMenuScene } from "./scenes/MainMenuScene.js";
 import { MainScene } from "./scenes/MainScene.js";
 
 const engine = new Engine("canvas");

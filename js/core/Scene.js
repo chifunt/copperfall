@@ -1,6 +1,3 @@
-// /js/core/Scene.js
-import { Engine } from "/js/core/Engine.js";
-
 export class Scene {
   constructor() {
     this.gameObjects = []; // All objects in this scene
