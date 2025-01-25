@@ -528,8 +528,8 @@ h2 {
 }
 
 #copper-count-container img {
-  width: 30%;
-  height: 30%;
+  width: 3vw;
+  height: 3vw;
   border-radius: 50%;
   box-shadow: 0 0 1vw black, 0 0 4vw black inset;
 }
