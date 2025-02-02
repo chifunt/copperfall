@@ -1,4 +1,3 @@
-// InputHandler.js
 import { GameObject } from "../core/GameObject.js";
 import { Actions } from "../utils/Actions.js";
 
