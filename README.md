@@ -66,6 +66,7 @@
    - **`EasingFunctions.js`**: standard easing formulas for animations.  
    - **`Actions.js`**: enumerates game-wide action names (e.g. `DASH`, `INTERACT`).
 
+[Further Details](/documentation.md)
 ---
 
 ### Running / Building
