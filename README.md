@@ -1,7 +1,7 @@
 # copperfall
 ![screenshot](assets/screenshots/screenshot-1.png)
 
-[Play Copperfall](https://chifunt.com/copperfall/)
+[Play Copperfall (Hosted on my website)](https://chifunt.com/copperfall/)
 ---
 **Copperfall** is a custom 2D JavaScript/Canvas game engine and game project made for the first semester project of Creative Computing @ St. Pölten University of Applied Sciences, featuring:
 
