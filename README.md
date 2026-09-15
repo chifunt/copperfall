@@ -1,7 +1,7 @@
-# copperfall
+# Copperfall
 ![screenshot](assets/screenshots/screenshot-1.png)
 
-[Play Copperfall (Hosted on my website)](https://chifunt.com/copperfall/)
+[Play in Your Browser](https://chifunt.github.io/copperfall/) · [Engineering Writeup](https://www.joshuatjhie.com/projects/copperfall)
 ---
 **Copperfall** is a custom 2D JavaScript/Canvas game engine and game project made for the first semester project of Creative Computing @ St. Pölten University of Applied Sciences, featuring:
 
@@ -66,15 +66,15 @@
    - **`EasingFunctions.js`**: standard easing formulas for animations.  
    - **`Actions.js`**: enumerates game-wide action names (e.g. `DASH`, `INTERACT`).
 
-[Further Details](/documentation.md)
+[Engine Documentation](documentation.md)
 ---
 
-### Running / Building
+### Run Locally
 
-1. **Open `index.html` in a browser** (serve via an HTTP server) to run locally.  
+1. Serve the repository with a local HTTP server, for example `python3 -m http.server 8080`, then open `http://localhost:8080`.  
 2. No special build steps are required; the `.js` files are ES modules imported in `main.js`.  
 
-(Use a local dev server, browsers typically disable some js features for security reasons otherwise.)
+Use the browser version above for a quick look, or read the portfolio writeup for diagrams, debug views, and implementation details.
 
 ---
 
@@ -83,4 +83,4 @@
 ![screenshot](assets/screenshots/screenshot-3.png)
 ![screenshot](assets/screenshots/screenshot-4.png)
 ![screenshot](assets/screenshots/screenshot-5.png)
-(I think gifs would be better here but I'll do that later)
+
