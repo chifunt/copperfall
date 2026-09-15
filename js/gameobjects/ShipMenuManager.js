@@ -146,7 +146,7 @@ export class ShipMenuManager extends GameObject {
 
       // Price <p>
       const copperimg = containerDiv.appendChild(document.createElement("img"));
-      copperimg.src = "/assets/images/copper.png"
+      copperimg.src = "./assets/images/copper.png"
       const priceP = document.createElement("p");
       priceP.textContent = item.cost;
       containerDiv.appendChild(priceP);

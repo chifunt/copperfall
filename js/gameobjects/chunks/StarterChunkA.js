@@ -1,6 +1,6 @@
 import { BaseChunk } from "./BaseChunk.js";
 import { MovementToolTipZone } from "../../gameobjects/MovementToolTipZone.js";
-import { TextureBG } from "/js/gameobjects/TextureBG.js";
+import { TextureBG } from "../TextureBG.js";
 
 export class StarterChunkA extends BaseChunk {
   constructor(cx, cy) {

@@ -1,12 +1,12 @@
-import { Scene } from "/js/core/Scene.js";
-import { Background } from "/js/gameobjects/Background.js";
-import { InputHandler } from "/js/gameobjects/InputHandler.js";
+import { Scene } from "../core/Scene.js";
+import { Background } from "../gameobjects/Background.js";
+import { InputHandler } from "../gameobjects/InputHandler.js";
 import { Engine } from "../core/Engine.js";
 import { MainScene } from "./MainScene.js";
 import { UIManager } from "../gameobjects/UIManager.js";
 import { Pickup } from "../gameobjects/Pickup.js";
 import { TestThing2 } from "../gameobjects/TestThing2.js";
-import { ToolTipManager } from "/js/gameobjects/ToolTipManager.js";
+import { ToolTipManager } from "../gameobjects/ToolTipManager.js";
 import { TextureBG } from "../gameobjects/TextureBG.js";
 import { EnemyTest } from "../gameobjects/EnemyTest.js";
 import { Spaceship } from "../gameobjects/Spaceship.js";

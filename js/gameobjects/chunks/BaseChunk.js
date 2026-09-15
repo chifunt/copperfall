@@ -69,7 +69,7 @@ export class BaseChunk extends GameObject {
    * Loads a chunk map (.png) and spawns objects based on colors.
    * Ensures that only one object is instantiated per cell.
    *
-   * @param {string} imagePath - e.g. "/assets/images/chunk-maps/start-a.png"
+   * @param {string} imagePath - e.g. "./assets/images/chunk-maps/start-a.png"
    * @param {Object} customMap - optional color->class mapping if you want to override or extend
    * @param {number} cellsX - number of cells horizontally (default: 8)
    * @param {number} cellsY - number of cells vertically (default: 8)
