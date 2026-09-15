@@ -22,7 +22,7 @@ export class DestructibleRock extends GameObject {
 
     // Add SpriteRenderer
     const img = new Image();
-    img.src = "../../assets/images/destructible-rock.png";
+    img.src = new URL("../../assets/images/destructible-rock.png", import.meta.url).href;
     img.onload = () => {
       this.addComponent(new SpriteRenderer(img, { pivot: "center", zOrder: 3 }));
     };

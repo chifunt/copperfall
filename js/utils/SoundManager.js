@@ -16,7 +16,7 @@ class SoundManager {
     Object.keys(SoundEffects).forEach((key) => {
       const { fileName } = SoundEffects[key];
       // Construct a full path to the sfx directory
-      const audioPath = `../../assets/audio/sfx/${fileName}`;
+      const audioPath = new URL(`../../assets/audio/sfx/${fileName}`, import.meta.url).href;
       const audio = new Audio(audioPath);
 
       // Store it in the audioMap under the same key
@@ -43,7 +43,7 @@ class SoundManager {
     const audioElem = this.audioMap[key];
     if (!audioElem) {
       // If it wasn't preloaded, load it now (lazy loading fallback)
-      const audioPath = `../../assets/audio/sfx/${fileName}`;
+      const audioPath = new URL(`../../assets/audio/sfx/${fileName}`, import.meta.url).href;
       this.audioMap[key] = new Audio(audioPath);
     }
 

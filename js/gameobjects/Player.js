@@ -87,11 +87,11 @@ export class Player extends GameObject {
 
         // Add a SpriteRenderer component
         this.img = new Image();
-        this.img.src = "../../assets/images/curo.png";
+        this.img.src = new URL("../../assets/images/curo.png", import.meta.url).href;
         this.dashimg = new Image();
-        this.dashimg.src = "../../assets/images/curo-dash.png";
+        this.dashimg.src = new URL("../../assets/images/curo-dash.png", import.meta.url).href;
         this.hurtimg = new Image();
-        this.hurtimg.src = "../../assets/images/curo-hurt.png";
+        this.hurtimg.src = new URL("../../assets/images/curo-hurt.png", import.meta.url).href;
         this.img.onload = () => {
             this.addComponent(new SpriteRenderer(this.img, { pivot: "bottom", zOrder: 5 }));
         };
